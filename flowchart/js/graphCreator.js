@@ -2152,12 +2152,18 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     var words = d.title.split(/\s+/g),
       nwords = words.length;
     var el = gEl.append("text")
-      .attr("text-anchor", "middle")
-      .attr("letter-spacing", "1");
+        .attr("x",20)
+        .attr("y", 30)
+        .attr("text-anchor", "start")
+        .attr("letter-spacing", "1");
     switch (d.type) {
       case 'start':
+          el.attr("x",40)
+            .attr("y", 25)
       case 'end':
-        el.attr("dy", "13");
+          el.attr("x",40)
+            .attr("y", 25)
+            .attr("dy", "13");
         break;
       default:
         el.attr("dy", "-" + (nwords - 1) * 7.5);
