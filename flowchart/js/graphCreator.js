@@ -24,7 +24,8 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       lastKeyDown: -1,
       shiftNodeDrag: false,
       selectedText: null,
-      drawLine: ''
+      drawLine: '',
+        type : ''
     };
 
     // define arrow markers for graph links
@@ -32,7 +33,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     defs.append('svg:marker')
       .attr('id', thisGraph.containerId + '-end-arrow')
       .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 42)
+      .attr('refX', 10)
       .attr('markerWidth', 5)
       .attr('markerHeight', 5)
       .attr('orient', 'auto')
@@ -43,7 +44,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     defs.append('marker')
       .attr('id', thisGraph.containerId + '-mark-end-arrow')
       .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 7)
+      .attr('refX', 10)
       .attr('markerWidth', 5)
       .attr('markerHeight', 5)
       .attr('orient', 'auto')
@@ -54,7 +55,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     defs.append('marker')
       .attr('id', thisGraph.containerId + '-selected-end-arrow')
       .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 30)
+      .attr('refX', 10)
       .attr('markerWidth', 5)
       .attr('markerHeight', 5)
       .attr('orient', 'auto')
@@ -243,8 +244,8 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
 
       var data = JSON.parse(ev.originalEvent.dataTransfer.getData('tr_data'));
       data = $.extend(data, position);
+      thisGraph.state.type = data.type;
       var node = thisGraph.createNode(data);
-
       thisGraph.nodes.push(node);
       thisGraph.updateGraph();
 
@@ -1983,58 +1984,105 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       dif_y = des.y - d.y;
     var link;
     if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
-      if (dif_x > 0 && dif_y > 0) { //第一象限（200,200-300,300）
-        // <path d="M 200,200 L 245,200 M 245,200 A 5,5,0,0,1 250,205 M 250,205 L 250,295 M 250,295 A 5,5,0,0,0 255,300 M 255,300 L 300,300" fill="none" stroke="#F18C16" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + (mid_x-5) + ',' + d.y + 'M' + (mid_x-5) + ',' + d.y + 'A 5,5,0,0,1 ' + mid_x + ',' + (d.y+5) + 
-          'M' + mid_x + ',' + (d.y+5) + 'L' + mid_x + ',' + (des.y-5) +'M' + mid_x + ',' + (des.y-5) + 'A 5,5,0,0,0' + (mid_x+5) + ',' + des.y + 
-          'M' + (mid_x+5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+      if (dif_x > 0 && dif_y > 0) { //第一象限（200,200-300,300） 200,200->295,200->300,205->300,300
+        // <path d="M 200,200 L 295,200 M 295,200 A 5,5,0,0,1 300,205 M 300,205 L 300,300 M 250,295 A 5,5,0,0,0 255,300 M 255,300 L 300,300" fill="none" stroke="#F18C16" stroke-width="1"></path>
+        link = 'M' + d.x + ',' + d.y + 'L' + (des.x-5) + ',' + d.y + 'M' + (des.x-5) + ',' + d.y + 'A 5,5,0,0,1 ' + des.x + ',' + (d.y+5) +
+          'M' + des.x + ',' + (d.y+5) + 'L' + des.x + ',' + des.y;
       }
       if (dif_x < 0 && dif_y > 0) { //第二象限（200,200-100,300）
         // <path d="M 200,200 L 155,200 M 155,200 A 5,5,0,0,0 150,205 M 150,205 L 150,295 M 150,295 A 5,5,0,0,1 145,300 M 145,300 L 100,300" fill="none" stroke="#F18C16" stroke-width="1"></path> 
-        link = 'M' + d.x + ',' + d.y + 'L' + (mid_x+5) + ',' + d.y + 'M' + (mid_x+5) + ',' + d.y + 'A 5,5,0,0,0 ' + mid_x + ',' + (d.y+5) + 
-          'M' + mid_x + ',' + (d.y+5) + 'L' + mid_x + ',' + (des.y-5) +'M' + mid_x + ',' + (des.y-5) + 'A 5,5,0,0,1' + (mid_x-5) + ',' + des.y + 
-          'M' + (mid_x-5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+        link = 'M' + d.x + ',' + d.y + 'L' + (des.x+5) + ',' + d.y + 'M' + (des.x+5) + ',' + d.y + 'A 5,5,0,0,0 ' + des.x + ',' + (d.y+5) +
+          'M' + des.x + ',' + (d.y+5) + 'L' + des.x + ',' + des.y;
       }
       if (dif_x < 0 && dif_y < 0) { //第三象限（200,200-100,100）
         // <path d="M 200,200 L 155,200 M 155,200 A 5,5,0,0,1 150,195 M 150,195 L 150,105 M 150,105 A 5,5,0,0,0 145,100 M 145,100 L 100,100" fill="none" stroke="#F18C16" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + (mid_x+5) + ',' + d.y + 'M' + (mid_x+5) + ',' + d.y + 'A 5,5,0,0,1 ' + mid_x + ',' + (d.y-5) + 
-          'M' + mid_x + ',' + (d.y-5) + 'L' + mid_x + ',' + (des.y+5) +'M' + mid_x + ',' + (des.y+5) + 'A 5,5,0,0,0' + (mid_x-5) + ',' + des.y + 
-          'M' + (mid_x-5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+        link = 'M' + d.x + ',' + d.y + 'L' + (des.x+5) + ',' + d.y + 'M' + (des.x+5) + ',' + d.y + 'A 5,5,0,0,1 ' + des.x + ',' + (d.y-5) +
+          'M' + des.x + ',' + (d.y-5) + 'L' + des.x + ',' + des.y;
       }
       if (dif_x > 0 && dif_y < 0) { //第四象限（200,200-300,100）
         // <path d="M 200,200 L 245,200 M 245,200 A 5,5,0,0,0 250,195 M 250,195 L 250,105 M 250,105 A 5,5,0,0,1 255,100 M 255,100 L 300,100" fill="none" stroke="#F18C16" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + (mid_x-5) + ',' + d.y + 'M' + (mid_x-5) + ',' + d.y + 'A 5,5,0,0,0 ' + mid_x + ',' + (d.y-5) + 
-          'M' + mid_x + ',' + (d.y-5) + 'L' + mid_x + ',' + (des.y+5) +'M' + mid_x + ',' + (des.y+5) + 'A 5,5,0,0,1' + (mid_x+5) + ',' + des.y + 
-          'M' + (mid_x+5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+        link = 'M' + d.x + ',' + d.y + 'L' + (des.x-5) + ',' + d.y + 'M' + (des.x-5) + ',' + d.y + 'A 5,5,0,0,0 ' + des.x + ',' + (d.y-5) +
+          'M' + des.x + ',' + (d.y-5) + 'L' + des.x + ',' + des.y;
       }
     } else { // 上下连线
-      if (dif_x > 0 && dif_y > 0) { //第一象限（200,200-300,300）
+      if (dif_x > 0 && dif_y > 0) { //第一象限（200,200-300,300） 200,200->200,295->205,300->300,300
         // <path d="M 100,100 L 100,145 M 100,145 A 5,5,0,0,0 105,150 M 105,150 L 195,150 M 195,150 A 5,5,0,0,1 200,155 M 200,155 L 200,200" fill="none" stroke="#0096f2" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (mid_y-5) + 'M' + d.x + ',' + (mid_y-5) + 'A 5,5,0,0,0 ' + (d.x+5) + ',' + mid_y + 
-          'M' + (d.x+5) + ',' + mid_y + 'L' + (des.x-5) + ',' + mid_y +'M' + (des.x-5) + ',' + mid_y + 'A 5,5,0,0,1' + des.x + ',' + (mid_y+5) + 
-          'M' + des.x + ',' + (mid_y+5) + 'L' + des.x + ',' + des.y;
+        link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y-5) + 'M' + d.x + ',' + (des.y-5) + 'A 5,5,0,0,0 ' + (d.x+5) + ',' + des.y +
+          'M' + (d.x+5) + ',' + des.y + 'L' + des.x + ',' + des.y;
       }
       if (dif_x < 0 && dif_y > 0) { //第二象限（200,200-100,300）
         // <path d="M 200,200 L 200,245 M 200,245 A 5,5,0,0,1 195,250 M 195,250 L 105,250 M 105,250 A 5,5,0,0,0 100,255 M 100,255 L 100,300" fill="none" stroke="#0096f2" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (mid_y-5) + 'M' + d.x + ',' + (mid_y-5) + 'A 5,5,0,0,1 ' + (d.x-5) + ',' + mid_y + 
-          'M' + (d.x-5) + ',' + mid_y + 'L' + (des.x+5) + ',' + mid_y +'M' + (des.x+5) + ',' + mid_y + 'A 5,5,0,0,0' + des.x + ',' + (mid_y+5) + 
-          'M' + des.x + ',' + (mid_y+5) + 'L' + des.x + ',' + des.y;
+        link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y-5) + 'M' + d.x + ',' + (des.y-5) + 'A 5,5,0,0,1 ' + (d.x-5) + ',' + des.y +
+          'M' + (d.x-5) + ',' + des.y + 'L' + des.x + ',' + des.y;
       }
       if (dif_x < 0 && dif_y < 0) { //第三象限（200,200-100,100）
         // <path d="M 200,200 L 200,155 M 200,155 A 5,5,0,0,0 195,150 M 195,150 L 105,150 M 105,150 A 5,5,0,0,1 100,145 M 100,145 L 100,100" fill="none" stroke="#0096f2" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (mid_y+5) + 'M' + d.x + ',' + (mid_y+5) + 'A 5,5,0,0,0 ' + (d.x-5) + ',' + mid_y + 
-          'M' + (d.x-5) + ',' + mid_y + 'L' + (des.x+5) + ',' + mid_y +'M' + (des.x+5) + ',' + mid_y + 'A 5,5,0,0,1' + des.x + ',' + (mid_y-5) + 
-          'M' + des.x + ',' + (mid_y-5) + 'L' + des.x + ',' + des.y;
+        link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y+5) + 'M' + d.x + ',' + (des.y+5) + 'A 5,5,0,0,0 ' + (d.x-5) + ',' + des.y +
+          'M' + (d.x-5) + ',' + des.y + 'L' + des.x + ',' + des.y;
       }
       if (dif_x > 0 && dif_y < 0) { //第四象限（200,200-300,100）
         // <path d="M 200,200 L 200,155 M 200,155 A 5,5,0,0,1 205,150 M 205,150 L 295,150 M 295,150 A 5,5,0,0,0 300,145 M 300,145 L 300,100" fill="none" stroke="#0096f2" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (mid_y+5) + 'M' + d.x + ',' + (mid_y+5) + 'A 5,5,0,0,1 ' + (d.x+5) + ',' + mid_y + 
-          'M' + (d.x+5) + ',' + mid_y + 'L' + (des.x-5) + ',' + mid_y +'M' + (des.x-5) + ',' + mid_y + 'A 5,5,0,0,0' + des.x + ',' + (mid_y-5) + 
-          'M' + des.x + ',' + (mid_y-5) + 'L' + des.x + ',' + des.y;
+        link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y+5) + 'M' + d.x + ',' + (des.y+5) + 'A 5,5,0,0,1 ' + (d.x+5) + ',' + des.y +
+          'M' + (d.x+5) + ',' + des.y + 'L' + des.x + ',' + des.y;
       }
     }
     return link;
   };
+
+    GraphCreator.prototype.getLink_move = function(start, des) {
+        var d = start;
+        var dif_x = des.x - d.x,
+            dif_y = des.y - d.y;
+        var link;
+        if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+            if (dif_x > 0) {
+              d.x = d.x + 100;
+            }else{
+              des.x = des.x + 100;
+            }
+            d.y = d.y + 25;
+            des.y = des.y + 25;
+        } else { // 上下连线
+            if (dif_y > 0) {
+              d.y = d.y + 50;
+            }else{
+              des.y = des.y + 50;
+            }
+            d.x = d.x + 50;
+            des.x = des.x + 50;
+        }
+    };
+
+    GraphCreator.prototype.getLink_move_w = function(start, des) {
+        var d = start;
+        var dif_x = des.x - d.x,
+            dif_y = des.y - d.y;
+        var link;
+        if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+            if(dif_y < 0){
+                des.y = des.y + 50;
+            }
+            if (dif_x > 0) {
+              d.x = d.x + 100;
+              des.x = des.x + 50;
+            }else{
+
+                des.x = des.x + 50;
+            }
+            d.y = d.y + 25;
+        } else { // 上下连线
+            if(dif_x < 0){
+                des.x = des.x + 100;
+            }
+            if (dif_y > 0) {
+              des.y = des.y + 25;
+              d.y = d.y + 50;
+            }else{
+              des.y = des.y + 25;
+            }
+            d.x = d.x + 50;
+        }
+    };
 
   /**
    * 获取此节点的连线
@@ -2584,146 +2632,6 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     this.state.lastKeyDown = -1;
   };
 
-  // call to propagate changes to graph
-  GraphCreator.prototype.updateGraph = function() {
-    var thisGraph = this,
-      consts = thisGraph.consts,
-      state = thisGraph.state,
-      nodes = thisGraph.nodes, 
-      edges = thisGraph.edges;
-    
-    thisGraph.paths = thisGraph.paths.data(edges, function(d) {
-      return String(d.source.id) + "+" + String(d.target.id);
-    });
-    var paths = thisGraph.paths;
-    // update existing paths
-    var link = paths.style('marker-end', 'url(#'+thisGraph.containerId+'-end-arrow)')
-      .classed(consts.selectedClass, function(d) {
-        return d === state.selectedEdge;
-      })
-      .attr("conditype", function(d) {
-        if (d.postCondition) {
-          return changeCase(d.postCondition.conditype, 5);
-        } else {
-          return '';
-        }
-      })
-      .attr("d", function(d) {
-        if (d.drawLine == 'NOROUTING') {
-          return "M" + d.source.x + "," + d.source.y + "L" + d.target.x + "," + d.target.y;
-        }
-        if (d.drawLine == 'SIMPLEROUTING') {
-          var start = {
-            x: d.source.x,
-            y: d.source.y
-          };
-          var des = {
-            x: d.target.x,
-            y: d.target.y
-          };
-          return thisGraph.getLink_d(start, des);
-        }
-      });
-    refresh(link); // 兼容IE11
-
-    // add new paths
-    paths.enter()
-      .append("path")
-      .style('marker-end', 'url(#'+thisGraph.containerId+'-end-arrow)')
-      .classed("link", true)
-      .attr("conditype", function(d) {
-        if (d.postCondition) {
-          return changeCase(d.postCondition.conditype, 5);
-        } else {
-          return '';
-        }
-      })
-      .attr("d", function(d) {
-        if (d.drawLine == 'NOROUTING') {
-          return "M" + d.source.x + "," + d.source.y + "L" + d.target.x + "," + d.target.y;
-        }
-        if (d.drawLine == 'SIMPLEROUTING') {
-          var start = {
-            x: d.source.x,
-            y: d.source.y
-          };
-          var des = {
-            x: d.target.x,
-            y: d.target.y
-          };
-          return thisGraph.getLink_d(start, des);
-        }
-      })
-      .on("mousedown", function(d) {
-        thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
-      })
-      .on("mouseup", function(d) {
-        state.mouseDownLink = null;
-      });
-
-    // remove old links
-    paths.exit().remove();
-
-    // update existing nodes
-    thisGraph.circles = thisGraph.circles.data(nodes, function(d) {
-      return d.id;
-    });
-    thisGraph.circles.attr("transform", function(d) {
-      if (d == state.selectedNode) { // 更新节点名称
-        var tspan = d3.select(this).select('tspan');
-        if (tspan.text() !== d.title) {
-          tspan.text(d.title);
-        }
-      }
-      return "translate(" + d.x + "," + d.y + ")";
-    });
-
-    // add new nodes
-    var newGs = thisGraph.circles.enter()
-      .append("g")
-        .attr({"id": function(d) { return generateUUID(); }});
-
-    newGs.classed(consts.circleGClass, true)
-      .attr("transform", function(d) {
-        return "translate(" + d.x + "," + d.y + ")";
-      })
-      .on("mouseover", function(d) {
-        if (state.shiftNodeDrag) {
-          d3.select(this).classed(consts.connectClass, true);
-        }
-      })
-      .on("mouseout", function(d) {
-        d3.select(this).classed(consts.connectClass, false);
-      })
-      .on("mousedown", function(d) {
-        thisGraph.circleMouseDown.call(thisGraph, d3.select(this), d);
-      })
-      .on("mouseup", function(d) {
-        thisGraph.circleMouseUp.call(thisGraph, d3.select(this), d);
-      })
-      .call(thisGraph.drag);
-
-    newGs.append("rect")
-        .attr("width",100)
-        .attr("height",50);
-      // .attr("r", String(consts.nodeRadius));
-
-    newGs.each(function(d) {
-      switch (d.type) {
-        case 'start':
-          d3.select(this).classed('start', true);
-          break;
-        case 'end':
-          d3.select(this).classed('end', true);
-          break;
-      }
-      thisGraph.insertTitleLinebreaks(d3.select(this), d);
-    });
-
-    // remove old nodes
-    thisGraph.circles.exit().remove();
-  };
-  
   GraphCreator.prototype.zoomed = function() {
     this.state.justScaleTransGraph = true;
     var translate = this.dragSvg.translate();
@@ -2769,7 +2677,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       } else {
         graph_active = new GraphCreator(containerId, svg, [], [], []);
         editedBlockNode.activitySet.graphCreator = graph_active;
-      } 
+      }
       pools.push(graph_active);
       graphPool.updateGraphActiveById(containerId);
       graph_active.updateGraph();
@@ -2788,9 +2696,9 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
           x: data.x,
           y: data.y,
           conventional: {
-            MustActivity: true, 
-            taskAssign: 'taskAutoMode', 
-            autoAcceptAllAssignments: true, 
+            MustActivity: true,
+            taskAssign: 'taskAutoMode',
+            autoAcceptAllAssignments: true,
             isResponsible: true,
             startMode: 'manual',
             finishMode: 'manual'
@@ -2823,6 +2731,176 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     }
     return node;
   };
+
+    // call to propagate changes to graph
+    GraphCreator.prototype.updateGraph = function() {
+        var thisGraph = this,
+            consts = thisGraph.consts,
+            state = thisGraph.state,
+            nodes = thisGraph.nodes,
+            edges = thisGraph.edges;
+
+        thisGraph.paths = thisGraph.paths.data(edges, function(d) {
+            return String(d.source.id) + "+" + String(d.target.id);
+        });
+        var paths = thisGraph.paths;
+        // update existing paths
+        var link = paths.style('marker-end', 'url(#'+thisGraph.containerId+'-end-arrow)')
+            .classed(consts.selectedClass, function(d) {
+                return d === state.selectedEdge;
+            })
+            .attr("conditype", function(d) {
+                if (d.postCondition) {
+                    return changeCase(d.postCondition.conditype, 5);
+                } else {
+                    return '';
+                }
+            })
+            .attr("d", function(d) {
+                if (d.drawLine == 'NOROUTING') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y
+                    };
+                    thisGraph.getLink_move(start, des);
+                    return "M" + start.x + "," + start.y + "L" + des.x + "," + des.y;
+                }
+                if (d.drawLine == 'SIMPLEROUTING') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y
+                    };
+                    thisGraph.getLink_move_w(start, des);
+                    return thisGraph.getLink_d(start, des);
+                }
+            });
+        refresh(link); // 兼容IE11
+
+        // add new paths
+        paths.enter()
+            .append("path")
+            .style('marker-end', 'url(#'+thisGraph.containerId+'-end-arrow)')
+            .classed("link", true)
+            .attr("conditype", function(d) {
+                if (d.postCondition) {
+                    return changeCase(d.postCondition.conditype, 5);
+                } else {
+                    return '';
+                }
+            })
+            .attr("d", function(d) {
+                if (d.drawLine == 'NOROUTING') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y
+                    };
+                    thisGraph.getLink_move(start, des);
+                    return "M" + start.x + "," + start.y + "L" + des.x + "," + des.y;
+                }
+                if (d.drawLine == 'SIMPLEROUTING') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y
+                    };
+                    thisGraph.getLink_move_w(start, des);
+                    return thisGraph.getLink_d(start, des);
+                }
+            })
+            .on("mousedown", function(d) {
+                thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
+            })
+            .on("mouseup", function(d) {
+                state.mouseDownLink = null;
+            });
+
+        // remove old links
+        paths.exit().remove();
+
+        // update existing nodes
+        thisGraph.circles = thisGraph.circles.data(nodes, function(d) {
+            return d.id;
+        });
+        thisGraph.circles.attr("transform", function(d) {
+            if (d == state.selectedNode) { // 更新节点名称
+                var tspan = d3.select(this).select('tspan');
+                if (tspan.text() !== d.title) {
+                    tspan.text(d.title);
+                }
+            }
+            return "translate(" + d.x + "," + d.y + ")";
+        });
+
+        // add new nodes
+        var newGs = thisGraph.circles.enter()
+            .append("g")
+            .attr({"id": function(d) { return generateUUID(); }});
+
+        newGs.classed(consts.circleGClass, true)
+            .attr("transform", function(d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            })
+            .on("mouseover", function(d) {
+                if (state.shiftNodeDrag) {
+                    d3.select(this).classed(consts.connectClass, true);
+                }
+            })
+            .on("mouseout", function(d) {
+                d3.select(this).classed(consts.connectClass, false);
+            })
+            .on("mousedown", function(d) {
+                thisGraph.circleMouseDown.call(thisGraph, d3.select(this), d);
+            })
+            .on("mouseup", function(d) {
+                thisGraph.circleMouseUp.call(thisGraph, d3.select(this), d);
+            })
+            .call(thisGraph.drag);
+        if(thisGraph.state.type=="start"||thisGraph.state.type=="end"){
+            newGs.append("circle")
+                .attr("r", String(consts.nodeRadius));
+        }else if(thisGraph.state.type=="flag"){
+            newGs.append("rect")
+                .attr("width",50)
+                .attr("height",50)
+                .attr("transform","rotate(45)");
+            // .attr("r", String(consts.nodeRadius));
+
+        }else{
+            newGs.append("rect")
+                .attr("width",100)
+                .attr("height",50);
+        }
+
+        newGs.each(function(d) {
+            switch (d.type) {
+                case 'start':
+                    d3.select(this).classed('start', true);
+                    break;
+                case 'end':
+                    d3.select(this).classed('end', true);
+                    break;
+            }
+            thisGraph.insertTitleLinebreaks(d3.select(this), d);
+        });
+
+        // remove old nodes
+        thisGraph.circles.exit().remove();
+    };
 
 
   /**** MAIN ****/

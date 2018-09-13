@@ -702,7 +702,7 @@ i.icon.mouse.pointer:before {
 i.icon.hourglass.empty:before {
   content: "\f250";
 }
-i.icon.hourglass.start:before {
+i.icon.hourglass.rect:before {
   content: "\f251";
 }
 i.icon.hourglass.half:before {
