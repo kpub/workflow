@@ -63,7 +63,8 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       .attr('d', 'M0,-5L10,0L0,5')
       .attr('fill', 'rgb(229, 172, 247)');
 
-    thisGraph.svg = svg;
+
+      thisGraph.svg = svg;
     thisGraph.show_position = svg.append("text")
       .attr({
         'x': 1107,
@@ -2030,7 +2031,9 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
   };
 
     GraphCreator.prototype.getLink_move = function(start, des) {
+        var startType = start.type,desType = des.type;
         var d = start;
+        var xSource = d.x,ySource = d.y,xDes = des.x,yDes = des.y;
         var dif_x = des.x - d.x,
             dif_y = des.y - d.y;
         var link;
@@ -2051,10 +2054,41 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
             d.x = d.x + 50;
             des.x = des.x + 50;
         }
+        if(startType=="start"){
+            d.x = xSource;
+            d.y = ySource;
+        }
+        if(desType=="end"){
+            des.x = xDes;
+            des.y = yDes;
+        }
+        if(start.type=="flag"){
+            d.x = xSource;
+            d.y = ySource + 35;
+        }
+        if(desType=="flag"){
+            if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+                if (dif_x < 0) {
+                    des.x = xDes + 35;
+                    des.y = yDes + 35;
+                }else{
+                    des.x = xDes - 35;
+                    des.y = yDes + 35;
+                }
+            } else { // 上下连线
+                if (dif_y < 0) {
+                    des.y = yDes + 70;
+                }
+                des.x = xDes;
+            }
+        }
+
     };
 
     GraphCreator.prototype.getLink_move_w = function(start, des) {
+        var startType = start.type,desType = des.type;
         var d = start;
+        var xSource = d.x,ySource = d.y,xDes = des.x,yDes = des.y;
         var dif_x = des.x - d.x,
             dif_y = des.y - d.y;
         var link;
@@ -2081,7 +2115,37 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
               des.y = des.y + 25;
             }
             d.x = d.x + 50;
+
         }
+        if(startType=="start"){
+            d.x = xSource;
+            d.y = ySource;
+        }
+        if(desType=="end"){
+            des.x = xDes;
+            des.y = yDes;
+        }
+        if(startType=="flag"){
+            d.x = xSource;
+            d.y = ySource + 35;
+        }
+        if(desType=="flag"){
+            if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+                if (dif_y < 0) {
+                    des.y = yDes + 70;
+                }
+                des.x = xDes;
+            } else { // 上下连线
+                if (dif_x < 0) {
+                    des.x = xDes + 35;
+                    des.y = yDes + 35;
+                }else{
+                    des.x = xDes - 35;
+                    des.y = yDes + 35;
+                }
+            }
+        }
+
     };
 
   /**
@@ -2206,11 +2270,13 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         .attr("letter-spacing", "1");
     switch (d.type) {
       case 'start':
-          el.attr("x",40)
-            .attr("y", 25)
+          el.attr("x", 0)
+            .attr("y", 0)
+              .attr("dx","-10");
       case 'end':
-          el.attr("x",40)
-            .attr("y", 25)
+          el.attr("x", 0)
+            .attr("y", 0)
+              .attr("dx","-10")
             .attr("dy", "13");
         break;
       default:
@@ -2760,11 +2826,13 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                 if (d.drawLine == 'NOROUTING') {
                     var start = {
                         x: d.source.x,
-                        y: d.source.y
+                        y: d.source.y,
+                        type : d.source.type
                     };
                     var des = {
                         x: d.target.x,
-                        y: d.target.y
+                        y: d.target.y,
+                        type : d.target.type
                     };
                     thisGraph.getLink_move(start, des);
                     return "M" + start.x + "," + start.y + "L" + des.x + "," + des.y;
@@ -2772,11 +2840,13 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                 if (d.drawLine == 'SIMPLEROUTING') {
                     var start = {
                         x: d.source.x,
-                        y: d.source.y
+                        y: d.source.y,
+                        type : d.source.type
                     };
                     var des = {
                         x: d.target.x,
-                        y: d.target.y
+                        y: d.target.y,
+                        type : d.target.type
                     };
                     thisGraph.getLink_move_w(start, des);
                     return thisGraph.getLink_d(start, des);
@@ -2800,11 +2870,13 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                 if (d.drawLine == 'NOROUTING') {
                     var start = {
                         x: d.source.x,
-                        y: d.source.y
+                        y: d.source.y,
+                        type : d.source.type
                     };
                     var des = {
                         x: d.target.x,
-                        y: d.target.y
+                        y: d.target.y,
+                        type : d.target.type
                     };
                     thisGraph.getLink_move(start, des);
                     return "M" + start.x + "," + start.y + "L" + des.x + "," + des.y;
@@ -2812,11 +2884,13 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                 if (d.drawLine == 'SIMPLEROUTING') {
                     var start = {
                         x: d.source.x,
-                        y: d.source.y
+                        y: d.source.y,
+                        type : d.source.type
                     };
                     var des = {
                         x: d.target.x,
-                        y: d.target.y
+                        y: d.target.y,
+                        type : d.target.type
                     };
                     thisGraph.getLink_move_w(start, des);
                     return thisGraph.getLink_d(start, des);
