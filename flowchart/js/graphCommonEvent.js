@@ -2,114 +2,136 @@
  * 生成bpmn文件
  */
 function createBpmn(){
-  graph_main.bpmnStr = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
-      '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/testm1533999566823" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1533999566823" name="" targetNamespace="http://www.activiti.org/testm1533999566823" typeLanguage="http://www.w3.org/2001/XMLSchema">\n';
-  var processBpmn = '<process id="myProcess_1" isClosed="false" isExecutable="true" name="leave" processType="None">\n\t';
-  var bpmndi = '<bpmndi:BPMNDiagram documentation="background=#3C3F41;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">\n';
-  var nodes = graph_main.nodes.concat();
-  var edges = graph_main.edges.concat();
-  var bpmnId = 0;
-  bpmndi += '<bpmndi:BPMNPlane bpmnElement="myProcess_1">\n';
-  nodes.forEach(function (node) {
-      node.id = "_"+bpmnId++;
-      node.choseId = bpmnId++;
-
-      if(node.type=="start"){
-          processBpmn += '<startEvent id="'+node.id+'" name="StartEvent"/>\n\t';
-          bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
-              '        <dc:Bounds height="32.0" width="32.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
-              '        <bpmndi:BPMNLabel>\n' +
-              '          <dc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>\n' +
-              '        </bpmndi:BPMNLabel>\n' +
-              '      </bpmndi:BPMNShape>\n';
-      }
-      else if(node.type=="end"){
-          processBpmn += '<endEvent id="'+node.id+'" name="EndEvent"/>\n\t';
-          bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
-              '        <dc:Bounds height="32.0" width="32.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
-              '        <bpmndi:BPMNLabel>\n' +
-              '          <dc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>\n' +
-              '        </bpmndi:BPMNLabel>\n' +
-          '      </bpmndi:BPMNShape>\n';
-      }else if(node.type=="activity"){
-          processBpmn += '<userTask activiti:exclusive="true" id="'+node.id+'" name="'+node.title+'">' +
-                            judgeLength(node.conventional.description) +
-                '       </userTask>';
-          bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
-              '        <dc:Bounds height="55.0" width="85.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
-              '        <bpmndi:BPMNLabel>\n' +
-              '          <dc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>\n' +
-              '        </bpmndi:BPMNLabel>\n' +
-          '      </bpmndi:BPMNShape>\n';
-      }else if(node.type == 'flag'){
-          processBpmn += '<exclusiveGateway id="'+node.id+'" name="Exclusive Gateway"></exclusiveGateway>';
-          bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
-              '        <dc:Bounds height="55.0" width="85.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
-              '        <bpmndi:BPMNLabel>\n' +
-              '          <dc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>\n' +
-              '        </bpmndi:BPMNLabel>\n' +
-              '      </bpmndi:BPMNShape>\n';
-      }
-      //alert(node.conventional.description);
-       //alert(JSON.stringify(node));
-      //console.log(JSON.stringify(node));
-  });
-
-/*
-* 箭头生成相关bpmn文件
-* */
-    edges.forEach(function (edge) {
-    //alert(":::::"+JSON.stringify(edge));
-      edge.edgeId = "_"+bpmnId++;
-      var source = edge.source;
-      var target = edge.target;
-      var name = edge.postCondition.edgeName;
-      var condition = edge.postCondition.condition_data;
-      if(name != null && condition != null){
-        //alert(edge.postCondition.edgeName);
-        //alert("edge.postCondition.edgeName"+edge.postCondition.condition_data);
-          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" name=" '+ name +' " sourceRef="'+source.id+'" targetRef="'+target.id+'"/>' +
-              '<conditionExpression xsi:type="tFormalExpression"><![CDATA[${'+condition+'}]]></conditionExpression>';
-      }else if(name == null && condition != null){
-          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'"/>' +
-              '<conditionExpression xsi:type="tFormalExpression"><![CDATA[${'+condition+'}]]></conditionExpression>';
-      } else if(name != null && condition == null){
-          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'">\n\t';
-      }else{
-          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'">';
-      }
-
-      bpmndi += '<bpmndi:BPMNEdge bpmnElement="'+edge.edgeId+'" id="BPMNEdge_'+edge.edgeId+'" sourceElement="'+source.id+'" targetElement="'+target.id+'">\n' + '        <di:waypoint x="'+source.x+'" y="'+source.y+'"/>\n' +
-        '        <di:waypoint x="'+target.x+'" y="'+target.y+'"/>\n' +
-        '        <bpmndi:BPMNLabel>\n' +
-        '          <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>\n' +
-        '        </bpmndi:BPMNLabel>\n' +
-        '      </bpmndi:BPMNEdge>\n';
+    var formNames = getFormKey();
+    var formSelect = $(".five.wide.field").find("select[name=formKey]");
+    // formSelect.html("");
+    if(formSelect.val()==null){
+      formNames.forEach(function (form) {
+        formSelect.append("<option value='"+form+"'>"+form+"</option>");
       });
-
-
-  processBpmn += '</process>\n';
-  bpmndi += '</bpmndi:BPMNPlane>\n' +
-      '  </bpmndi:BPMNDiagram>\n';
+      formSelect.append("<option value='1'>空</option>");
+    }
+    graph_main.bpmnStr = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+        '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/testm1533999566823" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1533999566823" name="" targetNamespace="http://www.activiti.org/testm1533999566823" typeLanguage="http://www.w3.org/2001/XMLSchema">\n';
+    var processBpmn = '<process id="myProcess_1" isClosed="false" isExecutable="true" name="leave" processType="None">\n\t';
+    var bpmndi = '<bpmndi:BPMNDiagram documentation="background=#3C3F41;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">\n';
+    var nodes = graph_main.nodes.concat();
+    var edges = graph_main.edges.concat();
+    var bpmnId = 0;
+    bpmndi += '<bpmndi:BPMNPlane bpmnElement="myProcess_1">\n';
+    nodes.forEach(function (node) {
+        console.log(JSON.stringify(node));
+        // alert(JSON.stringify(node));
+        // alert(node.component);
+        node.id = "_"+bpmnId++;
+        if(node.type=="start"){
+            processBpmn += '<startEvent id="'+node.id+'" name="StartEvent"/>\n\t';
+            bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
+                '        <dc:Bounds height="32.0" width="32.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
+                '        <bpmndi:BPMNLabel>\n' +
+                '          <dc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>\n' +
+                '        </bpmndi:BPMNLabel>\n' +
+                '      </bpmndi:BPMNShape>\n';
+        }
+        else if(node.type=="end"){
+            processBpmn += '<endEvent id="'+node.id+'" name="EndEvent"/>\n\t';
+            bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
+                '        <dc:Bounds height="32.0" width="32.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
+                '        <bpmndi:BPMNLabel>\n' +
+                '          <dc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>\n' +
+                '        </bpmndi:BPMNLabel>\n' +
+                '      </bpmndi:BPMNShape>\n';
+        }else if(node.component=="ordinaryActivity"){
+            var userName = node.conventional.conventional_definition_name;
+            var userGroup = node.conventional.conventional_definition_group;
+            var formKey = node.conventional.formKey;
+            var userTask = '<userTask activiti:exclusive="true" id="'+node.id+'" name="'+node.title+'"';
+            if(userName!=null&&userName!=''){
+                userTask += ' activiti:candidateGroups="' + userGroup + '" activiti:candidateUsers="' + userName + '"';
+            }
+            if(formKey!=null&&formKey!='1'){
+                userTask += ' activiti:formKey="'+formKey+'"';
+            }
+            processBpmn += userTask + ' />\n\t';
+            bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
+                '        <dc:Bounds height="55.0" width="85.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
+                '        <bpmndi:BPMNLabel>\n' +
+                '          <dc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>\n' +
+                '        </bpmndi:BPMNLabel>\n' +
+                '      </bpmndi:BPMNShape>\n';
+        }else if(node.component=="routeActivity"){
+            processBpmn += '<exclusiveGateway gatewayDirection="Unspecified" id="'+node.id+'" name="'+node.title+'"/>\n\t';
+            bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
+                '        <dc:Bounds height="55.0" width="85.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
+                '        <bpmndi:BPMNLabel>\n' +
+                '          <dc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>\n' +
+                '        </bpmndi:BPMNLabel>\n' +
+                '      </bpmndi:BPMNShape>\n';
+        }
+        // alert(JSON.stringify(node));
+    });
+    // alert(edges.length);
+    edges.forEach(function (edge) {
+        // alert(JSON.stringify(edge));
+        // alert(edge.postCondition.condition);
+        edge.edgeId = "_"+bpmnId++;
+        var source = edge.source;
+        var target = edge.target;
+        if(edge.source.component=="routeActivity"){
+            processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'">\n' +
+                '              <conditionExpression xsi:type="tFormalExpression"><![CDATA['+edge.postCondition.condition+']]></conditionExpression>\n' +
+                '             </sequenceFlow>';
+        }else{
+            processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'"/>\n\t';
+        }
+        bpmndi += '<bpmndi:BPMNEdge bpmnElement="'+edge.edgeId+'" id="BPMNEdge_'+edge.edgeId+'" sourceElement="'+source.id+'" targetElement="'+target.id+'">\n' +
+            '        <di:waypoint x="'+source.x+'" y="'+source.y+'"/>\n' +
+            '        <di:waypoint x="'+target.x+'" y="'+target.y+'"/>\n' +
+            '        <bpmndi:BPMNLabel>\n' +
+            '          <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>\n' +
+            '        </bpmndi:BPMNLabel>\n' +
+            '      </bpmndi:BPMNEdge>\n';
+    });
+    processBpmn += '</process>\n';
+    bpmndi += '</bpmndi:BPMNPlane>\n' +
+        '  </bpmndi:BPMNDiagram>\n';
     graph_main.bpmnStr += processBpmn;
     graph_main.bpmnStr += bpmndi;
     graph_main.bpmnStr += '</definitions>';
-   //console.log("bpmnStr" + graph_main.bpmnStr);
-  return graph_main.bpmnStr;
+    // alert(bpmnStr);
+    return graph_main.bpmnStr;
 }
 
-function judgeLength(desc){
-    if(desc != null){
-        return '<documentation>'+ desc + ' </documentation>';
-    }else{
-        return '';
-    }
+/**
+ *  下拉选择FormKey
+ */
+function getFormKey(){
+    // document.currentScript.src;
+    var names;
+    $.ajax({
+        type: "GET",   // get post 方法都是一样的
+        async: false,
+        url: "http://localhost:8080/getFileName",
+        dataType: "json",
+        success: function(json){
+            names = json.names.split(",");
+        },
+        error: function(){
+            names = "";
+        }
+    });
+    return names;
 }
-//下载功能模块
+
+/*
+* 下载功能模块
+* */
 function downloadBpmn(){
     export_raw('test.bpmn',graph_main.bpmnStr);
 }
-
+/*
+* 下载功能模块
+* */
 function fake_click(obj) {
     var ev = document.createEvent("MouseEvents");
     ev.initMouseEvent(
@@ -119,6 +141,9 @@ function fake_click(obj) {
     obj.dispatchEvent(ev);
 }
 
+/*
+* 下载功能模块
+* */
 function export_raw(name, data) {
     var urlObject = window.URL || window.webkitURL || window;
 
@@ -129,6 +154,15 @@ function export_raw(name, data) {
     save_link.download = name;
     fake_click(save_link);
 }
+
+function judgeLength(desc){
+    if(desc != null && desc != ''){
+        return '<documentation>'+ desc + ' </documentation>';
+    }else{
+        return '';
+    }
+}
+
 /*
 * 导入bpmn文件
 * */

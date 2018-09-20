@@ -542,6 +542,9 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       $('.conventional_definition div[data-tab="definition_1"]').find('input[name]:not(".hidden"), textarea').each(function() {
         participant[$(this).attr('name')] = $(this).val();
       });
+      participant.conventional_definition_group = $('.conventional input[name="conventional_definition_group"]').val();
+      participant.conventional_definition_name = $('.conventional input[name="conventional_definition_name"]').val();
+      participant.formKey = $(".five.wide.field").find("select[name=formKey] option:selected").val();
       if (participant.conventional_definition_participant) {// 自定义参与者
         
       } else {
@@ -1240,7 +1243,8 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         $event.find("input[name], select").each(function() {
           postCondition[$(this).attr('name')] = $(this).val();
         });
-        edge.edgeId = postCondition.edgeId;
+        postCondition.condition =  $('.segment input[name="definition_condition"]').val();
+          edge.edgeId = postCondition.edgeId;
         edge.postCondition = postCondition;
         if (selector == '.post_condition') {
           var splitType = $(selector).find('select[name=splitType]').val();
@@ -3126,7 +3130,10 @@ function importXpdl(str) {
         autoAcceptAllAssignments: $(this).find('ExtendedAttribute[name=autoAcceptAllAssignments]').attr('Value'), // true or false
         completeAllAssignments: $(this).find('ExtendedAttribute[name=completeAllAssignments]').attr('Value'),
         assignmentsOrder: $(this).find('ExtendedAttribute[name=assignmentsOrder]').attr('Value'),
-        //description: $(this).find('Description').html(),
+        conventional_definition_group : $('.conventional input[name="conventional_definition_group"]').val(),
+        conventional_definition_name : $('.conventional input[name="conventional_definition_name"]').val(),
+        formKey : $(".five.wide.field").find("select[name=formKey] option:selected").val(),
+            //description: $(this).find('Description').html(),
         taskAssignMode: $(this).find('ExtendedAttribute[name=taskAssignMode]').attr('Value'),
         mustActivity: $(this).find('ExtendedAttribute[name=MustActivity]').attr('Value'), // true or false
         participantID: $(this).find('ExtendedAttribute[name=ParticipantID]').attr('Value'),

@@ -18,7 +18,6 @@
 		<!--<div class="column pop-btn" data-content="剪切" data-position="bottom center" data-variation="mini"><i class="cut icon"></i></div>
 		<div class="column pop-btn" data-content="复制" data-position="bottom center" data-variation="mini"><i class="copy icon"></i></div>
 
-		<div class="column pop-btn" id="delete-graph" data-content="清空" data-position="bottom center" data-variation="mini"><i class="trash icon"></i></div>
 		<div class="column pop-btn" id="delete-ele" data-content="删除" data-position="bottom center" data-variation="mini"><i class="remove icon"></i></div>
 		<!--<div class="divider"></div>
 		<div class="column pop-btn" data-content="撤销" data-position="bottom center" data-variation="mini"><i class="repeat icon"></i></div>
@@ -27,6 +26,7 @@
 		<div class="column pop-btn" id="zoom-enlarge" data-content="放大" data-position="bottom center" data-variation="mini"><i class="zoom icon"></i></div>
 		<div class="column pop-btn" id="zoom-narrow" data-content="缩小" data-position="bottom center" data-variation="mini"><i class="zoom out icon"></i></div>
 		<div class="column pop-btn" id="reset-zoom" data-content="归位" data-position="bottom center" data-variation="mini"><i class="maximize icon"></i></div>
+		<div class="column pop-btn" id="delete-graph" data-content="清空" data-position="bottom center" data-variation="mini"><i class="trash icon"></i></div>
 		<div class="divider"></div>
 		<div class="column pop-btn" data-content="导入json" data-position="bottom center" data-variation="mini"><i class="sign in icon"></i></div>
 		<div class="column pop-btn small popup" data-content="导出json" data-position="bottom center" data-variation="mini"><i class="sign out icon"></i></div>
@@ -167,14 +167,28 @@
 				      <label>ID:</label>
 				      <input name="ID" type="text" placeholder="ID">
 				    </div>
-				    <div class="five wide field">
-				      <label>名称:</label>
-				      <input name="name" type="text" placeholder="名称">
-				    </div>
-				    <!--<div class="five wide field">
-					    <label>类型:</label>
-					    <input name="type" type="text" placeholder="类型" readonly>
-					</div>-->
+					<div class="five wide field">
+						<label>名称:</label>
+						<input name="name" type="text" placeholder="名称">
+					</div>
+				</div>
+				<div class="fields">
+					<div class="five wide field">
+						<label>所属组:</label>
+						<input name="conventional_definition_group" type="text" placeholder="所属组">
+					</div>
+					<div class="five wide field">
+						<label>执行人:</label>
+						<input name="conventional_definition_name" type="text" placeholder="执行人">
+					</div>
+				</div>
+				<div class="fields">
+					<div class="five wide field">
+						<label>formKey:</label>
+						<select name="formKey" class="formKey">
+
+						</select>
+					</div>
 				</div>
 				<div class="ui divider hidden"></div>
 				<!--<div class="field">
@@ -192,7 +206,7 @@
                 	</div>
                 </div>-->
 
-		<!--		<div class="field">
+				<!--	<div class="field">
 					<label>所属组:</label>
 					<input type="text" name="conventional_definition_group" placeholder="所属组">
 				</div>
@@ -200,6 +214,7 @@
 					<label>名称:</label>
 					<input type="text" name="conventional_definition_name" placeholder="名称">
 				</div>
+
                 <div class="fields">
                 	<div class="inline field">
     				  	<div class="ui checkbox isTracking">
@@ -1863,7 +1878,10 @@
 					    <input type="text" name="targetTitle" placeholder="到" disabled="disabled">
 					</div>
 				</div>
-
+				<div class="field">
+					<label>条件:</label>
+					<input type="text" name="definition_condition" placeholder="条件">
+				</div>
 				<div class="five wide field">
 					<label>转移条件设置：</label>
 					<input type="text" name="condition_data">
