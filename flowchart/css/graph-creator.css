@@ -151,6 +151,16 @@ g.start rect {
   stroke-width: 0px;
 }
 
+g.conceptG text {
+  background: black;
+  font-size:10px;
+}
+
+g.flag text{
+  font-size:30px;
+}
+
+
 g.start text {
   font-family: trebuche;
   font-size: 37px;
@@ -170,7 +180,6 @@ g.end text {
   fill: #fff;
   font-weight: 550;
 }
-
 
 /*------------------------------------------------*/
 

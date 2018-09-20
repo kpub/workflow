@@ -1,41 +1,188 @@
 /**
- * 工具栏-导入/导出功能
+ * 生成bpmn文件
+ */
+function createBpmn(){
+  graph_main.bpmnStr = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
+      '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/testm1533999566823" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1533999566823" name="" targetNamespace="http://www.activiti.org/testm1533999566823" typeLanguage="http://www.w3.org/2001/XMLSchema">\n';
+  var processBpmn = '<process id="myProcess_1" isClosed="false" isExecutable="true" name="leave" processType="None">\n\t';
+  var bpmndi = '<bpmndi:BPMNDiagram documentation="background=#3C3F41;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">\n';
+  var nodes = graph_main.nodes.concat();
+  var edges = graph_main.edges.concat();
+  var bpmnId = 0;
+  bpmndi += '<bpmndi:BPMNPlane bpmnElement="myProcess_1">\n';
+  nodes.forEach(function (node) {
+      node.id = "_"+bpmnId++;
+      node.choseId = bpmnId++;
+
+      if(node.type=="start"){
+          processBpmn += '<startEvent id="'+node.id+'" name="StartEvent"/>\n\t';
+          bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
+              '        <dc:Bounds height="32.0" width="32.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
+              '        <bpmndi:BPMNLabel>\n' +
+              '          <dc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>\n' +
+              '        </bpmndi:BPMNLabel>\n' +
+              '      </bpmndi:BPMNShape>\n';
+      }
+      else if(node.type=="end"){
+          processBpmn += '<endEvent id="'+node.id+'" name="EndEvent"/>\n\t';
+          bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
+              '        <dc:Bounds height="32.0" width="32.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
+              '        <bpmndi:BPMNLabel>\n' +
+              '          <dc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>\n' +
+              '        </bpmndi:BPMNLabel>\n' +
+          '      </bpmndi:BPMNShape>\n';
+      }else if(node.type=="activity"){
+          processBpmn += '<userTask activiti:exclusive="true" id="'+node.id+'" name="'+node.title+'">' +
+                            judgeLength(node.conventional.description) +
+                '       </userTask>';
+          bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
+              '        <dc:Bounds height="55.0" width="85.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
+              '        <bpmndi:BPMNLabel>\n' +
+              '          <dc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>\n' +
+              '        </bpmndi:BPMNLabel>\n' +
+          '      </bpmndi:BPMNShape>\n';
+      }else if(node.type == 'flag'){
+          processBpmn += '<exclusiveGateway id="'+node.id+'" name="Exclusive Gateway"></exclusiveGateway>';
+          bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
+              '        <dc:Bounds height="55.0" width="85.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
+              '        <bpmndi:BPMNLabel>\n' +
+              '          <dc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>\n' +
+              '        </bpmndi:BPMNLabel>\n' +
+              '      </bpmndi:BPMNShape>\n';
+      }
+      //alert(node.conventional.description);
+       //alert(JSON.stringify(node));
+      //console.log(JSON.stringify(node));
+  });
+
+/*
+* 箭头生成相关bpmn文件
+* */
+    edges.forEach(function (edge) {
+    //alert(":::::"+JSON.stringify(edge));
+      edge.edgeId = "_"+bpmnId++;
+      var source = edge.source;
+      var target = edge.target;
+      var name = edge.postCondition.edgeName;
+      var condition = edge.postCondition.condition_data;
+      if(name != null && condition != null){
+        //alert(edge.postCondition.edgeName);
+        //alert("edge.postCondition.edgeName"+edge.postCondition.condition_data);
+          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" name=" '+ name +' " sourceRef="'+source.id+'" targetRef="'+target.id+'"/>' +
+              '<conditionExpression xsi:type="tFormalExpression"><![CDATA[${'+condition+'}]]></conditionExpression>';
+      }else if(name == null && condition != null){
+          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'"/>' +
+              '<conditionExpression xsi:type="tFormalExpression"><![CDATA[${'+condition+'}]]></conditionExpression>';
+      } else if(name != null && condition == null){
+          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'">\n\t';
+      }else{
+          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'">';
+      }
+
+      bpmndi += '<bpmndi:BPMNEdge bpmnElement="'+edge.edgeId+'" id="BPMNEdge_'+edge.edgeId+'" sourceElement="'+source.id+'" targetElement="'+target.id+'">\n' + '        <di:waypoint x="'+source.x+'" y="'+source.y+'"/>\n' +
+        '        <di:waypoint x="'+target.x+'" y="'+target.y+'"/>\n' +
+        '        <bpmndi:BPMNLabel>\n' +
+        '          <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>\n' +
+        '        </bpmndi:BPMNLabel>\n' +
+        '      </bpmndi:BPMNEdge>\n';
+      });
+
+
+  processBpmn += '</process>\n';
+  bpmndi += '</bpmndi:BPMNPlane>\n' +
+      '  </bpmndi:BPMNDiagram>\n';
+    graph_main.bpmnStr += processBpmn;
+    graph_main.bpmnStr += bpmndi;
+    graph_main.bpmnStr += '</definitions>';
+   //console.log("bpmnStr" + graph_main.bpmnStr);
+  return graph_main.bpmnStr;
+}
+
+function judgeLength(desc){
+    if(desc != null){
+        return '<documentation>'+ desc + ' </documentation>';
+    }else{
+        return '';
+    }
+}
+//下载功能模块
+function downloadBpmn(){
+    export_raw('test.bpmn',graph_main.bpmnStr);
+}
+
+function fake_click(obj) {
+    var ev = document.createEvent("MouseEvents");
+    ev.initMouseEvent(
+        "click", true, false, window, 0, 0, 0, 0, 0
+        , false, false, false, false, 0, null
+    );
+    obj.dispatchEvent(ev);
+}
+
+function export_raw(name, data) {
+    var urlObject = window.URL || window.webkitURL || window;
+
+    var export_blob = new Blob([data]);
+
+    var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+    save_link.href = urlObject.createObjectURL(export_blob);
+    save_link.download = name;
+    fake_click(save_link);
+}
+/*
+* 导入bpmn文件
+* */
+function openFileBtn() {
+    var inputObj=document.createElement('input');
+    inputObj.setAttribute('id','file');
+    inputObj.setAttribute('type','file');
+    inputObj.setAttribute('name','file');
+    inputObj.setAttribute("style",'visibility:hidden');
+    document.body.appendChild(inputObj);
+    inputObj.value;
+    inputObj.click();
+    console.log(inputObj);
+}
+
+/**
+ * 工具栏-json数据导入/导出功能
  */
 function handleImportOrExport(e) {
+    alert("e:"+JSON.stringify(e));
   var isImport = e.target.className.indexOf('in'),
-    textarea = $('.json_data textarea');
-  $('.ui.modal.json_data').modal({
-    onApprove: function() {
-      if (isImport !== -1) { // 导入
-        var jsonStr = textarea.val();
-        if (jsonStr) {
-          var jsonObj = JSON.parse(jsonStr);
-          jsonObj = edgeAssociateNode(jsonObj);
-          graph_main.nodes = graph_main.nodes.concat(jsonObj.nodes);
-          graph_main.edges = graph_main.edges.concat(jsonObj.edges);
-          graph_main.updateGraph();
+      textarea = $('.json_data textarea');
+    $('.ui.modal.json_data').modal({
+      onApprove: function() {
+        if (isImport !== -1) { // 导入
+          var jsonStr = textarea.val();
+          if (jsonStr) {
+            var jsonObj = JSON.parse(jsonStr);
+            jsonObj = edgeAssociateNode(jsonObj);
+            graph_main.nodes = graph_main.nodes.concat(jsonObj.nodes);
+            graph_main.edges = graph_main.edges.concat(jsonObj.edges);
+            graph_main.updateGraph();
+          }
         }
+      },
+      onHidden: function() {
+        textarea.val('');
       }
-    },
-    onHidden: function() {
-      textarea.val('');
-    }
-  })
-  .modal('setting', 'transition', 'scale')
-  .modal('show');
+    })
+    .modal('setting', 'transition', 'scale')
+    .modal('show');
 
-  var element_header = $('div.json_data .header');
-  if (isImport !== -1) {
-    element_header.text('导入数据');
-  } else {
-    element_header.text('导出数据');
-    var data = {
-      nodes: graph_main.nodes,
-      edges: graph_main.edges
-    };
-    textarea.val(JSON.stringify(data));
+    var element_header = $('div.json_data .header');
+    if (isImport !== -1) {
+      element_header.text('导入数据');
+    } else {
+      element_header.text('导出数据');
+      var data = {
+        nodes: graph_main.nodes,
+        edges: graph_main.edges
+      };
+      textarea.val(JSON.stringify(data));
+    }
   }
-}
 
 /**
  * 工具栏-清空
@@ -187,7 +334,7 @@ function handleComponentsBtn() {
 /**
  * 自动插入开始结束节点
  */
-function handleAddStartEnd() {
+/*function handleAddStartEnd() {
   var graph_active = graphPool.getGraphByActiveEdit();
   var edges = graph_active.edges;
   var nodes = graph_active.filterActivities();
@@ -231,7 +378,7 @@ function handleAddStartEnd() {
       graph_active.updateGraph();
     }
   });
-}
+}*/
 
 /**
  * 视图显示Tab（图标视图、Xpdl视图、Xml视图）

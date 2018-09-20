@@ -29,16 +29,16 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     };
 
     // define arrow markers for graph links
-    var defs = svg.append('defs');
-    defs.append('svg:marker')
-      .attr('id', thisGraph.containerId + '-end-arrow')
-      .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 10)
-      .attr('markerWidth', 5)
-      .attr('markerHeight', 5)
-      .attr('orient', 'auto')
-      .append('svg:path')
-      .attr('d', 'M0,-5L10,0L0,5');
+      var defs = svg.append('defs');
+      defs.append('svg:marker')
+        .attr('id', thisGraph.containerId + '-end-arrow')
+        .attr('viewBox', '0 -5 10 10')
+        .attr('refX', 10)
+        .attr('markerWidth', 5)
+        .attr('markerHeight', 5)
+        .attr('orient', 'auto')
+        .append('svg:path')
+        .attr('d', 'M0,-5L10,0L0,5');
 
     //define arrow markers for leading arrow
     defs.append('marker')
@@ -1159,95 +1159,95 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
   };
 
   // 更新-后置条件或转移属性
-  GraphCreator.prototype.updatePostCondi = function(selector) {
-    var thisGraph = this;
-    var item_act = $(selector).find('.list .item.active');
-    if (item_act.length || selector == '.prop_edge') {
-      var edge;
-      if (item_act.length) {
-        var jsonObj = JSON.parse(item_act.attr('jsonStr'));
-        thisGraph.edges.forEach(function(item, i) {
-          if (item.edgeId == jsonObj.edgeId) {
-            edge = item;
-          }
+    GraphCreator.prototype.updatePostCondi = function(selector) {
+      var thisGraph = this;
+      var item_act = $(selector).find('.list .item.active');
+      if (item_act.length || selector == '.prop_edge') {
+        var edge;
+        if (item_act.length) {
+          var jsonObj = JSON.parse(item_act.attr('jsonStr'));
+          thisGraph.edges.forEach(function(item, i) {
+            if (item.edgeId == jsonObj.edgeId) {
+              edge = item;
+            }
+          });
+        } else {
+          edge = thisGraph.state.selectedEdge;
+        }
+        var postCondition = {transitionRuleType: 'Script_Rule'};
+        var $transferInf = $(selector).find('div[data-tab="four/a"]'); // 转移信息
+        $transferInf.find("input:not(.hidden), select, textarea").each(function() {
+          postCondition[$(this).attr('name')] = $(this).val();
         });
-      } else {
-        edge = thisGraph.state.selectedEdge;
-      }
-      var postCondition = {transitionRuleType: 'Script_Rule'};
-      var $transferInf = $(selector).find('div[data-tab="four/a"]'); // 转移信息
-      $transferInf.find("input:not(.hidden), select, textarea").each(function() {
-        postCondition[$(this).attr('name')] = $(this).val();
-      });
-      postCondition.extendedAttrs = [];
-      $transferInf.find('tbody tr').each(function() {
-        var jsonstr = $(this).attr('jsonstr');
-        postCondition.extendedAttrs.push(jsonstr);
-      });
-      var $conditionSet = $(selector).find('div[data-tab="four/b"]');//条件设置
-      var conditype = $conditionSet.find('select[name=conditype]').val();
-      postCondition.conditype = conditype;
-      if (conditype == 'CONDITION') {//类型选择条件
-        var tr = $(selector).find('.conditionDiv tbody').find('tr');
-        var fieldCondition = '',
-          condixml = '',
-          fieldConditions_type = '';
-        if (tr.length) {
-          tr.each(function() {
-            var json_obj = JSON.parse($(this).attr('jsonstr'));
-            fieldCondition += 
-              ' <fieldCondition type="'+json_obj.fieldCondition_type+'">'+
-              '   <expression key="'+json_obj.key+'" sign="'+json_obj.sign_one+'" type="'+json_obj.type+'" displayValue="'+json_obj.displayValue_one+'"><![CDATA['+json_obj.displayValue_two+']]></expression>'+
-              '   <expression key="'+json_obj.key+'" sign="'+json_obj.sign_two+'" type="'+json_obj.type+'" displayValue="'+json_obj.displayValue_two+'"><![CDATA['+json_obj.displayValue_two+']]></expression>'+
-              ' </fieldCondition>';
-          });
-          fieldConditions_type = $(selector).find('.conditionDiv select[name=fieldConditions_type]').parent().dropdown('get value');
+        postCondition.extendedAttrs = [];
+        $transferInf.find('tbody tr').each(function() {
+          var jsonstr = $(this).attr('jsonstr');
+          postCondition.extendedAttrs.push(jsonstr);
+        });
+        var $conditionSet = $(selector).find('div[data-tab="four/b"]');//条件设置
+        var conditype = $conditionSet.find('select[name=conditype]').val();
+        postCondition.conditype = conditype;
+        if (conditype == 'CONDITION') {//类型选择条件
+          var tr = $(selector).find('.conditionDiv tbody').find('tr');
+          var fieldCondition = '',
+            condixml = '',
+            fieldConditions_type = '';
+          if (tr.length) {
+            tr.each(function() {
+              var json_obj = JSON.parse($(this).attr('jsonstr'));
+              fieldCondition +=
+                ' <fieldCondition type="'+json_obj.fieldCondition_type+'">'+
+                '   <expression key="'+json_obj.key+'" sign="'+json_obj.sign_one+'" type="'+json_obj.type+'" displayValue="'+json_obj.displayValue_one+'"><![CDATA['+json_obj.displayValue_two+']]></expression>'+
+                '   <expression key="'+json_obj.key+'" sign="'+json_obj.sign_two+'" type="'+json_obj.type+'" displayValue="'+json_obj.displayValue_two+'"><![CDATA['+json_obj.displayValue_two+']]></expression>'+
+                ' </fieldCondition>';
+            });
+            fieldConditions_type = $(selector).find('.conditionDiv select[name=fieldConditions_type]').parent().dropdown('get value');
+          }
+          condixml = '<FieldConditions type="'+fieldConditions_type+'">'+ fieldCondition +'</FieldConditions>';
+          condixml = Base64.encode(condixml);
+          postCondition.condixml = condixml;
         }
-        condixml = '<FieldConditions type="'+fieldConditions_type+'">'+ fieldCondition +'</FieldConditions>';
-        condixml = Base64.encode(condixml);
-        postCondition.condixml = condixml;
-      }
-      if (conditype == 'EXCEPTION') {//类型选择异常
-        postCondition.condiException = $(selector).find('.exceptionDiv select[name=condiException]').parent().dropdown('get value');
-      }
-      if (conditype == 'WORKFLOWBEAN') { //类型选择业务对象转移
-        var w_tr = $(selector).find('.workflowbeanDiv tbody').find('tr');
-        var beanCondition = '',
-          w_condixml = '',
-          beanConditions_type = '';
-        if (w_tr.length) {
-          w_tr.each(function() {
-            var json_obj = JSON.parse($(this).attr('jsonstr'));
-            beanCondition += 
-              '<beanCondition code="'+json_obj.code+'" type="'+json_obj.beanConditions_type+'" bean="'+json_obj.bean+'" paramField="'+json_obj.paramField+'">'+
-              '  <expression key="'+json_obj.key+'" sign="'+json_obj.sign_one+'" type="'+json_obj.type+'" displayValue="'+json_obj.displayValue_one+'"><![CDATA['+json_obj.displayValue_one+']]></expression>'+
-              '  <expression key="'+json_obj.key+'" sign="'+json_obj.sign_two+'" type="'+json_obj.type+'" displayValue="'+json_obj.displayValue_two+'"><![CDATA['+json_obj.displayValue_two+']]></expression>'+
-              '</beanCondition>';
-          });
-          beanConditions_type = $(selector).find('.workflowbeanDiv input[name=beanConditions_type]').val();
+        if (conditype == 'EXCEPTION') {//类型选择异常
+          postCondition.condiException = $(selector).find('.exceptionDiv select[name=condiException]').parent().dropdown('get value');
         }
-        w_condixml = '<beanConditions type="'+beanConditions_type+'">'+ beanCondition +'</beanConditions>';
-        w_condixml = Base64.encode(w_condixml);
-        postCondition.condixml = w_condixml;
+        if (conditype == 'WORKFLOWBEAN') { //类型选择业务对象转移
+          var w_tr = $(selector).find('.workflowbeanDiv tbody').find('tr');
+          var beanCondition = '',
+            w_condixml = '',
+            beanConditions_type = '';
+          if (w_tr.length) {
+            w_tr.each(function() {
+              var json_obj = JSON.parse($(this).attr('jsonstr'));
+              beanCondition +=
+                '<beanCondition code="'+json_obj.code+'" type="'+json_obj.beanConditions_type+'" bean="'+json_obj.bean+'" paramField="'+json_obj.paramField+'">'+
+                '  <expression key="'+json_obj.key+'" sign="'+json_obj.sign_one+'" type="'+json_obj.type+'" displayValue="'+json_obj.displayValue_one+'"><![CDATA['+json_obj.displayValue_one+']]></expression>'+
+                '  <expression key="'+json_obj.key+'" sign="'+json_obj.sign_two+'" type="'+json_obj.type+'" displayValue="'+json_obj.displayValue_two+'"><![CDATA['+json_obj.displayValue_two+']]></expression>'+
+                '</beanCondition>';
+            });
+            beanConditions_type = $(selector).find('.workflowbeanDiv input[name=beanConditions_type]').val();
+          }
+          w_condixml = '<beanConditions type="'+beanConditions_type+'">'+ beanCondition +'</beanConditions>';
+          w_condixml = Base64.encode(w_condixml);
+          postCondition.condixml = w_condixml;
+        }
+        if (conditype == 'USERDEFINE') {//类型选择用户自定义
+          postCondition.condition_data = $(selector).find('.userdefineDiv input').val();
+        }
+        if (conditype == 'CUSTOM') {//类型选择自定义转移
+          postCondition.condition_data = $(selector).find('.customDiv textarea').val();
+        }
+        var $event = $(selector).find('div[data-tab="four/c"]'); //事件（标签）
+        $event.find("input[name], select").each(function() {
+          postCondition[$(this).attr('name')] = $(this).val();
+        });
+        edge.edgeId = postCondition.edgeId;
+        edge.postCondition = postCondition;
+        if (selector == '.post_condition') {
+          var splitType = $(selector).find('select[name=splitType]').val();
+          thisGraph.state.selectedNode.postCondition = {splitType: splitType};
+        }
       }
-      if (conditype == 'USERDEFINE') {//类型选择用户自定义
-        postCondition.condition_data = $(selector).find('.userdefineDiv input').val();
-      }
-      if (conditype == 'CUSTOM') {//类型选择自定义转移
-        postCondition.condition_data = $(selector).find('.customDiv textarea').val();
-      }
-      var $event = $(selector).find('div[data-tab="four/c"]'); //事件（标签）
-      $event.find("input[name], select").each(function() { 
-        postCondition[$(this).attr('name')] = $(this).val(); 
-      }); 
-      edge.edgeId = postCondition.edgeId; 
-      edge.postCondition = postCondition; 
-      if (selector == '.post_condition') { 
-        var splitType = $(selector).find('select[name=splitType]').val();
-        thisGraph.state.selectedNode.postCondition = {splitType: splitType};
-      }
-    }
-  };
+    };
   
   // 获取 后置条件-条件设置-类型(条件)下的列表
   GraphCreator.prototype.getConditionList = function(condition, num) {
@@ -1525,27 +1525,11 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
   };
 
   //生成所有activity xml添加至xmlContainer
-  GraphCreator.prototype.emergeAllXmlContent = function() {
-    var thisGraph = this;
-    var start = '<WorkflowProcess Id="'+workflow_id+'" Name="'+workflow_name+'" endform-id="" endformschema="">',
-          end = '  <text-limit/>'+
-                '</WorkflowProcess>';
-
-    var curText = start,
-      activity = '';
-    thisGraph.nodes.forEach(function(node) {
-      if (node.type == 'activity') {
-        activity = '<activity Id="'+node.id+'" Name="'+node.title+'" form-id="" formdisplayschema="" hisformdisplayschema="">'+
-                   '  <operations/>'+
-                   '  <text-limit/>'+
-                   '</activity>';
-        curText += activity;
-      }
-    });
-    curText += end;
-    curText = vkbeautify.xml(curText);
-    return curText;
-  };
+  GraphCreator.prototype.emergeAllXmlContent = function(){
+      var thisGraph = this;
+      var curText = vkbeautify.xml(this.bpmnStr);
+      return curText;
+  }
 
   GraphCreator.prototype.startAndEndOfWorkflow = function() {
     var thisGraph = this;
@@ -1590,20 +1574,8 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       var conventionalXpdl = thisGraph.conventionalXpdl(node);
       switch (node.component) {
         case "ordinaryActivity": //普通活动
-          activitiesXpdl += '<Activity Id="'+node.id+'" Name="'+node.title+'">'+
-                                 deadlineXpdl.limit+
-                                 conventionalXpdl.description+
-                            '    <Implementation>'+
-                            '        <No/>'+
-                            '    </Implementation>'+
-                                 conventionalXpdl.performer+
-                                 conventionalXpdl.startMode+
-                                 conventionalXpdl.finishMode+
-                            '    <Priority/>'+
-                                 deadlineXpdl.deadlines+
-                                 thisGraph.getTransitionRestrictions(node, activity_inOut)+
-                                 thisGraph.getExtendedAttributes(node, deadlineXpdl, conventionalXpdl)+
-                            '</Activity>';
+          activitiesXpdl += '<userTask Id="'+node.id+'" Name="'+node.title+'">'+
+                            '</userTask>';
           break;
         case "blockActivity": //块活动
           activitiesXpdl += '<Activity Id="'+node.id+'" Name="'+node.title+'">' +
@@ -1978,57 +1950,59 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
    * 如果 dif.x < 0 && dif.y < 0 第三象限
    */
   GraphCreator.prototype.getLink_d = function(start, des) {
-    var d = start;
-    var mid_x = (d.x + des.x)/2,
-      mid_y = (d.y + des.y)/2;
-    var dif_x = des.x - d.x,
-      dif_y = des.y - d.y;
-    var link;
-    if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
-      if (dif_x > 0 && dif_y > 0) { //第一象限（200,200-300,300） 200,200->295,200->300,205->300,300
-        // <path d="M 200,200 L 295,200 M 295,200 A 5,5,0,0,1 300,205 M 300,205 L 300,300 M 250,295 A 5,5,0,0,0 255,300 M 255,300 L 300,300" fill="none" stroke="#F18C16" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + (des.x-5) + ',' + d.y + 'M' + (des.x-5) + ',' + d.y + 'A 5,5,0,0,1 ' + des.x + ',' + (d.y+5) +
-          'M' + des.x + ',' + (d.y+5) + 'L' + des.x + ',' + des.y;
+      var d = start;
+      var mid_x = (d.x + des.x)/2,
+          mid_y = (d.y + des.y)/2;
+      var dif_x = des.x - d.x,
+          dif_y = des.y - d.y;
+      var link;
+      if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+          if (dif_x > 0 && dif_y > 0) { //第一象限（200,200-300,300） 200,200->200,295->205,300->300,300
+              // <path d="M 100,100 L 100,145 M 100,145 A 5,5,0,0,0 105,150 M 105,150 L 195,150 M 195,150 A 5,5,0,0,1 200,155 M 200,155 L 200,200" fill="none" stroke="#0096f2" stroke-width="1"></path>
+              link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y-5) + 'M' + d.x + ',' + (des.y-5) + 'A 5,5,0,0,0 ' + (d.x+5) + ',' + des.y +
+                  'M' + (d.x+5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+          }
+          if (dif_x < 0 && dif_y > 0) { //第二象限（200,200-100,300）
+              // <path d="M 200,200 L 200,245 M 200,245 A 5,5,0,0,1 195,250 M 195,250 L 105,250 M 105,250 A 5,5,0,0,0 100,255 M 100,255 L 100,300" fill="none" stroke="#0096f2" stroke-width="1"></path>
+              link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y-5) + 'M' + d.x + ',' + (des.y-5) + 'A 5,5,0,0,1 ' + (d.x-5) + ',' + des.y +
+                  'M' + (d.x-5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+          }
+          if (dif_x < 0 && dif_y < 0) { //第三象限（200,200-100,100）
+              // <path d="M 200,200 L 200,155 M 200,155 A 5,5,0,0,0 195,150 M 195,150 L 105,150 M 105,150 A 5,5,0,0,1 100,145 M 100,145 L 100,100" fill="none" stroke="#0096f2" stroke-width="1"></path>
+              link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y+5) + 'M' + d.x + ',' + (des.y+5) + 'A 5,5,0,0,0 ' + (d.x-5) + ',' + des.y +
+                  'M' + (d.x-5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+          }
+          if (dif_x > 0 && dif_y < 0) { //第四象限（200,200-300,100）
+              // <path d="M 200,200 L 200,155 M 200,155 A 5,5,0,0,1 205,150 M 205,150 L 295,150 M 295,150 A 5,5,0,0,0 300,145 M 300,145 L 300,100" fill="none" stroke="#0096f2" stroke-width="1"></path>
+              link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y+5) + 'M' + d.x + ',' + (des.y+5) + 'A 5,5,0,0,1 ' + (d.x+5) + ',' + des.y +
+                  'M' + (d.x+5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+          }
+      } else { // 上下连线
+          if (dif_x > 0 && dif_y > 0) { //第一象限（200,200-300,300） 200,200->295,200->300,205->300,300
+              // <path d="M 200,200 L 295,200 M 295,200 A 5,5,0,0,1 300,205 M 300,205 L 300,300 M 250,295 A 5,5,0,0,0 255,300 M 255,300 L 300,300" fill="none" stroke="#F18C16" stroke-width="1"></path>
+              link = 'M' + d.x + ',' + d.y + 'L' + (des.x-5) + ',' + d.y + 'M' + (des.x-5) + ',' + d.y + 'A 5,5,0,0,1 ' + des.x + ',' + (d.y+5) +
+                  'M' + des.x + ',' + (d.y+5) + 'L' + des.x + ',' + des.y;
+          }
+          if (dif_x < 0 && dif_y > 0) { //第二象限（200,200-100,300）
+              // <path d="M 200,200 L 155,200 M 155,200 A 5,5,0,0,0 150,205 M 150,205 L 150,295 M 150,295 A 5,5,0,0,1 145,300 M 145,300 L 100,300" fill="none" stroke="#F18C16" stroke-width="1"></path>
+              link = 'M' + d.x + ',' + d.y + 'L' + (des.x+5) + ',' + d.y + 'M' + (des.x+5) + ',' + d.y + 'A 5,5,0,0,0 ' + des.x + ',' + (d.y+5) +
+                  'M' + des.x + ',' + (d.y+5) + 'L' + des.x + ',' + des.y;
+          }
+          if (dif_x < 0 && dif_y < 0) { //第三象限（200,200-100,100）
+              // <path d="M 200,200 L 155,200 M 155,200 A 5,5,0,0,1 150,195 M 150,195 L 150,105 M 150,105 A 5,5,0,0,0 145,100 M 145,100 L 100,100" fill="none" stroke="#F18C16" stroke-width="1"></path>
+              link = 'M' + d.x + ',' + d.y + 'L' + (des.x+5) + ',' + d.y + 'M' + (des.x+5) + ',' + d.y + 'A 5,5,0,0,1 ' + des.x + ',' + (d.y-5) +
+                  'M' + des.x + ',' + (d.y-5) + 'L' + des.x + ',' + des.y;
+          }
+          if (dif_x > 0 && dif_y < 0) { //第四象限（200,200-300,100）
+              // <path d="M 200,200 L 245,200 M 245,200 A 5,5,0,0,0 250,195 M 250,195 L 250,105 M 250,105 A 5,5,0,0,1 255,100 M 255,100 L 300,100" fill="none" stroke="#F18C16" stroke-width="1"></path>
+              link = 'M' + d.x + ',' + d.y + 'L' + (des.x-5) + ',' + d.y + 'M' + (des.x-5) + ',' + d.y + 'A 5,5,0,0,0 ' + des.x + ',' + (d.y-5) +
+                  'M' + des.x + ',' + (d.y-5) + 'L' + des.x + ',' + des.y;
+          }
       }
-      if (dif_x < 0 && dif_y > 0) { //第二象限（200,200-100,300）
-        // <path d="M 200,200 L 155,200 M 155,200 A 5,5,0,0,0 150,205 M 150,205 L 150,295 M 150,295 A 5,5,0,0,1 145,300 M 145,300 L 100,300" fill="none" stroke="#F18C16" stroke-width="1"></path> 
-        link = 'M' + d.x + ',' + d.y + 'L' + (des.x+5) + ',' + d.y + 'M' + (des.x+5) + ',' + d.y + 'A 5,5,0,0,0 ' + des.x + ',' + (d.y+5) +
-          'M' + des.x + ',' + (d.y+5) + 'L' + des.x + ',' + des.y;
-      }
-      if (dif_x < 0 && dif_y < 0) { //第三象限（200,200-100,100）
-        // <path d="M 200,200 L 155,200 M 155,200 A 5,5,0,0,1 150,195 M 150,195 L 150,105 M 150,105 A 5,5,0,0,0 145,100 M 145,100 L 100,100" fill="none" stroke="#F18C16" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + (des.x+5) + ',' + d.y + 'M' + (des.x+5) + ',' + d.y + 'A 5,5,0,0,1 ' + des.x + ',' + (d.y-5) +
-          'M' + des.x + ',' + (d.y-5) + 'L' + des.x + ',' + des.y;
-      }
-      if (dif_x > 0 && dif_y < 0) { //第四象限（200,200-300,100）
-        // <path d="M 200,200 L 245,200 M 245,200 A 5,5,0,0,0 250,195 M 250,195 L 250,105 M 250,105 A 5,5,0,0,1 255,100 M 255,100 L 300,100" fill="none" stroke="#F18C16" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + (des.x-5) + ',' + d.y + 'M' + (des.x-5) + ',' + d.y + 'A 5,5,0,0,0 ' + des.x + ',' + (d.y-5) +
-          'M' + des.x + ',' + (d.y-5) + 'L' + des.x + ',' + des.y;
-      }
-    } else { // 上下连线
-      if (dif_x > 0 && dif_y > 0) { //第一象限（200,200-300,300） 200,200->200,295->205,300->300,300
-        // <path d="M 100,100 L 100,145 M 100,145 A 5,5,0,0,0 105,150 M 105,150 L 195,150 M 195,150 A 5,5,0,0,1 200,155 M 200,155 L 200,200" fill="none" stroke="#0096f2" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y-5) + 'M' + d.x + ',' + (des.y-5) + 'A 5,5,0,0,0 ' + (d.x+5) + ',' + des.y +
-          'M' + (d.x+5) + ',' + des.y + 'L' + des.x + ',' + des.y;
-      }
-      if (dif_x < 0 && dif_y > 0) { //第二象限（200,200-100,300）
-        // <path d="M 200,200 L 200,245 M 200,245 A 5,5,0,0,1 195,250 M 195,250 L 105,250 M 105,250 A 5,5,0,0,0 100,255 M 100,255 L 100,300" fill="none" stroke="#0096f2" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y-5) + 'M' + d.x + ',' + (des.y-5) + 'A 5,5,0,0,1 ' + (d.x-5) + ',' + des.y +
-          'M' + (d.x-5) + ',' + des.y + 'L' + des.x + ',' + des.y;
-      }
-      if (dif_x < 0 && dif_y < 0) { //第三象限（200,200-100,100）
-        // <path d="M 200,200 L 200,155 M 200,155 A 5,5,0,0,0 195,150 M 195,150 L 105,150 M 105,150 A 5,5,0,0,1 100,145 M 100,145 L 100,100" fill="none" stroke="#0096f2" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y+5) + 'M' + d.x + ',' + (des.y+5) + 'A 5,5,0,0,0 ' + (d.x-5) + ',' + des.y +
-          'M' + (d.x-5) + ',' + des.y + 'L' + des.x + ',' + des.y;
-      }
-      if (dif_x > 0 && dif_y < 0) { //第四象限（200,200-300,100）
-        // <path d="M 200,200 L 200,155 M 200,155 A 5,5,0,0,1 205,150 M 205,150 L 295,150 M 295,150 A 5,5,0,0,0 300,145 M 300,145 L 300,100" fill="none" stroke="#0096f2" stroke-width="1"></path>
-        link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y+5) + 'M' + d.x + ',' + (des.y+5) + 'A 5,5,0,0,1 ' + (d.x+5) + ',' + des.y +
-          'M' + (d.x+5) + ',' + des.y + 'L' + des.x + ',' + des.y;
-      }
-    }
-    return link;
+      return link;
   };
+
+
 
     GraphCreator.prototype.getLink_move = function(start, des) {
         var startType = start.type,desType = des.type;
@@ -2064,20 +2038,20 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         }
         if(start.type=="flag"){
             d.x = xSource;
-            d.y = ySource + 35;
+            d.y = ySource + 17;
         }
         if(desType=="flag"){
             if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
                 if (dif_x < 0) {
-                    des.x = xDes + 35;
-                    des.y = yDes + 35;
+                    des.x = xDes + 15;
+                    des.y = yDes + 30;
                 }else{
-                    des.x = xDes - 35;
-                    des.y = yDes + 35;
+                    des.x = xDes-15;
+                    des.y = yDes+20;
                 }
             } else { // 上下连线
                 if (dif_y < 0) {
-                    des.y = yDes + 70;
+                    des.y = yDes + 50;
                 }
                 des.x = xDes;
             }
@@ -2085,7 +2059,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
 
     };
 
-    GraphCreator.prototype.getLink_move_w = function(start, des) {
+    /*GraphCreator.prototype.getLink_move_w = function(start, des) {
         var startType = start.type,desType = des.type;
         var d = start;
         var xSource = d.x,ySource = d.y,xDes = des.x,yDes = des.y;
@@ -2132,10 +2106,68 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         if(desType=="flag"){
             if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
                 if (dif_y < 0) {
-                    des.y = yDes + 70;
+                    des.y = yDes + 40;
                 }
                 des.x = xDes;
             } else { // 上下连线
+                if (dif_x < 0) {
+                    des.x = xDes + 5;
+                    des.y = yDes + 35;
+                }else{
+                    des.x = xDes - 15;
+                    des.y = yDes + 35;
+                }
+            }
+        }
+
+    };*/
+    GraphCreator.prototype.getLink_move_w = function(start, des) {
+        var startType = start.type,desType = des.type;
+        var d = start;
+        var xSource = d.x,ySource = d.y,xDes = des.x,yDes = des.y;
+        var dif_x = des.x - d.x,
+            dif_y = des.y - d.y;
+        var link;
+        if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+            if(dif_x < 0){
+                des.x = des.x + 100;
+            }
+            if (dif_y > 0) {
+                des.y = des.y + 25;
+                d.y = d.y + 50;
+            }else{
+                des.y = des.y + 25;
+            }
+            d.x = d.x + 50;
+
+        } else { // 上下连线
+            if(dif_y < 0){
+                des.y = des.y + 50;
+            }
+            if (dif_x > 0) {
+                d.x = d.x + 100;
+                des.x = des.x + 50;
+            }else{
+
+                des.x = des.x + 50;
+            }
+            d.y = d.y + 25;
+
+        }
+        if(startType=="start"){
+            d.x = xSource;
+            d.y = ySource;
+        }
+        if(desType=="end"){
+            des.x = xDes;
+            des.y = yDes;
+        }
+        if(startType=="flag"){
+            d.x = xSource;
+            d.y = ySource + 35;
+        }
+        if(desType=="flag"){
+            if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
                 if (dif_x < 0) {
                     des.x = xDes + 35;
                     des.y = yDes + 35;
@@ -2143,12 +2175,20 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                     des.x = xDes - 35;
                     des.y = yDes + 35;
                 }
+            } else { // 上下连线
+                if (dif_y < 0) {
+                    des.y = yDes + 70;
+                }
+                des.x = xDes;
             }
         }
 
     };
 
-  /**
+
+
+
+    /**
    * 获取此节点的连线
    * @param  {Object} node        此节点
    * @param  {Number} type        -1 连线指向此节点 1 此节点连出 undefined 所有连线
@@ -2205,7 +2245,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     return hasLinked;
   };
 
-  /* PROTOTYPE FUNCTIONS */
+  /* 连接线的设置 */
   GraphCreator.prototype.dragmove = function(d) {
     var thisGraph = this;
     var drawLine = thisGraph.state.drawLine;
@@ -2259,26 +2299,29 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
   };
 
 
-  /* insert svg line breaks: taken from http://stackoverflow.com/questions/13241475/how-do-i-include-newlines-in-labels-in-d3-charts */
+  /* 根据不同的type值，设置不同的文本样式*/
   GraphCreator.prototype.insertTitleLinebreaks = function(gEl, d) {
     var words = d.title.split(/\s+/g),
       nwords = words.length;
     var el = gEl.append("text")
-        .attr("x",20)
+        .attr("x",50)
         .attr("y", 30)
-        .attr("text-anchor", "start")
+        .attr("text-anchor", "middle")
         .attr("letter-spacing", "1");
     switch (d.type) {
       case 'start':
-          el.attr("x", 0)
+          el.attr("x", 10)
             .attr("y", 0)
               .attr("dx","-10");
       case 'end':
-          el.attr("x", 0)
+          el.attr("x", 10)
             .attr("y", 0)
               .attr("dx","-10")
             .attr("dy", "13");
         break;
+        case 'flag':
+          el.attr('x',0)
+              .attr('y',32);
       default:
         el.attr("dy", "-" + (nwords - 1) * 7.5);
         break;
@@ -2570,8 +2613,8 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         '</div>' +
         '<div class="clearfix"></div>'+
         '<div> ' +
-        '  <div name="type" class="prop-value"><span>类型:</span><span>' + d.component + '</span></div>'+
-        '  <div name="" class="prop-value"><span>执行者:</span><span>无</span></div>' +
+       /* '  <div name="type" class="prop-value"><span>类型:</span><span>' + d.component + '</span></div>'+
+        '  <div name="desc" class="prop-value"><span>描述:</span><span> ' + d.conventional.description + '</span></div>' +*/
         '</div>' +
         '<div class="clearfix"></div>');
   };
@@ -2633,6 +2676,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         d = {
           id: seqer_nodeID.gensym(),
           title: '普通活动',
+          desc:$(this).find('Description').html(),
           component: 'ordinaryActivity',
           type: 'activity',
           x: xycoords[0],
@@ -2759,6 +2803,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
           title: data.text,
           component: data.component,
           type: data.type,
+          //description:data.description,
           x: data.x,
           y: data.y,
           conventional: {
@@ -2949,15 +2994,15 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                 .attr("r", String(consts.nodeRadius));
         }else if(thisGraph.state.type=="flag"){
             newGs.append("rect")
-                .attr("width",50)
-                .attr("height",50)
+                .attr("width",30)
+                .attr("height",30)
                 .attr("transform","rotate(45)");
-            // .attr("r", String(consts.nodeRadius));
-
         }else{
             newGs.append("rect")
                 .attr("width",100)
-                .attr("height",50);
+                .attr("height",50)
+                .attr("rx",10)
+                .attr("ry",10);
         }
 
         newGs.each(function(d) {
@@ -2968,12 +3013,15 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                 case 'end':
                     d3.select(this).classed('end', true);
                     break;
+                case 'flag':
+                  d3.select(this).classed('flag',true);
             }
             thisGraph.insertTitleLinebreaks(d3.select(this), d);
         });
 
         // remove old nodes
         thisGraph.circles.exit().remove();
+        thisGraph.bpmnStr = createBpmn();
     };
 
 
@@ -2995,6 +3043,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
 
 function initCommonEvent() {
   $('.editor-toolbar').on('click', '.sign.in,.sign.out', handleImportOrExport);
+  $('.editor-toolbar .open .icon').on('click',openFileBtn);
   $('.full-right').on('click', '.full-right-btn .item', handleViews);
   $('.editor-toolbar #delete-ele').on('click', handleDeleteNode);
   $('.editor-toolbar #zoom-enlarge,#zoom-narrow').on('click.zoom', handleClickZoom);
@@ -3002,9 +3051,9 @@ function initCommonEvent() {
   $('#helper').on('click', handleHelp);
   $('#flowComponents .components-btn').on('click', handleComponentsBtn);
   $("#delete-graph").on("click", clearGraph);
-  $('.editor-toolbar .icon.save').on('click', handleSave);
+  $('.editor-toolbar .icon.save').on('click', downloadBpmn);
   $('#rMenu .item').on('click', handleRightMenu);
-  $('.full-left [name=addStartEndBtn]').on('click', handleAddStartEnd);
+  //$('.full-left [name=addStartEndBtn]').on('click', handleAddStartEnd);
 }
 
 function initFlowChart() {
@@ -3063,6 +3112,7 @@ function importXpdl(str) {
   root.find("Activities Activity").each(function() {
     var id = $(this).attr('id'),
       name = $(this).attr('name'),
+      //desc = $(this).attr('description'),
       x = parseInt($(this).find('ExtendedAttribute[name=XOffset]').attr('Value')),
       y = parseInt($(this).find('ExtendedAttribute[name=YOffset]').attr('Value'));
       
@@ -3076,7 +3126,7 @@ function importXpdl(str) {
         autoAcceptAllAssignments: $(this).find('ExtendedAttribute[name=autoAcceptAllAssignments]').attr('Value'), // true or false
         completeAllAssignments: $(this).find('ExtendedAttribute[name=completeAllAssignments]').attr('Value'),
         assignmentsOrder: $(this).find('ExtendedAttribute[name=assignmentsOrder]').attr('Value'),
-        description: $(this).find('Description').html(),
+        //description: $(this).find('Description').html(),
         taskAssignMode: $(this).find('ExtendedAttribute[name=taskAssignMode]').attr('Value'),
         mustActivity: $(this).find('ExtendedAttribute[name=MustActivity]').attr('Value'), // true or false
         participantID: $(this).find('ExtendedAttribute[name=ParticipantID]').attr('Value'),
