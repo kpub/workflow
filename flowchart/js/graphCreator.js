@@ -2042,20 +2042,20 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         }
         if(start.type=="flag"){
             d.x = xSource;
-            d.y = ySource + 17;
+            d.y = ySource + 21;
         }
         if(desType=="flag"){
             if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
                 if (dif_x < 0) {
-                    des.x = xDes + 15;
-                    des.y = yDes + 30;
+                    des.x = xDes + 21;
+                    des.y = yDes + 21;
                 }else{
-                    des.x = xDes-15;
-                    des.y = yDes+20;
+                    des.x = xDes-21;
+                    des.y = yDes+21;
                 }
             } else { // 上下连线
                 if (dif_y < 0) {
-                    des.y = yDes + 50;
+                    des.y = yDes + 42;
                 }
                 des.x = xDes;
             }
@@ -2168,20 +2168,20 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         }
         if(startType=="flag"){
             d.x = xSource;
-            d.y = ySource + 35;
+            d.y = ySource + 21;
         }
         if(desType=="flag"){
             if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
                 if (dif_x < 0) {
-                    des.x = xDes + 35;
-                    des.y = yDes + 35;
+                    des.x = xDes + 21;
+                    des.y = yDes + 21;
                 }else{
-                    des.x = xDes - 35;
-                    des.y = yDes + 35;
+                    des.x = xDes - 21;
+                    des.y = yDes + 21;
                 }
             } else { // 上下连线
                 if (dif_y < 0) {
-                    des.y = yDes + 70;
+                    des.y = yDes + 42;
                 }
                 des.x = xDes;
             }
@@ -3180,7 +3180,7 @@ function importXpdl(str) {
             id: id,
             title: name,
             //component要根据xpdl确定---未修改
-            component: name=='普通活动'?'ordinaryActivity':name=='块活动'?'blockActivity':name=='子活动'?'subFlowActivity':name=='路径活动'?'routeActivity':'',
+            component: name=='普通活动'?'ordinaryActivity':name=='块活动'?'blockActivity':name=='子活动'?'subFlowActivity':name=='判断条件'?'routeActivity':'',
             type: 'activity',
             x: x,
             y: y,

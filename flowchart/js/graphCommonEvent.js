@@ -2,15 +2,7 @@
  * 生成bpmn文件
  */
 function createBpmn(){
-    var formNames = getFormKey();
-    var formSelect = $(".five.wide.field").find("select[name=formKey]");
-    // formSelect.html("");
-    if(formSelect.val()==null){
-      formNames.forEach(function (form) {
-        formSelect.append("<option value='"+form+"'>"+form+"</option>");
-      });
-      formSelect.append("<option value='1'>空</option>");
-    }
+    getFormKey();
     graph_main.bpmnStr = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
         '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/testm1533999566823" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1533999566823" name="" targetNamespace="http://www.activiti.org/testm1533999566823" typeLanguage="http://www.w3.org/2001/XMLSchema">\n';
     var processBpmn = '<process id="myProcess_1" isClosed="false" isExecutable="true" name="leave" processType="None">\n\t';
@@ -107,20 +99,26 @@ function createBpmn(){
  */
 function getFormKey(){
     // document.currentScript.src;
-    var names;
     $.ajax({
         type: "GET",   // get post 方法都是一样的
         async: false,
         url: "http://localhost:8080/getFileName",
         dataType: "json",
         success: function(json){
-            names = json.names.split(",");
+            var names = json.names.split(",");
+            var formSelect = $(".five.wide.field").find("select[name=formKey]");
+            // formSelect.html("");
+            if(formSelect.val()==null){
+                names.forEach(function (form) {
+                    formSelect.append("<option value='"+form+"'>"+form+"</option>");
+                });
+                formSelect.append("<option value='1'>空</option>");
+            }
         },
         error: function(){
-            names = "";
+
         }
     });
-    return names;
 }
 
 /*

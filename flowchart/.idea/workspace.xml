@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a786a366-158b-4ab5-afd5-2ab9d47396bf" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/graph-creator.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/graph-creator.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/flowchart.html" beforeDir="false" afterPath="$PROJECT_DIR$/flowchart.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/graphCommonEvent.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/graphCommonEvent.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/graphCreator.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/graphCreator.js" afterDir="false" />
@@ -22,8 +20,8 @@
       <file leaf-file-name="flowchart.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/flowchart.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="344">
-              <caret line="28" column="72" selection-start-line="28" selection-start-column="72" selection-end-line="28" selection-end-column="72" />
+            <state relative-caret-position="260">
+              <caret line="55" column="68" selection-start-line="55" selection-start-column="68" selection-end-line="55" selection-end-column="68" />
             </state>
           </provider>
         </entry>
@@ -31,8 +29,8 @@
       <file leaf-file-name="graphCommonEvent.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/graphCommonEvent.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="44">
-              <caret line="2" column="3" lean-forward="true" selection-start-line="2" selection-start-column="3" selection-end-line="2" selection-end-column="3" />
+            <state relative-caret-position="682">
+              <caret line="61" column="9" lean-forward="true" selection-start-line="61" selection-start-column="9" selection-end-line="61" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -40,8 +38,8 @@
       <file leaf-file-name="graphCreator.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/graphCreator.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="1083" column="8" selection-start-line="1083" selection-start-column="6" selection-end-line="1083" selection-end-column="8" />
+            <state relative-caret-position="-2289">
+              <caret line="2044" column="30" selection-start-line="2044" selection-start-column="30" selection-end-line="2044" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -57,12 +55,7 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>handleAddStartEnd</find>
-      <find>updateGraph</find>
-      <find>-end-arrow</find>
-      <find>end-arrow</find>
       <find>rect</find>
-      <find>move</find>
       <find>getLink_move_w</find>
       <find>getLink_d</find>
       <find>append</find>
@@ -87,6 +80,11 @@
       <find>formKey</find>
       <find>updateGr</find>
       <find>清空</find>
+      <find>move</find>
+      <find>component</find>
+      <find>blockActivity</find>
+      <find>路径活动</find>
+      <find>update</find>
     </findStrings>
     <replaceStrings>
       <replace>rect</replace>
@@ -118,10 +116,10 @@
         <option value="$PROJECT_DIR$/css/flowchart.css" />
         <option value="$PROJECT_DIR$/getFileName/src/getFormFileName.java" />
         <option value="$PROJECT_DIR$/css/graph-creator.css" />
-        <option value="$PROJECT_DIR$/js/graphCreator.js" />
         <option value="$PROJECT_DIR$/js/flowchart.js" />
         <option value="$PROJECT_DIR$/js/graphCommonEvent.js" />
         <option value="$PROJECT_DIR$/flowchart.html" />
+        <option value="$PROJECT_DIR$/js/graphCreator.js" />
       </list>
     </option>
   </component>
@@ -156,7 +154,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="AndroidView" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -174,6 +171,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="AndroidView" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -280,16 +278,17 @@
       <workItem from="1537407038446" duration="65000" />
       <workItem from="1537407115821" duration="5244000" />
       <workItem from="1537413030470" duration="91000" />
-      <workItem from="1537424634282" duration="11079000" />
+      <workItem from="1537424634282" duration="12056000" />
+      <workItem from="1537437358269" duration="884000" />
+      <workItem from="1537495124038" duration="7306000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58983000" />
+    <option name="totallyTimeSpent" value="68150000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -305,21 +304,21 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18550107" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18763326" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="BPMNPalette" order="3" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32925472" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
       <window_info anchor="right" id="Theme Preview" order="3" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.19466074" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.19466074" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32925472" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -548,30 +547,27 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
           <caret line="35" column="3" selection-start-line="35" selection-start-column="3" selection-end-line="35" selection-end-column="3" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/graphCreator.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="1083" column="8" selection-start-line="1083" selection-start-column="6" selection-end-line="1083" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/flowchart.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="28" column="72" selection-start-line="28" selection-start-column="72" selection-end-line="28" selection-end-column="72" />
+        <state relative-caret-position="260">
+          <caret line="55" column="68" selection-start-line="55" selection-start-column="68" selection-end-line="55" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/graphCreator.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2289">
+          <caret line="2044" column="30" selection-start-line="2044" selection-start-column="30" selection-end-line="2044" selection-end-column="30" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/graphCommonEvent.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="44">
-          <caret line="2" column="3" lean-forward="true" selection-start-line="2" selection-start-column="3" selection-end-line="2" selection-end-column="3" />
+        <state relative-caret-position="682">
+          <caret line="61" column="9" lean-forward="true" selection-start-line="61" selection-start-column="9" selection-end-line="61" selection-end-column="9" />
         </state>
       </provider>
     </entry>
