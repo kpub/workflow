@@ -11,11 +11,14 @@ function createBpmn(){
   var bpmnId = 0;
   bpmndi += '<bpmndi:BPMNPlane bpmnElement="myProcess_1">\n';
   nodes.forEach(function (node) {
+    //alert("node:"+JSON.stringify(node));
+    //alert("arr:"+node.extendAttr);
       node.id = "_"+bpmnId++;
       node.choseId = bpmnId++;
-
       if(node.type=="start"){
-          processBpmn += '<startEvent id="'+node.id+'" name="StartEvent"/>\n\t';
+          processBpmn += '<startEvent id="'+node.id+'" name="StartEvent"/>\n\t' +
+                judgeDocument(node.conventional.description)+
+                judgeFormList(node.extendAttr);
           bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
               '        <dc:Bounds height="32.0" width="32.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
               '        <bpmndi:BPMNLabel>\n' +
@@ -32,8 +35,9 @@ function createBpmn(){
               '        </bpmndi:BPMNLabel>\n' +
           '      </bpmndi:BPMNShape>\n';
       }else if(node.type=="activity"){
-          processBpmn += '<userTask activiti:exclusive="true" id="'+node.id+'" name="'+node.title+'">' +
-                            judgeLength(node.conventional.description) +
+          processBpmn += '<userTask activiti:exclusive="true" id="'+node.id+'" name="'+node.title+'">\n' +
+                judgeDocument(node.conventional.description) +
+                judgeFormList(node.extendAttr) +
                 '       </userTask>';
           bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
               '        <dc:Bounds height="55.0" width="85.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
@@ -42,7 +46,9 @@ function createBpmn(){
               '        </bpmndi:BPMNLabel>\n' +
           '      </bpmndi:BPMNShape>\n';
       }else if(node.type == 'flag'){
-          processBpmn += '<exclusiveGateway id="'+node.id+'" name="Exclusive Gateway"></exclusiveGateway>';
+          processBpmn += '<exclusiveGateway id="'+node.id+'" name="Exclusive Gateway">\n' +
+              judgeDocument(node.conventional.description) +
+              +'     </exclusiveGateway>\n';
           bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
               '        <dc:Bounds height="55.0" width="85.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
               '        <bpmndi:BPMNLabel>\n' +
@@ -50,34 +56,24 @@ function createBpmn(){
               '        </bpmndi:BPMNLabel>\n' +
               '      </bpmndi:BPMNShape>\n';
       }
-      //alert(node.conventional.description);
-       //alert(JSON.stringify(node));
-      //console.log(JSON.stringify(node));
   });
 
 /*
 * 箭头生成相关bpmn文件
 * */
     edges.forEach(function (edge) {
-    //alert(":::::"+JSON.stringify(edge));
       edge.edgeId = "_"+bpmnId++;
       var source = edge.source;
       var target = edge.target;
       var name = edge.postCondition.edgeName;
-      var condition = edge.postCondition.condition_data;
-      if(name != null && condition != null){
-        //alert(edge.postCondition.edgeName);
-        //alert("edge.postCondition.edgeName"+edge.postCondition.condition_data);
-          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" name=" '+ name +' " sourceRef="'+source.id+'" targetRef="'+target.id+'"/>' +
-              '<conditionExpression xsi:type="tFormalExpression"><![CDATA[${'+condition+'}]]></conditionExpression>';
-      }else if(name == null && condition != null){
-          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'"/>' +
-              '<conditionExpression xsi:type="tFormalExpression"><![CDATA[${'+condition+'}]]></conditionExpression>';
-      } else if(name != null && condition == null){
-          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'">\n\t';
-      }else{
-          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'">';
+      var condition = edge.postCondition.conditionData;
+
+      if(name != null && name != ''){
+          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" name=" '+ name +' " sourceRef="'+source.id+'" targetRef="'+target.id+'"/>\n';
+      }else {
+          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'"/>\n';
       }
+      processBpmn += judgeCondition(edge.postCondition.conditionData) + judgeDocument(edge.postCondition.description);
 
       bpmndi += '<bpmndi:BPMNEdge bpmnElement="'+edge.edgeId+'" id="BPMNEdge_'+edge.edgeId+'" sourceElement="'+source.id+'" targetElement="'+target.id+'">\n' + '        <di:waypoint x="'+source.x+'" y="'+source.y+'"/>\n' +
         '        <di:waypoint x="'+target.x+'" y="'+target.y+'"/>\n' +
@@ -98,14 +94,51 @@ function createBpmn(){
   return graph_main.bpmnStr;
 }
 
-function judgeLength(desc){
-    if(desc != null){
-        return '<documentation>'+ desc + ' </documentation>';
+/*
+* 活动描述部分(documentation)
+* */
+function judgeDocument(desc){
+    if(desc != null && desc !=''){
+        return '<documentation>'+ desc + '</documentation>\n';
     }else{
         return '';
     }
 }
-//下载功能模块
+
+/*
+* 转移条件判断
+* */
+function judgeCondition(exp){
+    if (exp != '' && exp != null){
+        return '<conditionExpression xsi:type="tFormalExpression"><![CDATA[${' +exp+ '}]]></conditionExpression>\n';
+    } else{
+        return '';
+    }
+}
+
+/*
+* 动态表单设置
+* */
+function judgeFormList(arr) {
+    console.log(arr)
+    if(arr.length > 0){
+        var str = '';
+        var pre= '          <extensionElements>\n';
+        var pos ='          </extensionElements>\n';
+        for(var i = 0; i<arr.length;i++) {
+            str += '           <activiti:formProperty ' +
+                'id= "' + JSON.parse(arr[i]).id + '" name="' + JSON.parse(arr[i]).name + '" type="' + JSON.parse(arr[i]).type + '"' +
+                ' variable="' + JSON.parse(arr[i]).variable + '"/>'
+        }
+        return str = pre + str + pos;
+    }else{
+        return '';
+    }
+}
+
+/*
+* 下载功能模块
+* */
 function downloadBpmn(){
     export_raw('test.bpmn',graph_main.bpmnStr);
 }
@@ -541,7 +574,7 @@ function handleNodeMenuProp() {
         selectedNode.frontCondition[$(this).attr('name')] = $(this).val();
       });
       //更新-工具
-      
+
       //更新-常规
       selectedNode.conventional = {};
       var conventional = {};
@@ -619,7 +652,7 @@ function handleNodeMenuProp() {
         extendAttr_strs.forEach(function(extendAttr_str) {
           var extendAttr_obj = JSON.parse(extendAttr_str);
           var data = {
-            data: extendAttr_obj, 
+            data: extendAttr_obj,
             jsonstr: extendAttr_str
           };
           e_tr += juicer($('#extended_attr_tpl').html(), data);
@@ -677,7 +710,7 @@ function handleNodeMenuProp() {
         }
       }
       //展示-工具
-      
+
       //展示-常规
       var conventional = node.conventional;
       $('.conventional').find('input[name], textarea').each(function() {
@@ -731,7 +764,7 @@ function handleNodeMenuProp() {
       $(this).find('input, textarea').val('');
       $(this).find('.ui.dropdown').dropdown('clear');
       $(this).find('.ui.checkbox').checkbox('uncheck');
-      $('.monitorinf tbody').empty(); // 清空监控信息 
+      $('.monitorinf tbody').empty(); // 清空监控信息
       $('.timeout_limit tbody').empty(); // 清空监控信息
       $('.extended_attr tbody').empty(); // 清空扩展属性集
       $('.post_condition .list').empty(); // 清空后置条件
@@ -739,6 +772,11 @@ function handleNodeMenuProp() {
       $('.conventional select[name="definition_role"]').siblings('.text').removeAttr('definition_id');
     }
   }).modal('show');
+    $('.prop_node>.menu a[data-tab="five"]').addClass('hideitem');
+  if(selectedNode.title == '普通活动' || selectedNode.title == 'S'){
+      $('.prop_node>.menu a[data-tab="five"]').removeClass('hideitem');
+  }
+  /*
   $('.prop_node>.menu a[data-tab*="two"]').addClass('hideitem');
   if (selectedNode.title == '普通活动') {
     $('.prop_node>.menu a[data-tab="two_1"]').removeClass('hideitem');
@@ -749,6 +787,7 @@ function handleNodeMenuProp() {
   if (selectedNode.title == '子活动') {
     $('.prop_node>.menu a[data-tab="two_3"]').removeClass('hideitem');
   }
+  */
 }
 
 function handleEdgeMenuProp() {
@@ -785,12 +824,13 @@ function handleRightMenu() {
     case 'removeMenu':
       handleDeleteNode();
       break;
-    case 'toFront':
+    /*case 'toFront':
       alert('前置');
       break;
     case 'editMenu':
       handleMenuEdit();
       break;
+      */
     case 'propMenu':
       if (selectedNode) {
         handleNodeMenuProp();

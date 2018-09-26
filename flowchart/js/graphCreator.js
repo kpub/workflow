@@ -264,28 +264,33 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     });
 
     //后置条件-扩展属性集-添加
+    /*
     $('.postCondition_extendAttr_add .green.button').on('click', function() {
-      var element_add = $('.postCondition_extendAttr_add.modal');
+      //var element_add = $('.postCondition_extendAttr_add.modal');
+      var id = element_add.find('input[name="extendAttr_add_id"]').val();
       var name = element_add.find('input[name="extendAttr_add_name"]').val();
-      var value = element_add.find('input[name="extendAttr_add_value"]').val();
-      if (!name) {
+      var variable = element_add.find('input[name="extendAttr_add_variable"]').val();
+      var type = element_add.find('input[name="extendAttr_add_type"]').val();
+      /!*if (!name) {
         layer.msg('请输入名称！', {time: 2000, icon:2});
         return false;
       }
       if (!value) {
         layer.msg('请输入值！', {time: 2000, icon:2});
         return false;
-      }
-      var data = {name: name, value: value};
+      }*!/
+      var data = {id : id,name: name, variable: variable,type : type};
       data = {data: data, jsonstr: JSON.stringify(data)};
       var html = juicer($('#extended_attr_tpl').html(), data);
       var operate = element_add.find('input[name="extendAttr_add_operate"]').val();
       if (operate) {
         var event_source = $(this).data('event_source');
         var selectedTr = $(event_source).find('.transferInf_extended_attr tbody tr.active');
-        selectedTr.attr('jsonstr', data.jsonstr);
-        selectedTr.find('td').eq(1).text(data.data.name);
-        selectedTr.find('td').eq(2).text(data.data.value);
+        //electedTr.attr('jsonstr', data.jsonstr);
+        selectedTr.find('td').eq(1).text(data.data.id);
+        selectedTr.find('td').eq(2).text(data.data.name);
+        selectedTr.find('td').eq(3).text(data.data.variable);
+        selectedTr.find('td').eq(4).text(data.data.type);
       } else {
         var element_attr = $('.targetActivity .transferInf_extended_attr');
         element_attr.find('tbody').append(html).find('.ui.checkbox').checkbox();
@@ -317,42 +322,57 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         layer.msg('请选择一行!', {time: 2000, icon: 0});
       }
     });
+    */
 
     //扩展属性集-添加
     $('.extendAttr_add .green.button').on('click', function() {
+      var id = $('.extendAttr_add.modal input[name="extendAttr_add_id"]').val();
       var name = $('.extendAttr_add.modal input[name="extendAttr_add_name"]').val();
-      var value = $('.extendAttr_add.modal input[name="extendAttr_add_value"]').val();
+      var variable = $('.extendAttr_add.modal input[name="extendAttr_add_variable"]').val();
+      var type = $('.extendAttr_add.modal input[name="extendAttr_add_type"]').val();
+      if (!id) {
+        layer.msg('请输入ID！', {time: 2000, icon:2});
+        return false;
+      }
       if (!name) {
-        layer.msg('请输入名称！', {time: 2000, icon:2});
+        layer.msg('请输入name！', {time: 2000, icon:2});
         return false;
       }
-      if (!value) {
-        layer.msg('请输入值！', {time: 2000, icon:2});
-        return false;
+      if(!variable){
+          layer.msg('请输入variable！', {time: 2000, icon:2});
+          return false;
       }
-      var data = {name: name, value: value};
+      if(!type){
+          layer.msg('请输入type！', {time: 2000, icon:2});
+          return false;
+      }
+      var data = {id : id,name: name, variable: variable,type : type};
       data = {data: data, jsonstr: JSON.stringify(data)};
       var html = juicer($('#extended_attr_tpl').html(), data);
-      var operate = $('.extendAttr_add.modal input[name="extendAttr_add_operate"]').val();
-      if (operate) {
-        var selectedTr = $('.extended_attr tbody tr.active');
-        selectedTr.attr('jsonstr', data.jsonstr);
-        selectedTr.find('td').eq(1).text(data.data.name);
-        selectedTr.find('td').eq(2).text(data.data.value);
-      } else {
-        $('.extended_attr tbody').append(html).find('.ui.checkbox').checkbox();
-      }
-      $('.extendAttr_add.modal input').val("");
+        var operate = $('.extendAttr_add.modal input[name="extendAttr_add_operate"]').val();
+        if (operate) {
+          var selectedTr = $('.extended_attr tbody tr.active');
+          selectedTr.attr('jsonstr', data.jsonstr);
+          selectedTr.find('td').eq(1).text(data.data.id);
+          selectedTr.find('td').eq(2).text(data.data.name);
+          selectedTr.find('td').eq(3).text(data.data.variable);
+          selectedTr.find('td').eq(4).text(data.data.type);
+        } else {
+            $('.extended_attr tbody').append(html).find('.ui.checkbox').checkbox();
+        }
+        $('.extendAttr_add.modal input').val("");
     });
 
-    //扩展属性集-编辑
+    //动态表单设置-编辑
     $('.extended_attr .extendAttrEditBtn').on('click', function() {
       var selectedTr = $(this).parents('.grid').find('tbody tr.active');
       if (selectedTr.length<1) {layer.msg('请选择一行!', {time: 2000, icon: 0}); return false;}
       var jsonstr = $(this).parents('.grid').find('tbody tr.active').attr('jsonstr');
       var json = JSON.parse(jsonstr);
+      $('.extendAttr_add.modal input[name="extendAttr_add_id"]').val(json.id);
       $('.extendAttr_add.modal input[name="extendAttr_add_name"]').val(json.name);
-      $('.extendAttr_add.modal input[name="extendAttr_add_value"]').val(json.value);
+      $('.extendAttr_add.modal input[name="extendAttr_add_variable"]').val(json.variable);
+      $('.extendAttr_add.modal input[name="extendAttr_add_type"]').val(json.type);
       $('.extendAttr_add.modal input[name="extendAttr_add_operate"]').val("1");
       $('.extended_attr .extendAttrAddBtn').trigger('click');
       // $('.extendAttr_add.modal').modal('show'); //会关闭一级弹窗
@@ -369,7 +389,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     });
 
     //超时限制-增加-确定
-    $('.timeoutLimit_add .green.button').on('click', function() {
+    /*$('.timeoutLimit_add .green.button').on('click', function() {
       var deadline = {};
       $('.timeoutLimit_add').find('input[name], select').each(function() {
         deadline[$(this).attr('name')] = $(this).val();
@@ -392,7 +412,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         $(".timeout_limit_grid .content-div").mCustomScrollbar("update");
         $(".timeout_limit_grid .content-div").mCustomScrollbar("scrollTo", "bottom", {scrollInertia: 1500});
       }
-    });
+    });*/
 
     //超时限制-删除
     $('.timeoutLimitRemoveBtn').on('click', function() {
@@ -1088,6 +1108,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     $(selector).find('input[name=edgeName]').val(postCond && postCond.edgeName || '');
     $(selector).find('input[name=sourceTitle]').val(transition.source.title);
     $(selector).find('input[name=targetTitle]').val(transition.target.title);
+    $(selector).find('input[name=conditionData]').val(postCond && postCond.conditionData || '');
     $(selector).find('textarea[name=description]').val(postCond && postCond.description || '');
     //遍历扩展属性
     if (postCond.extendedAttrs) {
@@ -2046,12 +2067,12 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                     des.x = xDes + 15;
                     des.y = yDes + 30;
                 }else{
-                    des.x = xDes-15;
+                    des.x = xDes-21;
                     des.y = yDes+20;
                 }
             } else { // 上下连线
                 if (dif_y < 0) {
-                    des.y = yDes + 50;
+                    des.y = yDes + 42;
                 }
                 des.x = xDes;
             }
@@ -2059,68 +2080,6 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
 
     };
 
-    /*GraphCreator.prototype.getLink_move_w = function(start, des) {
-        var startType = start.type,desType = des.type;
-        var d = start;
-        var xSource = d.x,ySource = d.y,xDes = des.x,yDes = des.y;
-        var dif_x = des.x - d.x,
-            dif_y = des.y - d.y;
-        var link;
-        if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
-            if(dif_y < 0){
-                des.y = des.y + 50;
-            }
-            if (dif_x > 0) {
-              d.x = d.x + 100;
-              des.x = des.x + 50;
-            }else{
-
-                des.x = des.x + 50;
-            }
-            d.y = d.y + 25;
-        } else { // 上下连线
-            if(dif_x < 0){
-                des.x = des.x + 100;
-            }
-            if (dif_y > 0) {
-              des.y = des.y + 25;
-              d.y = d.y + 50;
-            }else{
-              des.y = des.y + 25;
-            }
-            d.x = d.x + 50;
-
-        }
-        if(startType=="start"){
-            d.x = xSource;
-            d.y = ySource;
-        }
-        if(desType=="end"){
-            des.x = xDes;
-            des.y = yDes;
-        }
-        if(startType=="flag"){
-            d.x = xSource;
-            d.y = ySource + 35;
-        }
-        if(desType=="flag"){
-            if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
-                if (dif_y < 0) {
-                    des.y = yDes + 40;
-                }
-                des.x = xDes;
-            } else { // 上下连线
-                if (dif_x < 0) {
-                    des.x = xDes + 5;
-                    des.y = yDes + 35;
-                }else{
-                    des.x = xDes - 15;
-                    des.y = yDes + 35;
-                }
-            }
-        }
-
-    };*/
     GraphCreator.prototype.getLink_move_w = function(start, des) {
         var startType = start.type,desType = des.type;
         var d = start;
@@ -2164,20 +2123,20 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         }
         if(startType=="flag"){
             d.x = xSource;
-            d.y = ySource + 35;
+            d.y = ySource + 15;
         }
         if(desType=="flag"){
             if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
                 if (dif_x < 0) {
-                    des.x = xDes + 35;
-                    des.y = yDes + 35;
+                    des.x = xDes + 12;
+                    des.y = yDes + 12;
                 }else{
-                    des.x = xDes - 35;
-                    des.y = yDes + 35;
+                    des.x = xDes - 12;
+                    des.y = yDes + 12;
                 }
             } else { // 上下连线
                 if (dif_y < 0) {
-                    des.y = yDes + 70;
+                    des.y = yDes +42;
                 }
                 des.x = xDes;
             }
@@ -2415,7 +2374,8 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
   // mousedown on node
   GraphCreator.prototype.circleMouseDown = function(d3node, d) {
     var thisGraph = this,
-      state = thisGraph.state;
+      state = thisGraph
+          .state;
     d3.event.stopPropagation();
     state.mouseDownNode = d;
 
@@ -2627,22 +2587,20 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     var selectedNode = thisGraph.state.selectedNode,
       selectedEdge = thisGraph.state.selectedEdge;
     if (selectedNode) {
-      if (selectedNode.type == 'activity') {
+      if (selectedNode.type == 'activity' || selectedNode.type == 'start' || selectedNode.type == 'flag') {
         $('#rMenu a[name=propMenu]').show();
-        if (selectedNode.component == 'blockActivity') {
+        /*if (selectedNode.component == 'blockActivity') {
           $('#rMenu a[name=editMenu]').show();
         } else {
           $('#rMenu a[name=editMenu]').hide();
-        }
+        }*/
       } else {
         $('#rMenu a[name=propMenu]').hide();
-        $('#rMenu a[name=editMenu]').hide();
       }
     } else if (selectedEdge) {
       var sourceType = selectedEdge.source.type,
-        targetType = selectedEdge.target.type;
-      $('#rMenu a[name=editMenu]').hide();
-      if (sourceType == 'start' || targetType == 'end') {
+          targetType = selectedEdge.target.type;
+      if (targetType == 'end') {
         $('#rMenu a[name=propMenu]').hide();
       } else {
         $('#rMenu a[name=propMenu]').show();
@@ -2822,6 +2780,58 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
           monitorinf: {isResponsibleTem: true},
           eventTypeId: null
         };
+      break;
+      case 'flag':
+          node = {
+              id: seqer_nodeID.gensym(),
+              title: data.text,
+              component: data.component,
+              type: data.type,
+              //description:data.description,
+              x: data.x,
+              y: data.y,
+              conventional: {
+                  MustActivity: true,
+                  taskAssign: 'taskAutoMode',
+                  autoAcceptAllAssignments: true,
+                  isResponsible: true,
+                  startMode: 'manual',
+                  finishMode: 'manual'
+              },
+              frontCondition: {},
+              postCondition: {},
+              extendAttr: [],
+              highLevel: {},
+              timeoutLimit: {},
+              monitorinf: {isResponsibleTem: true},
+              eventTypeId: null
+          };
+        break;
+        case 'start':
+            node = {
+                id: seqer_nodeID.gensym(),
+                title: data.text,
+                component: data.component,
+                type: data.type,
+                //description:data.description,
+                x: data.x,
+                y: data.y,
+                conventional: {
+                    MustActivity: true,
+                    taskAssign: 'taskAutoMode',
+                    autoAcceptAllAssignments: true,
+                    isResponsible: true,
+                    startMode: 'manual',
+                    finishMode: 'manual'
+                },
+                frontCondition: {},
+                postCondition: {},
+                extendAttr: [],
+                highLevel: {},
+                timeoutLimit: {},
+                monitorinf: {isResponsibleTem: true},
+                eventTypeId: null
+            };
         if (data.component == 'blockActivity') {
           node.activitySet = {
             activitySetId: seqer_blockId.gensym(),
@@ -2838,7 +2848,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
           x: data.x,
           y: data.y
         };
-        break;
+      break;
     }
     return node;
   };
@@ -3165,10 +3175,10 @@ function importXpdl(str) {
     
     var extendAttr = []; // 扩展属性集
     $(this).find('ExtendedAttribute[name=YOffset]').nextAll().each(function() { 
-      var json_obj = {name: $(this).attr('name'), value: $(this).attr('Value')};
+      var json_obj = {id: $(this).attr('id'), name: $(this).attr('name'),variable:$(this).attr('Variable'),type:$(this).attr('type')};
       extendAttr.push(JSON.stringify(json_obj));
     });
-      
+
     var d = {
             id: id,
             title: name,
