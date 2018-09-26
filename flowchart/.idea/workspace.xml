@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a786a366-158b-4ab5-afd5-2ab9d47396bf" name="Default" comment="" />
+    <list default="true" id="a786a366-158b-4ab5-afd5-2ab9d47396bf" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flowchart.html" beforeDir="false" afterPath="$PROJECT_DIR$/flowchart.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/graphCommonEvent.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/graphCommonEvent.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/graphCreator.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/graphCreator.js" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,85 +20,71 @@
       <file leaf-file-name="flowchart.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/flowchart.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1232">
-              <caret line="56" column="65" selection-start-line="56" selection-start-column="65" selection-end-line="56" selection-end-column="65" />
+            <state relative-caret-position="260">
+              <caret line="55" column="68" selection-start-line="55" selection-start-column="68" selection-end-line="55" selection-end-column="68" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="flowchart.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/css/flowchart.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4136">
-              <caret line="188" column="12" selection-start-line="188" selection-start-column="12" selection-end-line="188" selection-end-column="12" />
-              <folding>
-                <element signature="e#1851#1946#2" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="graphCommonEvent.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="graphCommonEvent.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/graphCommonEvent.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4158">
-              <caret line="189" column="26" selection-start-line="189" selection-start-column="9" selection-end-line="189" selection-end-column="26" />
+            <state relative-caret-position="682">
+              <caret line="61" column="9" lean-forward="true" selection-start-line="61" selection-start-column="9" selection-end-line="61" selection-end-column="9" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="graph-creator.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/css/graph-creator.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4444">
-              <caret line="202" column="20" selection-start-line="202" selection-start-column="20" selection-end-line="202" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="graphCreator.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="graphCreator.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/graphCreator.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="395">
-              <caret line="2077" column="28" lean-forward="true" selection-start-line="2077" selection-start-column="28" selection-end-line="2077" selection-end-column="28" />
+            <state relative-caret-position="-2289">
+              <caret line="2044" column="30" selection-start-line="2044" selection-start-column="30" selection-end-line="2044" selection-end-column="30" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>add.c</find>
-      <find>rectangle</find>
-      <find>first</find>
-      <find>second</find>
-      <find>third</find>
-      <find>container</find>
-      <find>svg-container</find>
-      <find>circle</find>
-      <find>text</find>
-      <find>parsePosition</find>
-      <find>append(&quot;text&quot;</find>
-      <find>marker</find>
-      <find>append(&quot;</find>
-      <find>create</find>
-      <find>conceptG</find>
-      <find>isAllowLinked</find>
-      <find>circleMouseUp</find>
-      <find>createNode</find>
-      <find>start</find>
-      <find>svg</find>
-      <find>handleAddStartEnd</find>
-      <find>updateGraph</find>
-      <find>-end-arrow</find>
-      <find>end-arrow</find>
       <find>rect</find>
-      <find>move</find>
       <find>getLink_move_w</find>
       <find>getLink_d</find>
       <find>append</find>
       <find>MOVE</find>
+      <find>xml</find>
+      <find>getParticipants</find>
+      <find>source</find>
+      <find>link</find>
+      <find>gra</find>
+      <find>init</find>
+      <find>upda</find>
+      <find>10px</find>
+      <find>group</find>
+      <find>roleName</find>
+      <find>roleGroup</find>
+      <find>definition_condition</find>
+      <find>postCondition</find>
+      <find>segment</find>
+      <find>ordinaryActivity</find>
+      <find>conventional_definition_name</find>
+      <find>conventional_definition_group</find>
+      <find>formKey</find>
+      <find>updateGr</find>
+      <find>清空</find>
+      <find>move</find>
+      <find>component</find>
+      <find>blockActivity</find>
+      <find>路径活动</find>
+      <find>update</find>
     </findStrings>
     <replaceStrings>
       <replace>rect</replace>
@@ -123,9 +114,11 @@
       <list>
         <option value="$PROJECT_DIR$/semantic-ui-2.2.13/dist/components/icon.css" />
         <option value="$PROJECT_DIR$/css/flowchart.css" />
+        <option value="$PROJECT_DIR$/getFileName/src/getFormFileName.java" />
+        <option value="$PROJECT_DIR$/css/graph-creator.css" />
+        <option value="$PROJECT_DIR$/js/flowchart.js" />
         <option value="$PROJECT_DIR$/js/graphCommonEvent.js" />
         <option value="$PROJECT_DIR$/flowchart.html" />
-        <option value="$PROJECT_DIR$/css/graph-creator.css" />
         <option value="$PROJECT_DIR$/js/graphCreator.js" />
       </list>
     </option>
@@ -147,21 +140,21 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="260" />
-    <option name="y" value="20" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-2" />
+    <option name="y" value="2" />
     <option name="width" value="1400" />
     <option name="height" value="1000" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
-      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -172,45 +165,32 @@
             <path>
               <item name="flowchart" type="b2602c69:ProjectViewProjectNode" />
               <item name="flowchart" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="flowchart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="flowchart" type="462c0819:PsiDirectoryNode" />
               <item name="js" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="flowchart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="flowchart" type="462c0819:PsiDirectoryNode" />
-              <item name="semantic-ui-2.2.13" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="flowchart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="flowchart" type="462c0819:PsiDirectoryNode" />
-              <item name="semantic-ui-2.2.13" type="462c0819:PsiDirectoryNode" />
-              <item name="dist" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="flowchart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="flowchart" type="462c0819:PsiDirectoryNode" />
-              <item name="wfConf" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="AndroidView" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="jdk.selected.JAVA_MODULE" value="1.7" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Code\workflow\flowchart\js" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -288,16 +268,27 @@
       <workItem from="1536719354508" duration="12940000" />
       <workItem from="1536810106128" duration="16169000" />
       <workItem from="1536886899907" duration="6028000" />
-      <workItem from="1536893444487" duration="80000" />
+      <workItem from="1536893444487" duration="988000" />
+      <workItem from="1536894604780" duration="627000" />
+      <workItem from="1536896971460" duration="1023000" />
+      <workItem from="1536905076170" duration="2000" />
+      <workItem from="1536911121901" duration="17000" />
+      <workItem from="1537349318152" duration="2606000" />
+      <workItem from="1537404767171" duration="1147000" />
+      <workItem from="1537407038446" duration="65000" />
+      <workItem from="1537407115821" duration="5244000" />
+      <workItem from="1537413030470" duration="91000" />
+      <workItem from="1537424634282" duration="12056000" />
+      <workItem from="1537437358269" duration="884000" />
+      <workItem from="1537495124038" duration="7306000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36174000" />
+    <option name="totallyTimeSpent" value="68150000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -308,26 +299,26 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" weight="0.32925472" />
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26332623" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18763326" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="BPMNPalette" order="3" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32925472" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
       <window_info anchor="right" id="Theme Preview" order="3" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.19466074" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32925472" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -336,24 +327,12 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$" />
+    </ignored-roots>
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/semantic-ui-2.2.13/dist/components/accordion.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/misc.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6186" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/modules.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/css/reset.css">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/icons/wf_edit_bg.gif">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -478,13 +457,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/flowchart.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-15918">
-          <caret line="61" column="7" lean-forward="true" selection-start-line="61" selection-start-column="7" selection-end-line="61" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/css/jquery.mCustomScrollbar.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2904" />
@@ -523,13 +495,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/common.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="251" column="4" selection-start-line="251" selection-start-column="4" selection-end-line="251" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/semantic-ui-2.2.13/dist/semantic.min.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
@@ -537,48 +502,72 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/flowchart.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1232">
-          <caret line="56" column="65" selection-start-line="56" selection-start-column="65" selection-end-line="56" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/graphCommonEvent.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4158">
-          <caret line="189" column="26" selection-start-line="189" selection-start-column="9" selection-end-line="189" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/css/flowchart.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4136">
           <caret line="188" column="12" selection-start-line="188" selection-start-column="12" selection-end-line="188" selection-end-column="12" />
-          <folding>
-            <element signature="e#1851#1946#2" expanded="true" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/form/form4">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/form/form3">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/form/form2">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/form/form1">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/getFileName/src/getFormFileName.java" />
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="580">
+          <caret line="4509" column="13" selection-start-line="4509" selection-start-column="13" selection-end-line="4509" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/css/graph-creator.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4444">
-          <caret line="202" column="20" selection-start-line="202" selection-start-column="20" selection-end-line="202" selection-end-column="20" />
+        <state relative-caret-position="241">
+          <caret line="154" column="20" lean-forward="true" selection-start-line="154" selection-start-column="20" selection-end-line="154" selection-end-column="20" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.dom.d.ts">
+    <entry file="file://$PROJECT_DIR$/js/common.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="580">
-          <caret line="15702" column="25" lean-forward="true" selection-start-line="15702" selection-start-column="25" selection-end-line="15702" selection-end-column="25" />
+        <state relative-caret-position="480">
+          <caret line="251" column="4" selection-start-line="251" selection-start-column="4" selection-end-line="251" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/flowchart.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="35" column="3" selection-start-line="35" selection-start-column="3" selection-end-line="35" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/flowchart.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="55" column="68" selection-start-line="55" selection-start-column="68" selection-end-line="55" selection-end-column="68" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/graphCreator.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
-          <caret line="2077" column="28" lean-forward="true" selection-start-line="2077" selection-start-column="28" selection-end-line="2077" selection-end-column="28" />
+        <state relative-caret-position="-2289">
+          <caret line="2044" column="30" selection-start-line="2044" selection-start-column="30" selection-end-line="2044" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/graphCommonEvent.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="682">
+          <caret line="61" column="9" lean-forward="true" selection-start-line="61" selection-start-column="9" selection-end-line="61" selection-end-column="9" />
         </state>
       </provider>
     </entry>
