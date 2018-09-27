@@ -178,7 +178,6 @@ function judgeCondition(exp){
 * 动态表单设置
 * */
 function judgeFormList(arr) {
-    console.log(arr)
     if(arr.length > 0){
         var str = '';
         var pre= '          <extensionElements>\n';

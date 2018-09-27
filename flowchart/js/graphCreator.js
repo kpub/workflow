@@ -5,9 +5,6 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
   // define graphcreator object
   var GraphCreator = function(containerId, svg, nodes, edges, participants) {
     var thisGraph = this;
-    console.log('thisGraph:');
-    console.log(thisGraph);
-
     thisGraph.nodes = nodes || [];
     thisGraph.edges = edges || [];
     thisGraph.participants = participants || [];
@@ -32,7 +29,9 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       var defs = svg.append('defs');
       defs.append('svg:marker')
         .attr('id', thisGraph.containerId + '-end-arrow')
+        //定义箭头样式
         .attr('viewBox', '0 -5 10 10')
+        //定义箭头位置
         .attr('refX', 10)
         .attr('markerWidth', 5)
         .attr('markerHeight', 5)
@@ -63,7 +62,6 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       .attr('d', 'M0,-5L10,0L0,5')
       .attr('fill', 'rgb(229, 172, 247)');
 
-
       thisGraph.svg = svg;
     thisGraph.show_position = svg.append("text")
       .attr({
@@ -76,7 +74,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     var svgG = thisGraph.svgG;
 
     // displayed when dragging between nodes
-    thisGraph.dragLine = svgG.append('path')
+     thisGraph.dragLine = svgG.append('path')
       .attr('class', 'link dragline hidden')
       .attr('d', 'M0,0L0,0')
       .style('marker-end', 'url(#'+thisGraph.containerId+'-mark-end-arrow)');
@@ -2027,8 +2025,6 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       return link;
   };
 
-
-
     GraphCreator.prototype.getLink_move = function(start, des) {
         var startType = start.type,desType = des.type;
         var d = start;
@@ -2058,8 +2054,24 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
             d.y = ySource;
         }
         if(desType=="end"){
-            des.x = xDes;
-            des.y = yDes;
+            if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+                if (dif_x < 0) {
+                    des.x = xDes + 33;
+                    des.y = yDes;
+                }else{
+                    des.x = xDes-33;
+                    des.y = yDes;
+                }
+            } else { // 上下连线
+                if (dif_y < 0) {
+                    des.x = xDes;
+                    des.y = yDes + 33;
+                }else{
+                    des.x = xDes;
+                    des.y = yDes - 33;
+                }
+
+            }
         }
         if(start.type=="flag"){
             d.x = xSource;
@@ -2122,8 +2134,24 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
             d.y = ySource;
         }
         if(desType=="end"){
-            des.x = xDes;
-            des.y = yDes;
+            if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+                if (dif_x < 0) {
+                    des.x = xDes + 33;
+                    des.y = yDes;
+                }else{
+                    des.x = xDes-33;
+                    des.y = yDes;
+                }
+            } else { // 上下连线
+                if (dif_y < 0) {
+                    des.x = xDes;
+                    des.y = yDes + 33;
+                }else{
+                    des.x = xDes;
+                    des.y = yDes - 33;
+                }
+
+            }
         }
         if(startType=="flag"){
             d.x = xSource;
@@ -2266,11 +2294,14 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
   GraphCreator.prototype.insertTitleLinebreaks = function(gEl, d) {
     var words = d.title.split(/\s+/g),
       nwords = words.length;
+
     var el = gEl.append("text")
         .attr("x",50)
         .attr("y", 30)
         .attr("text-anchor", "middle")
         .attr("letter-spacing", "1");
+    var defs = gEl.append('defs').append('svg:marker');
+
     switch (d.type) {
       case 'start':
           el.attr("x", 10)
@@ -2281,6 +2312,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
             .attr("y", 0)
               .attr("dx","-10")
             .attr("dy", "13");
+          defs.attr('refX', 40);
         break;
         case 'flag':
           el.attr('x',0)
@@ -2500,16 +2532,16 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         break;
       case 'end':
         if (thisGraph.hasLinked(eventNode)) {
-          result.success = false;
-          result.msg = '已有连线！';
+          result.success = true;
+         // result.msg = '已有连线！';
         }
         break;
     }
     switch (mouseDownNode.type) {
       case 'start':
         if (thisGraph.hasLinked(mouseDownNode)) {
-          result.success = false;
-          result.msg = '已有连线！';
+          result.success = true;
+          //result.msg = '已有连线！';
         }
         break;
       case 'end':
@@ -2544,8 +2576,8 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     switch (eventNode.type) {
       case 'start':
         if (thisGraph.hasLinked(eventNode)) { 
-          result.success = false;
-          result.msg = '已有连线！';
+          result.success = true;
+          //result.msg = '已有连线！';
         }
         break;
       case 'end':
