@@ -562,6 +562,9 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       $('.conventional_definition div[data-tab="definition_1"]').find('input[name]:not(".hidden"), textarea').each(function() {
         participant[$(this).attr('name')] = $(this).val();
       });
+      participant.conventional_definition_group = $('.conventional input[name="conventional_definition_group"]').val();
+      participant.conventional_definition_name = $('.conventional input[name="conventional_definition_name"]').val();
+      participant.formKey = $(".five.wide.field").find("select[name=formKey] option:selected").val();
       if (participant.conventional_definition_participant) {// 自定义参与者
         
       } else {
@@ -1261,6 +1264,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         $event.find("input[name], select").each(function() {
           postCondition[$(this).attr('name')] = $(this).val();
         });
+        postCondition.condition =  $('.segment input[name="definition_condition"]').val();
         edge.edgeId = postCondition.edgeId;
         edge.postCondition = postCondition;
         if (selector == '.post_condition') {
@@ -2064,11 +2068,11 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         if(desType=="flag"){
             if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
                 if (dif_x < 0) {
-                    des.x = xDes + 15;
-                    des.y = yDes + 30;
+                    des.x = xDes + 21;
+                    des.y = yDes + 21;
                 }else{
                     des.x = xDes-21;
-                    des.y = yDes+20;
+                    des.y = yDes+21;
                 }
             } else { // 上下连线
                 if (dif_y < 0) {
@@ -2128,11 +2132,11 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         if(desType=="flag"){
             if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
                 if (dif_x < 0) {
-                    des.x = xDes + 12;
-                    des.y = yDes + 12;
+                    des.x = xDes + 21;
+                    des.y = yDes + 21;
                 }else{
-                    des.x = xDes - 12;
-                    des.y = yDes + 12;
+                    des.x = xDes - 21;
+                    des.y = yDes + 21;
                 }
             } else { // 上下连线
                 if (dif_y < 0) {
@@ -2374,8 +2378,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
   // mousedown on node
   GraphCreator.prototype.circleMouseDown = function(d3node, d) {
     var thisGraph = this,
-      state = thisGraph
-          .state;
+      state = thisGraph.state;
     d3.event.stopPropagation();
     state.mouseDownNode = d;
 
@@ -3137,6 +3140,9 @@ function importXpdl(str) {
         completeAllAssignments: $(this).find('ExtendedAttribute[name=completeAllAssignments]').attr('Value'),
         assignmentsOrder: $(this).find('ExtendedAttribute[name=assignmentsOrder]').attr('Value'),
         //description: $(this).find('Description').html(),
+        conventional_definition_group : $('.conventional input[name="conventional_definition_group"]').val(),
+        conventional_definition_name : $('.conventional input[name="conventional_definition_name"]').val(),
+        formKey : $(".five.wide.field").find("select[name=formKey] option:selected").val(),
         taskAssignMode: $(this).find('ExtendedAttribute[name=taskAssignMode]').attr('Value'),
         mustActivity: $(this).find('ExtendedAttribute[name=MustActivity]').attr('Value'), // true or false
         participantID: $(this).find('ExtendedAttribute[name=ParticipantID]').attr('Value'),

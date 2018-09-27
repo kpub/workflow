@@ -2,6 +2,7 @@
  * 生成bpmn文件
  */
 function createBpmn(){
+  getFormKey();
   graph_main.bpmnStr = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
       '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/testm1533999566823" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1533999566823" name="" targetNamespace="http://www.activiti.org/testm1533999566823" typeLanguage="http://www.w3.org/2001/XMLSchema">\n';
   var processBpmn = '<process id="myProcess_1" isClosed="false" isExecutable="true" name="leave" processType="None">\n\t';
@@ -35,7 +36,18 @@ function createBpmn(){
               '        </bpmndi:BPMNLabel>\n' +
           '      </bpmndi:BPMNShape>\n';
       }else if(node.type=="activity"){
-          processBpmn += '<userTask activiti:exclusive="true" id="'+node.id+'" name="'+node.title+'">\n' +
+          var userName = node.conventional.conventional_definition_name;
+          var userGroup = node.conventional.conventional_definition_group;
+          var formKey = node.conventional.formKey;
+          var userTask = '<userTask activiti:exclusive="true" id="'+node.id+'" name="'+node.title+'"';
+          if(userName!=null&&userName!=''){
+              userTask += ' activiti:candidateGroups="' + userGroup + '" activiti:candidateUsers="' + userName + '"';
+          }
+          if(formKey!=null&&formKey!='1'){
+              userTask += ' activiti:formKey="'+formKey+'"';
+          }
+          processBpmn += userTask + '>\n\t';
+          processBpmn +=
                 judgeDocument(node.conventional.description) +
                 judgeFormList(node.extendAttr) +
                 '       </userTask>';
@@ -48,7 +60,7 @@ function createBpmn(){
       }else if(node.type == 'flag'){
           processBpmn += '<exclusiveGateway id="'+node.id+'" name="Exclusive Gateway">\n' +
               judgeDocument(node.conventional.description) +
-              +'     </exclusiveGateway>\n';
+              '     </exclusiveGateway>\n';
           bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
               '        <dc:Bounds height="55.0" width="85.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
               '        <bpmndi:BPMNLabel>\n' +
@@ -69,11 +81,12 @@ function createBpmn(){
       var condition = edge.postCondition.conditionData;
 
       if(name != null && name != ''){
-          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" name=" '+ name +' " sourceRef="'+source.id+'" targetRef="'+target.id+'"/>\n';
+          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" name=" '+ name +' " sourceRef="'+source.id+'" targetRef="'+target.id+'">\n\t';
       }else {
-          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'"/>\n';
+          processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'">\n\t';
       }
       processBpmn += judgeCondition(edge.postCondition.conditionData) + judgeDocument(edge.postCondition.description);
+      processBpmn += '</sequenceFlow>';
 
       bpmndi += '<bpmndi:BPMNEdge bpmnElement="'+edge.edgeId+'" id="BPMNEdge_'+edge.edgeId+'" sourceElement="'+source.id+'" targetElement="'+target.id+'">\n' + '        <di:waypoint x="'+source.x+'" y="'+source.y+'"/>\n' +
         '        <di:waypoint x="'+target.x+'" y="'+target.y+'"/>\n' +
@@ -93,6 +106,34 @@ function createBpmn(){
    //console.log("bpmnStr" + graph_main.bpmnStr);
   return graph_main.bpmnStr;
 }
+
+/**
+ *  下拉选择FormKey
+ */
+function getFormKey(){
+    // document.currentScript.src;
+    $.ajax({
+        type: "GET",   // get post 方法都是一样的
+        async: false,
+        url: "http://localhost:8080/getFileName",
+        dataType: "json",
+        success: function(json){
+            var names = json.names.split(",");
+            var formSelect = $(".five.wide.field").find("select[name=formKey]");
+            // formSelect.html("");
+            if(formSelect.val()==null){
+                names.forEach(function (form) {
+                    formSelect.append("<option value='"+form+"'>"+form+"</option>");
+                });
+                formSelect.append("<option value='1'>空</option>");
+            }
+        },
+        error: function(){
+
+        }
+    });
+}
+
 
 /*
 * 活动描述部分(documentation)
