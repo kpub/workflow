@@ -2063,7 +2063,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         }
         if(start.type=="flag"){
             d.x = xSource;
-            d.y = ySource + 17;
+            d.y = ySource + 21;
         }
         if(desType=="flag"){
             if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
@@ -2127,7 +2127,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         }
         if(startType=="flag"){
             d.x = xSource;
-            d.y = ySource + 15;
+            d.y = ySource + 21;
         }
         if(desType=="flag"){
             if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线

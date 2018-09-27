@@ -173,65 +173,50 @@
 						<label>名称:</label>
 						<input name="name" type="text" placeholder="名称">
 					</div>
+				</div>
+				<div class="fields">
+                    <!--<form name="groupandcandidate">-->
+                        <div class="five wide field">
+                            <label>所属组</label>
+                            <select name="conventional_definition_group" id="groups" onchange="getGroups()"
+                                    class="conventional_definition_group">
+                                <option value='0'>请选择所属组</option>
+                            </select>
+                        </div>
+                        <div class="five wide field">
+                            <label>候选人</label>
+                            <select name="conventional_definition_name"
+                                    class="conventional_definition_name">
+                                <option value="0">选择候选人</option>
+                            </select>
+                        </div>
+                    <!--</form>-->
+				</div>
+				<div class="fields">
                     <div class="five wide field">
                         <label>描述:</label>
                         <input name="description" type="text">
                     </div>
-				</div>
-				<div class="fields">
-						<div class="five wide field">
-							<form name="groupandcandidate">
-							<label>所属组</label>
-							<select name="conventional_definition_group" id="groups" onchange="getGroups()"
-									class="conventional_definition_group">
-								<option value='0'>请选择所属组</option>
-							</select>
-
-							<label>候选人</label>
-							<select name="conventional_definition_name"
-									class="conventional_definition_name">
-								<option value="0">选择候选人</option>
-							</select>
-							</form>
-						</div>
-
-				</div>
-				<div class="fields">
 					<div class="five wide field">
 						<label>formKey:</label>
 						<select name="formKey" class="formKey">
-
 						</select>
 					</div>
 				</div>
-				<div class="fields">
 
-					<div class="five wide field">
-						<label>form_Id:</label>
-						<input name="formId" type="text" placeholder="form_Id">
-					</div>
-					<div class="five wide field">
-						<label>form_Name</label>
-						<input name="formName" type="text" placeholder="form_Name">
-					</div>
-					<div class="five wide field">
-						<label>form_Variable</label>
-						<input name="formVariable" type="text" placeholder="form_Variable">
-					</div>
-                </div>
-				<div class="fields">
-					<div class="five wide field">
-						<label>form_Type</label>
-						<select name="formType" class="ui search dropdown">
-							<option value="">选择</option>
-							<option value="string">string</option>
-							<option value="date">date</option>
-							<option value="enum">enum</option>
-							<option value="long">long</option>
-							<option value="boolean">boolean</option>
-						</select>
-					</div>
-				</div>-->
+				<!--<div class="fields">-->
+					<!--<div class="five wide field">-->
+						<!--<label>form_Type</label>-->
+						<!--<select name="formType" class="ui search dropdown">-->
+							<!--<option value="">选择</option>-->
+							<!--<option value="string">string</option>-->
+							<!--<option value="date">date</option>-->
+							<!--<option value="enum">enum</option>-->
+							<!--<option value="long">long</option>-->
+							<!--<option value="boolean">boolean</option>-->
+						<!--</select>-->
+					<!--</div>-->
+				<!--</div>&ndash;&gt;-->
 			</div>
 		</div>
 		<!-- 动态表单设置 start -->
