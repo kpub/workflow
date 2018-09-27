@@ -3139,10 +3139,12 @@ function importXpdl(str) {
         autoAcceptAllAssignments: $(this).find('ExtendedAttribute[name=autoAcceptAllAssignments]').attr('Value'), // true or false
         completeAllAssignments: $(this).find('ExtendedAttribute[name=completeAllAssignments]').attr('Value'),
         assignmentsOrder: $(this).find('ExtendedAttribute[name=assignmentsOrder]').attr('Value'),
-        //description: $(this).find('Description').html(),
-        conventional_definition_group : $('.conventional input[name="conventional_definition_group"]').val(),
-        conventional_definition_name : $('.conventional input[name="conventional_definition_name"]').val(),
+       // conventional_definition_group : $('.conventional input[name="conventional_definition_group"]').val(),
+        //conventional_definition_name : $('.conventional input[name="conventional_definition_name"]').val(),
         formKey : $(".five.wide.field").find("select[name=formKey] option:selected").val(),
+        conventional_definition_group:$('.five.wide.field').find("select[name=conventional_definition_group] option:selected").val(),
+        conventional_definition_name:$('.five.wide.field').find("select[name=conventional_definition_name] option:selected").val(),
+            //description: $(this).find('Description').html(),
         taskAssignMode: $(this).find('ExtendedAttribute[name=taskAssignMode]').attr('Value'),
         mustActivity: $(this).find('ExtendedAttribute[name=MustActivity]').attr('Value'), // true or false
         participantID: $(this).find('ExtendedAttribute[name=ParticipantID]').attr('Value'),

@@ -169,25 +169,32 @@
 				      <label>ID:</label>
 				      <input name="ID" type="text" placeholder="ID" disabled="disabled">
 				    </div>
-				    <div class="five wide field">
-				      <label>名称:</label>
-				      <input name="name" type="text" placeholder="名称">
-				    </div>
-				    <div class="five wide field">
-					    <label>描述:</label>
-						<input name="description" type="text">
-
+					<div class="five wide field">
+						<label>名称:</label>
+						<input name="name" type="text" placeholder="名称">
 					</div>
+                    <div class="five wide field">
+                        <label>描述:</label>
+                        <input name="description" type="text">
+                    </div>
 				</div>
 				<div class="fields">
-					<div class="five wide field">
-						<label>所属组:</label>
-						<input name="conventional_definition_group" type="text" placeholder="所属组">
-					</div>
-					<div class="five wide field">
-						<label>执行人:</label>
-						<input name="conventional_definition_name" type="text" placeholder="执行人">
-					</div>
+						<div class="five wide field">
+							<form name="groupandcandidate">
+							<label>所属组</label>
+							<select name="conventional_definition_group" id="groups" onchange="getGroups()"
+									class="conventional_definition_group">
+								<option value='0'>请选择所属组</option>
+							</select>
+
+							<label>候选人</label>
+							<select name="conventional_definition_name"
+									class="conventional_definition_name">
+								<option value="0">选择候选人</option>
+							</select>
+							</form>
+						</div>
+
 				</div>
 				<div class="fields">
 					<div class="five wide field">
@@ -197,8 +204,6 @@
 						</select>
 					</div>
 				</div>
-			<!--	<div class="ui divider hidden"></div>
-				<div class="ui horizontal divider">动态表单设置</div>
 				<div class="fields">
 
 					<div class="five wide field">

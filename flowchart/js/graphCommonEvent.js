@@ -56,7 +56,7 @@ function createBpmn(){
               '        <bpmndi:BPMNLabel>\n' +
               '          <dc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>\n' +
               '        </bpmndi:BPMNLabel>\n' +
-          '      </bpmndi:BPMNShape>\n';
+              '      </bpmndi:BPMNShape>\n';
       }else if(node.type == 'flag'){
           processBpmn += '<exclusiveGateway id="'+node.id+'" name="Exclusive Gateway">\n' +
               judgeDocument(node.conventional.description) +
@@ -105,6 +105,23 @@ function createBpmn(){
     graph_main.bpmnStr += '</definitions>';
    //console.log("bpmnStr" + graph_main.bpmnStr);
   return graph_main.bpmnStr;
+}
+function getGroupAndCandidate(){
+   var jsonObject;
+$.ajax({
+    type:"GET",
+    async:false,
+    url:"http://localhost:8080/Candidate/getGroup",
+    dataType:"json",
+    success:function (json) {
+      jsonObject=json;
+      console.log('jsonObject');
+        console.log(jsonObject);
+    },
+    error:function () {
+    },
+});
+return jsonObject;
 }
 
 /**
@@ -202,6 +219,41 @@ function export_raw(name, data) {
     save_link.href = urlObject.createObjectURL(export_blob);
     save_link.download = name;
     fake_click(save_link);
+}
+
+function judgeLength(desc){
+    if(desc != null && desc != ''){
+        return '<documentation>'+ desc + ' </documentation>';
+    }else{
+        return '';
+    }
+}
+
+/**
+ * 所属组下拉选项
+ * 菜单二级联动
+ */
+candidates = new Object();
+var groupNamesList=[];
+var candidateNamesList=[];
+var jsonObject=getGroupAndCandidate();
+$.each(jsonObject,function (it) {
+    groupNamesList.push(it);
+    candidateNamesList.push(jsonObject[it])
+});
+for(var i=0;i<groupNamesList.length;i++){
+    candidates[groupNamesList[i]]=new Array(candidateNamesList[i]);
+    var groupSelect=$(".five.wide.field").find("select[name=conventional_definition_group]");
+    groupSelect.append("<option value='"+groupNamesList[i]+"'>"+groupNamesList[i]+"</option>");
+}
+function getGroups() {
+    var group_name=document.groupandcandidate.conventional_definition_group;
+    var candidate_name=document.groupandcandidate.conventional_definition_name;
+    var groupCandidate=candidateNamesList[group_name.selectedIndex-1];
+    candidate_name.length=1;
+    for(var i=0;i<groupCandidate.length;i++){
+        candidate_name[i+1]=new Option(groupCandidate[i],groupCandidate[i]);
+    }
 }
 /*
 * 导入bpmn文件
@@ -628,12 +680,12 @@ function handleNodeMenuProp() {
       if (conventional.name != selectedNode.title) {
         selectedNode.title = conventional.name;
       }
-      var $role = $('.conventional select[name="definition_role"]').parent();
-      conventional.performer = $role.children('.text').attr('definition_id') || '';
-      var role_txt = $role.dropdown('get text'); //Semantic存在bug，重构dropdown不能取value
-      if (role_txt !='请选择' && role_txt !='(空)') {
-        conventional.participantID = $role.dropdown('get text');
-      }
+      // var $role = $('.conventional select[name="definition_role"]').parent();
+      // conventional.performer = $role.children('.text').attr('definition_id') || '';
+      // var role_txt = $role.dropdown('get text'); //Semantic存在bug，重构dropdown不能取value
+      // if (role_txt !='请选择' && role_txt !='(空)') {
+      //   conventional.participantID = $role.dropdown('get text');
+      // }
       selectedNode.conventional = conventional;
       graph_active.updateGraph();
     },

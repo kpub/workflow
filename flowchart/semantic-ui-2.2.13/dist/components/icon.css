@@ -64,7 +64,8 @@ i.icon.loading {
 @-webkit-keyframes icon-loading {
   from {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+            transform:
+                    rotate(0deg);
   }
   to {
     -webkit-transform: rotate(360deg);
@@ -2490,7 +2491,7 @@ i.icon.internet.explorer:before {
 i.icon.contao:before {
   content: "\f26d";
 }
-i.icon.\35 00px:before {
+i.icon.\3500px:before {
   content: "\f26e";
 }
 i.icon.amazon:before {
