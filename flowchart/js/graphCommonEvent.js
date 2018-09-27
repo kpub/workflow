@@ -138,7 +138,8 @@ function getFormKey(){
             var names = json.names.split(",");
             var formSelect = $(".five.wide.field").find("select[name=formKey]");
             // formSelect.html("");
-            if(formSelect.val()==null){
+            // alert(formSelect.find("option").length);
+            if(formSelect.find("option").length==0){
                 names.forEach(function (form) {
                     formSelect.append("<option value='"+form+"'>"+form+"</option>");
                 });
