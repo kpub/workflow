@@ -2,7 +2,6 @@
  * 生成bpmn文件
  */
 function createBpmn(){
-  // getFormKey();
   // alert($('#aaa'));
   graph_main.bpmnStr = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
       '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/testm1533999566823" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1533999566823" name="" targetNamespace="http://www.activiti.org/testm1533999566823" typeLanguage="http://www.w3.org/2001/XMLSchema">\n';
@@ -876,6 +875,7 @@ function handleNodeMenuProp() {
       var conventional = node.conventional;
       var taskListener = conventional.taskListener;
       setListener("taskListener",taskListener);//显示监听器下拉菜单
+      getFormKey();
       $('.conventional').find('input[name], textarea').each(function() {
         for (var key in conventional) {
           if (key == $(this).attr('name')) {
