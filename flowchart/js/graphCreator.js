@@ -1974,7 +1974,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
    * 如果 dif.x < 0 && dif.y > 0 第二象限
    * 如果 dif.x < 0 && dif.y < 0 第三象限
    */
-  GraphCreator.prototype.getLink_d = function(start, des) {
+  GraphCreator.prototype.getLink_d_1 = function(start, des) {
       var d = start;
       var mid_x = (d.x + des.x)/2,
           mid_y = (d.y + des.y)/2;
@@ -2027,6 +2027,137 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       return link;
   };
 
+    /**
+     * 获取link样式 [添加线样式 start:连线起点 des:连线终点]
+     * 如果 |dif.x| > |dif.y| 左右连线，反之，上下连线
+     * 如果 dif.x > 0 && dif.y < 0 第四象限
+     * 如果 dif.x > 0 && dif.y > 0 第一象限
+     * 如果 dif.x < 0 && dif.y > 0 第二象限
+     * 如果 dif.x < 0 && dif.y < 0 第三象限
+     */
+    GraphCreator.prototype.getLink_d_2 = function(start, des) {
+        var d = start;
+        var mid_x = (d.x + des.x)/2,
+            mid_y = (d.y + des.y)/2;
+        var dif_x = des.x - d.x,
+            dif_y = des.y - d.y;
+        var link;
+        if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+            if (dif_x > 0 && dif_y > 0) { //第一象限（200,200-300,300） 200,200->295,200->300,205->300,300
+                // <path d="M 200,200 L 295,200 M 295,200 A 5,5,0,0,1 300,205 M 300,205 L 300,300 M 250,295 A 5,5,0,0,0 255,300 M 255,300 L 300,300" fill="none" stroke="#F18C16" stroke-width="1"></path>
+                link = 'M' + d.x + ',' + d.y + 'L' + (des.x-5) + ',' + d.y + 'M' + (des.x-5) + ',' + d.y + 'A 5,5,0,0,1 ' + des.x + ',' + (d.y+5) +
+                    'M' + des.x + ',' + (d.y+5) + 'L' + des.x + ',' + des.y;
+            }
+            if (dif_x < 0 && dif_y > 0) { //第二象限（200,200-100,300）
+                // <path d="M 200,200 L 155,200 M 155,200 A 5,5,0,0,0 150,205 M 150,205 L 150,295 M 150,295 A 5,5,0,0,1 145,300 M 145,300 L 100,300" fill="none" stroke="#F18C16" stroke-width="1"></path>
+                link = 'M' + d.x + ',' + d.y + 'L' + (des.x+5) + ',' + d.y + 'M' + (des.x+5) + ',' + d.y + 'A 5,5,0,0,0 ' + des.x + ',' + (d.y+5) +
+                    'M' + des.x + ',' + (d.y+5) + 'L' + des.x + ',' + des.y;
+            }
+            if (dif_x < 0 && dif_y < 0) { //第三象限（200,200-100,100）
+                // <path d="M 200,200 L 155,200 M 155,200 A 5,5,0,0,1 150,195 M 150,195 L 150,105 M 150,105 A 5,5,0,0,0 145,100 M 145,100 L 100,100" fill="none" stroke="#F18C16" stroke-width="1"></path>
+                link = 'M' + d.x + ',' + d.y + 'L' + (des.x+5) + ',' + d.y + 'M' + (des.x+5) + ',' + d.y + 'A 5,5,0,0,1 ' + des.x + ',' + (d.y-5) +
+                    'M' + des.x + ',' + (d.y-5) + 'L' + des.x + ',' + des.y;
+            }
+            if (dif_x > 0 && dif_y < 0) { //第四象限（200,200-300,100）
+                // <path d="M 200,200 L 245,200 M 245,200 A 5,5,0,0,0 250,195 M 250,195 L 250,105 M 250,105 A 5,5,0,0,1 255,100 M 255,100 L 300,100" fill="none" stroke="#F18C16" stroke-width="1"></path>
+                link = 'M' + d.x + ',' + d.y + 'L' + (des.x-5) + ',' + d.y + 'M' + (des.x-5) + ',' + d.y + 'A 5,5,0,0,0 ' + des.x + ',' + (d.y-5) +
+                    'M' + des.x + ',' + (d.y-5) + 'L' + des.x + ',' + des.y;
+            }
+        } else { // 上下连线
+            if (dif_x > 0 && dif_y > 0) { //第一象限（200,200-300,300） 200,200->200,295->205,300->300,300
+                // <path d="M 100,100 L 100,145 M 100,145 A 5,5,0,0,0 105,150 M 105,150 L 195,150 M 195,150 A 5,5,0,0,1 200,155 M 200,155 L 200,200" fill="none" stroke="#0096f2" stroke-width="1"></path>
+                link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y-5) + 'M' + d.x + ',' + (des.y-5) + 'A 5,5,0,0,0 ' + (d.x+5) + ',' + des.y +
+                    'M' + (d.x+5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+            }
+            if (dif_x < 0 && dif_y > 0) { //第二象限（200,200-100,300）
+                // <path d="M 200,200 L 200,245 M 200,245 A 5,5,0,0,1 195,250 M 195,250 L 105,250 M 105,250 A 5,5,0,0,0 100,255 M 100,255 L 100,300" fill="none" stroke="#0096f2" stroke-width="1"></path>
+                link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y-5) + 'M' + d.x + ',' + (des.y-5) + 'A 5,5,0,0,1 ' + (d.x-5) + ',' + des.y +
+                    'M' + (d.x-5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+            }
+            if (dif_x < 0 && dif_y < 0) { //第三象限（200,200-100,100）
+                // <path d="M 200,200 L 200,155 M 200,155 A 5,5,0,0,0 195,150 M 195,150 L 105,150 M 105,150 A 5,5,0,0,1 100,145 M 100,145 L 100,100" fill="none" stroke="#0096f2" stroke-width="1"></path>
+                link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y+5) + 'M' + d.x + ',' + (des.y+5) + 'A 5,5,0,0,0 ' + (d.x-5) + ',' + des.y +
+                    'M' + (d.x-5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+            }
+            if (dif_x > 0 && dif_y < 0) { //第四象限（200,200-300,100）
+                // <path d="M 200,200 L 200,155 M 200,155 A 5,5,0,0,1 205,150 M 205,150 L 295,150 M 295,150 A 5,5,0,0,0 300,145 M 300,145 L 300,100" fill="none" stroke="#0096f2" stroke-width="1"></path>
+                link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y+5) + 'M' + d.x + ',' + (des.y+5) + 'A 5,5,0,0,1 ' + (d.x+5) + ',' + des.y +
+                    'M' + (d.x+5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+            }
+
+        }
+        return link;
+    };
+
+    /**
+     * 获取link样式 [添加线样式 start:连线起点 des:连线终点]
+     * 如果 |dif.x| > |dif.y| 左右连线，反之，上下连线
+     * 如果 dif.x > 0 && dif.y < 0 第四象限
+     * 如果 dif.x > 0 && dif.y > 0 第一象限
+     * 如果 dif.x < 0 && dif.y > 0 第二象限
+     * 如果 dif.x < 0 && dif.y < 0 第三象限
+     */
+    GraphCreator.prototype.getLink_d_3 = function(start, des) {
+        var d = start;
+        var dif_x = des.x - d.x,
+            dif_y = des.y - d.y;
+        var link;
+        var hd = 150;
+        if (Math.abs(dif_x) < Math.abs(dif_y)) { // 左右连线
+            if (dif_x < 0 && dif_y > 0) { //第一象限（200,100-100,200） 200,100->50,100->50,200->100,200
+                // <path d="M 100,100 L 100,145 M 100,145 A 5,5,0,0,0 105,150 M 105,150 L 195,150 M 195,150 A 5,5,0,0,1 200,155 M 200,155 L 200,200" fill="none" stroke="#0096f2" stroke-width="1"></path>
+                link = 'M' + d.x + ',' + d.y + 'L' + (des.x-hd+5) + ',' + d.y + 'M' + (des.x-hd+5) + ',' + d.y + 'A 5,5,0,0,0 ' + (des.x-hd) + ',' + (d.y+5) +
+                    'M' + (des.x-hd) + ',' + (d.y+5) + 'L' + (des.x-hd) + ',' + (des.y-5) +
+                    'M' + (des.x-hd) + ',' + (des.y-5) + 'A 5,5,0,0,0 ' + (des.x-hd+5) + ',' + (des.y) +
+                    'M' + (des.x-hd+5) + ',' + (des.y) + 'L' + des.x + ',' + des.y;
+            }
+            if (dif_x > 0 && dif_y < 0) { //第二象限（200,100-100,0） 200,100->50,100->50,0->100,0
+                link = 'M' + d.x + ',' + d.y + 'L' + (des.x+hd-5) + ',' + d.y + 'M' + (des.x+hd-5) + ',' + d.y + 'A 5,5,0,0,0 ' + (des.x+hd) + ',' + (d.y-5) +
+                    'M' + (des.x+hd) + ',' + (d.y-5) + 'L' + (des.x+hd) + ',' + (des.y+5) +
+                    'M' + (des.x+hd) + ',' + (des.y+5) + 'A 5,5,0,0,0 ' + (des.x+hd-5) + ',' + des.y +
+                    'M' + (des.x+hd-5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+            }
+            if (dif_x < 0 && dif_y < 0) { //第三象限（200,200-100,100） 200,200->50,100->50,0->100,0
+                link = 'M' + d.x + ',' + d.y + 'L' + (des.x-hd+5) + ',' + d.y + 'M' + (des.x-hd+5) + ',' + d.y + 'A 5,5,0,0,1 ' + (des.x-hd) + ',' + (d.y-5) +
+                    'M' + (des.x-hd) + ',' + (d.y-5) + 'L' + (des.x-hd) + ',' + (des.y+5) +
+                    'M' + (des.x-hd) + ',' + (des.y+5) + 'A 5,5,0,0,1 ' + (des.x-hd+5) + ',' + des.y +
+                    'M' + (des.x-hd+5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+            }
+            if (dif_x > 0 && dif_y > 0) { //第四象限（200,200-300,100）
+                link = 'M' + d.x + ',' + d.y + 'L' + (des.x+hd-5) + ',' + d.y + 'M' + (des.x+hd-5) + ',' + d.y + 'A 5,5,0,0,1 ' + (des.x+hd) + ',' + (d.y+5) +
+                    'M' + (des.x+hd) + ',' + (d.y+5) + 'L' + (des.x+hd) + ',' + (des.y-5) +
+                    'M' + (des.x+hd) + ',' + (des.y-5) + 'A 5,5,0,0,1 ' + (des.x+hd-5) + ',' + des.y +
+                    'M' + (des.x+hd-5) + ',' + des.y + 'L' + des.x + ',' + des.y;
+            }
+        } else { // 上下连线
+            if (dif_x < 0 && dif_y > 0) { //第一象限（100,100-200,150）
+                link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y+hd-5) + 'M' + d.x + ',' + (des.y+hd-5) + 'A 5,5,0,0,1 ' + (d.x-5) + ',' + (des.y+hd) +
+                    'M' + (d.x-5) + ',' + (des.y+hd) + 'L' + (des.x+5) + ',' + (des.y+hd) +
+                    'M' + (des.x+5) + ',' + (des.y+hd) + 'A 5,5,0,0,1 ' + des.x + ',' + (des.y+hd-5) +
+                    'M' + des.x + ',' + (des.y+hd-5) + 'L' + des.x + ',' + des.y;
+            }
+            if (dif_x > 0 && dif_y < 0) { //第二象限（200,100-100,0） 200,100->50,100->50,0->100,0
+                link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y-hd+5) + 'M' + d.x + ',' + (des.y-hd+5) + 'A 5,5,0,0,1 ' + (d.x+5) + ',' + (des.y-hd) +
+                    'M' + (d.x+5) + ',' + (des.y-hd) + 'L' + (des.x-5) + ',' + (des.y-hd) +
+                    'M' + (des.x-5) + ',' + (des.y-hd) + 'A 5,5,0,0,1 ' + des.x + ',' + (des.y-hd+5) +
+                    'M' + des.x + ',' + (des.y-hd+5) + 'L' + des.x + ',' + des.y;
+            }
+            if (dif_x < 0 && dif_y < 0) { //第三象限（200,200-100,100） 200,200->50,100->50,0->100,0
+                link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y-hd+5) + 'M' + d.x + ',' + (des.y-hd+5) + 'A 5,5,0,0,0 ' + (d.x-5) + ',' + (des.y-hd) +
+                    'M' + (d.x-5) + ',' + (des.y-hd) + 'L' + (des.x+5) + ',' + (des.y-hd) +
+                    'M' + (des.x+5) + ',' + (des.y-hd) + 'A 5,5,0,0,0 ' + des.x + ',' + (des.y-hd+5) +
+                    'M' + des.x + ',' + (des.y-hd+5) + 'L' + des.x + ',' + des.y;
+            }
+            if (dif_x > 0 && dif_y > 0) { //第四象限（200,200-300,100）100,100->100,20->200,20->200,150
+                link = 'M' + d.x + ',' + d.y + 'L' + d.x + ',' + (des.y+hd-5) + 'M' + d.x + ',' + (des.y+hd-5) + 'A 5,5,0,0,0 ' + (d.x+5) + ',' + (des.y+hd) +
+                    'M' + (d.x+5) + ',' + (des.y+hd) + 'L' + (des.x-5) + ',' + (des.y+hd) +
+                    'M' + (des.x-5) + ',' + (des.y+hd) + 'A 5,5,0,0,0 ' + des.x + ',' + (des.y+hd-5) +
+                    'M' + des.x + ',' + (des.y+hd-5) + 'L' + des.x + ',' + des.y;
+            }
+        }
+        return link;
+    };
+
     GraphCreator.prototype.getLink_move = function(start, des) {
         var startType = start.type,desType = des.type;
         var d = start;
@@ -2072,7 +2203,6 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                     des.x = xDes;
                     des.y = yDes - 33;
                 }
-
             }
         }
         if(start.type=="flag"){
@@ -2098,7 +2228,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
 
     };
 
-    GraphCreator.prototype.getLink_move_w = function(start, des) {
+    GraphCreator.prototype.getLink_move_w_1 = function(start, des) {
         var startType = start.type,desType = des.type;
         var d = start;
         var xSource = d.x,ySource = d.y,xDes = des.x,yDes = des.y;
@@ -2178,7 +2308,149 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
 
     };
 
+    GraphCreator.prototype.getLink_move_w_2 = function(start, des) {
+        var startType = start.type,desType = des.type;
+        var d = start;
+        var xSource = d.x,ySource = d.y,xDes = des.x,yDes = des.y;
+        var dif_x = des.x - d.x,
+            dif_y = des.y - d.y;
+        var link;
+        if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+            if(dif_y < 0){
+                des.y = des.y + 50;
+            }
+            if (dif_x > 0) {
+                d.x = d.x + 100;
+                des.x = des.x + 50;
+            }else{
 
+                des.x = des.x + 50;
+            }
+            d.y = d.y + 25;
+        } else { // 上下连线
+            if(dif_x < 0){
+                des.x = des.x + 100;
+            }
+            if (dif_y > 0) {
+                des.y = des.y + 25;
+                d.y = d.y + 50;
+            }else{
+                des.y = des.y + 25;
+            }
+            d.x = d.x + 50;
+        }
+        if(startType=="start"){
+            d.x = xSource;
+            d.y = ySource;
+        }
+        if(desType=="end"){
+            if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+                if (dif_y < 0) {
+                    des.x = xDes;
+                    des.y = yDes + 33;
+                }else{
+                    des.x = xDes;
+                    des.y = yDes - 33;
+                }
+            } else { // 上下连线
+                if (dif_x < 0) {
+                    des.x = xDes + 33;
+                    des.y = yDes;
+                }else{
+                    des.x = xDes-33;
+                    des.y = yDes;
+                }
+            }
+        }
+        if(startType=="flag"){
+            d.x = xSource;
+            d.y = ySource + 21;
+        }
+        if(desType=="flag"){
+            if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+                if (dif_y < 0) {
+                    des.y = yDes +42;
+                }
+                des.x = xDes;
+            } else { // 上下连线
+                if (dif_x < 0) {
+                    des.x = xDes + 21;
+                    des.y = yDes + 21;
+                }else{
+                    des.x = xDes - 21;
+                    des.y = yDes + 21;
+                }
+            }
+        }
+    };
+
+    GraphCreator.prototype.getLink_move_w_3 = function(start, des) {
+        var startType = start.type,desType = des.type;
+        var d = start;
+        var xSource = d.x,ySource = d.y,xDes = des.x,yDes = des.y;
+        var dif_x = des.x - d.x,
+            dif_y = des.y - d.y;
+        var link;
+        if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+            if(dif_y > 0){
+                des.y = des.y + 50;
+            }
+            des.x = des.x + 50;
+            d.x = d.x + 50;
+            d.y = d.y + 25;
+        } else { // 上下连线
+            if(dif_x > 0){
+                des.x = des.x + 100;
+            }
+            des.y = des.y + 25;
+            d.x = d.x + 50;
+            d.y = d.y + 25;
+        }
+        if(startType=="start"){
+            d.x = xSource;
+            d.y = ySource;
+        }
+        if(desType=="end"){
+            if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+                if (dif_y < 0) {
+                    des.x = xDes;
+                    des.y = yDes - 33;
+                }else{
+                    des.x = xDes;
+                    des.y = yDes + 33;
+                }
+            } else { // 上下连线
+                if (dif_x < 0) {
+                    des.x = xDes - 33;
+                    des.y = yDes;
+                }else{
+                    des.x = xDes + 33;
+                    des.y = yDes;
+                }
+
+            }
+        }
+        if(startType=="flag"){
+            d.x = xSource;
+            d.y = ySource + 21;
+        }
+        if(desType=="flag"){
+            if (Math.abs(dif_x) > Math.abs(dif_y)) { // 左右连线
+                if (dif_y > 0) {
+                    des.y = yDes + 42;
+                }
+                des.x = xDes;
+            } else { // 上下连线
+                if (dif_x > 0) {
+                    des.x = xDes + 21;
+                }else{
+                    des.x = xDes - 21;
+                }
+                des.y = yDes + 21;
+            }
+        }
+
+    };
 
 
     /**
@@ -2250,14 +2522,30 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         case 'NOROUTING': // 直线
           link = dragLine.attr('d', 'M' + d.x + ',' + d.y + 'L' + d3.mouse(svgG.node())[0] + ',' + d3.mouse(svgG.node())[1]);
           break;
-        case 'SIMPLEROUTING': // 折线
+        case 'SIMPLEROUTING-1': // 折线
           var des = {
             x: d3.mouse(svgG.node())[0], 
             y: d3.mouse(svgG.node())[1] 
           };
-          var link_d = thisGraph.getLink_d(d, des);
+          var link_d = thisGraph.getLink_d_1(d, des);
           link = dragLine.attr('d', link_d);
           break;
+        case 'SIMPLEROUTING-2': // 折线
+            var des = {
+                x: d3.mouse(svgG.node())[0],
+                y: d3.mouse(svgG.node())[1]
+            };
+            var link_d = thisGraph.getLink_d_2(d, des);
+            link = dragLine.attr('d', link_d);
+            break;
+        case 'SIMPLEROUTING-3': // 折线
+            var des = {
+                x: d3.mouse(svgG.node())[0],
+                y: d3.mouse(svgG.node())[1]
+            };
+            var link_d = thisGraph.getLink_d_3(d, des);
+            link = dragLine.attr('d', link_d);
+            break;
       }
       refresh(link); // 兼容IE11
     } else {
@@ -2929,7 +3217,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                     thisGraph.getLink_move(start, des);
                     return "M" + start.x + "," + start.y + "L" + des.x + "," + des.y;
                 }
-                if (d.drawLine == 'SIMPLEROUTING') {
+                if (d.drawLine == 'SIMPLEROUTING-1') {
                     var start = {
                         x: d.source.x,
                         y: d.source.y,
@@ -2940,8 +3228,36 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                         y: d.target.y,
                         type : d.target.type
                     };
-                    thisGraph.getLink_move_w(start, des);
-                    return thisGraph.getLink_d(start, des);
+                    thisGraph.getLink_move_w_1(start, des);
+                    return thisGraph.getLink_d_1(start, des);
+                }
+                if (d.drawLine == 'SIMPLEROUTING-2') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y,
+                        type : d.source.type
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y,
+                        type : d.target.type
+                    };
+                    thisGraph.getLink_move_w_2(start, des);
+                    return thisGraph.getLink_d_2(start, des);
+                }
+                if (d.drawLine == 'SIMPLEROUTING-3') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y,
+                        type : d.source.type
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y,
+                        type : d.target.type
+                    };
+                    thisGraph.getLink_move_w_3(start, des);
+                    return thisGraph.getLink_d_3(start, des);
                 }
             });
         refresh(link); // 兼容IE11
@@ -2973,7 +3289,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                     thisGraph.getLink_move(start, des);
                     return "M" + start.x + "," + start.y + "L" + des.x + "," + des.y;
                 }
-                if (d.drawLine == 'SIMPLEROUTING') {
+                if (d.drawLine == 'SIMPLEROUTING-1') {
                     var start = {
                         x: d.source.x,
                         y: d.source.y,
@@ -2984,8 +3300,36 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                         y: d.target.y,
                         type : d.target.type
                     };
-                    thisGraph.getLink_move_w(start, des);
-                    return thisGraph.getLink_d(start, des);
+                    thisGraph.getLink_move_w_1(start, des);
+                    return thisGraph.getLink_d_1(start, des);
+                }
+                if (d.drawLine == 'SIMPLEROUTING-2') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y,
+                        type : d.source.type
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y,
+                        type : d.target.type
+                    };
+                    thisGraph.getLink_move_w_2(start, des);
+                    return thisGraph.getLink_d_2(start, des);
+                }
+                if (d.drawLine == 'SIMPLEROUTING-3') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y,
+                        type : d.source.type
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y,
+                        type : d.target.type
+                    };
+                    thisGraph.getLink_move_w_3(start, des);
+                    return thisGraph.getLink_d_3(start, des);
                 }
             })
             .on("mousedown", function(d) {

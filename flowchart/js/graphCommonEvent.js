@@ -508,7 +508,7 @@ function handleComponentsBtn() {
     state = graph_active.state,
     nodeName = $(this).attr('name'),
     container = $('.svg-container');
-  if (nodeName === 'NOROUTING' || nodeName === 'SIMPLEROUTING') {
+  if (nodeName === 'NOROUTING' || nodeName === 'SIMPLEROUTING-1'|| nodeName === 'SIMPLEROUTING-2'|| nodeName === 'SIMPLEROUTING-3') {
     state.drawLine = nodeName;
     container.on('mouseover mouseout', '.conceptG', function(e) {
       if (e.type === 'mouseover') {
