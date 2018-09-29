@@ -356,7 +356,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
           selectedTr.find('td').eq(3).text(data.data.variable);
           selectedTr.find('td').eq(4).text(data.data.type);
         } else {
-            $('.extended_attr tbody').append(html).find('.ui.checkbox').checkbox();
+            $('.extended_attr:visible tbody').append(html).find('.ui.checkbox').checkbox();
         }
         $('.extendAttr_add.modal input').val("");
     });
@@ -563,6 +563,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       participant.conventional_definition_group = $('.conventional input[name="conventional_definition_group"]').val();
       participant.conventional_definition_name = $('.conventional input[name="conventional_definition_name"]').val();
       participant.formKey = $(".five.wide.field").find("select[name=formKey] option:selected").val();
+      participant.taskListener = $(".five.wide.field").find("select[name=taskListener] option:selected").val();
       if (participant.conventional_definition_participant) {// 自定义参与者
         
       } else {
@@ -1100,10 +1101,10 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     var thisGraph = this;
     var postCond = transition.postCondition;
     //清空 转移信息/条件设置/事件
-    $(selector).find('.tab').find('input, textarea').val('');
+    /*$(selector).find('.tab').find('input, textarea').val('');
     $(selector).find('.tab').find('select').dropdown('clear');
     $(selector).find('tbody').empty();
-    $(selector).find('.postCondi_extendedAttr').mCustomScrollbar("update");
+    $(selector).find('.postCondi_extendedAttr').mCustomScrollbar("update");*/
     //转移信息
     $(selector).find('input[name=edgeId]').val(transition.edgeId);
     $(selector).find('input[name=edgeName]').val(postCond && postCond.edgeName || '');
@@ -1265,6 +1266,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         postCondition.condition =  $('.segment input[name="definition_condition"]').val();
         edge.edgeId = postCondition.edgeId;
         edge.postCondition = postCondition;
+        edge.sFlowListener = $(".five.wide.field").find("select[name=sFlowListener] option:selected").val();//获取连线监听器
         if (selector == '.post_condition') {
           var splitType = $(selector).find('select[name=splitType]').val();
           thisGraph.state.selectedNode.postCondition = {splitType: splitType};
@@ -3066,7 +3068,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
 
         // remove old nodes
         thisGraph.circles.exit().remove();
-        thisGraph.bpmnStr = createBpmn();
+        //thisGraph.bpmnStr = createBpmn();
     };
 
 
@@ -3174,6 +3176,9 @@ function importXpdl(str) {
        // conventional_definition_group : $('.conventional input[name="conventional_definition_group"]').val(),
         //conventional_definition_name : $('.conventional input[name="conventional_definition_name"]').val(),
         formKey : $(".five.wide.field").find("select[name=formKey] option:selected").val(),
+        taskListener:$(".five.wide.field").find("select[name=taskListener] option:selected").val(),
+        taskEvent:$(".five.wide.field").find("select[name=taskEvent] option:selected").val(),
+        globalListener:"",
         conventional_definition_group:$('.five.wide.field').find("select[name=conventional_definition_group] option:selected").val(),
         conventional_definition_name:$('.five.wide.field').find("select[name=conventional_definition_name] option:selected").val(),
             //description: $(this).find('Description').html(),
@@ -3248,11 +3253,13 @@ function importXpdl(str) {
       to_actId = $(this).attr('To'),
       edgeId = $(this).attr('Id'),
       drawLine = $(this).find('[name=RoutingType]').attr('Value'),
-      transitionEventType = $(this).find('[name=TransitionEventType]').attr('Value');
+      transitionEventType = $(this).find('[name=TransitionEventType]').attr('Value'),
+      sFlowListener = $(this).find("select[name=sFlowListener] option:selected").val();
     var edge = {
             edgeId: edgeId,
             postCondition: {transitionEventType: transitionEventType},
-            drawLine: drawLine
+            drawLine: drawLine,
+            sFlowListener:sFlowListener
           };
     
     nodes.forEach(function(node, i) {

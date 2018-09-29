@@ -2,7 +2,8 @@
  * 生成bpmn文件
  */
 function createBpmn(){
-  getFormKey();
+  // getFormKey();
+  // alert($('#aaa'));
   graph_main.bpmnStr = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
       '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/testm1533999566823" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1533999566823" name="" targetNamespace="http://www.activiti.org/testm1533999566823" typeLanguage="http://www.w3.org/2001/XMLSchema">\n';
   var processBpmn = '<process id="myProcess_1" isClosed="false" isExecutable="true" name="leave" processType="None">\n\t';
@@ -10,6 +11,10 @@ function createBpmn(){
   var nodes = graph_main.nodes.concat();
   var edges = graph_main.edges.concat();
   var bpmnId = 0;
+  var start_bpmn = "";
+  var end_bpmn = "";
+  var ordinaryActivity_bpmn = "";
+  var routeActivity_bpmn = "";
   bpmndi += '<bpmndi:BPMNPlane bpmnElement="myProcess_1">\n';
   nodes.forEach(function (node) {
     //alert("node:"+JSON.stringify(node));
@@ -17,9 +22,16 @@ function createBpmn(){
       node.id = "_"+bpmnId++;
       node.choseId = bpmnId++;
       if(node.type=="start"){
-          processBpmn += '<startEvent id="'+node.id+'" name="StartEvent"/>\n\t' +
+          var globalListener = node.conventional.globalListener;
+          if(globalListener!=null&&globalListener!="")
+          {
+              var startListener = '<activiti:executionListener event="start" class="'+globalListener+'"> \n</activiti:executionListener>\n';
+              var endListener = '<activiti:executionListener event="end" class="'+globalListener+'"> \n</activiti:executionListener>\n';
+              start_bpmn += ' <extensionElements>\n'+startListener+endListener+'</extensionElements>';
+          }
+          start_bpmn += '<startEvent id="'+node.id+'" name="StartEvent">\n' +
                 judgeDocument(node.conventional.description)+
-                judgeFormList(node.extendAttr);
+                judgeFormList(node.extendAttr)+'</startEvent>\n\t';
           bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
               '        <dc:Bounds height="32.0" width="32.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
               '        <bpmndi:BPMNLabel>\n' +
@@ -28,7 +40,7 @@ function createBpmn(){
               '      </bpmndi:BPMNShape>\n';
       }
       else if(node.type=="end"){
-          processBpmn += '<endEvent id="'+node.id+'" name="EndEvent"/>\n\t';
+          end_bpmn += '<endEvent id="'+node.id+'" name="EndEvent"/>\n\t';
           bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
               '        <dc:Bounds height="32.0" width="32.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
               '        <bpmndi:BPMNLabel>\n' +
@@ -39,6 +51,9 @@ function createBpmn(){
           var userName = node.conventional.conventional_definition_name;
           var userGroup = node.conventional.conventional_definition_group;
           var formKey = node.conventional.formKey;
+          var taskListner = node.conventional.taskListener;
+          var taskEvent = null;
+
           var userTask = '<userTask activiti:exclusive="true" id="'+node.id+'" name="'+node.title+'"';
           if(userName!=null&&userName!=''){
               userTask += ' activiti:candidateGroups="' + userGroup + '" activiti:candidateUsers="' + userName + '"';
@@ -46,11 +61,16 @@ function createBpmn(){
           if(formKey!=null&&formKey!='1'){
               userTask += ' activiti:formKey="'+formKey+'"';
           }
-          processBpmn += userTask + '>\n\t';
-          processBpmn +=
+          userTask += '>';
+          if(taskListner!=null&&taskListner!="empty"){
+              taskEvent = node.conventional.taskEvent;
+              userTask += ' <extensionElements>\n<activiti:taskListener event="'+taskEvent+'" class= "'+taskListner+'"> \n</activiti:taskListener>\n</extensionElements>';
+          }
+          ordinaryActivity_bpmn += userTask + '\n\t';
+          ordinaryActivity_bpmn +=
                 judgeDocument(node.conventional.description) +
                 judgeFormList(node.extendAttr) +
-                '       </userTask>';
+                '       </userTask>\n\t';
           bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
               '        <dc:Bounds height="55.0" width="85.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
               '        <bpmndi:BPMNLabel>\n' +
@@ -58,7 +78,7 @@ function createBpmn(){
               '        </bpmndi:BPMNLabel>\n' +
               '      </bpmndi:BPMNShape>\n';
       }else if(node.type == 'flag'){
-          processBpmn += '<exclusiveGateway id="'+node.id+'" name="Exclusive Gateway">\n' +
+          routeActivity_bpmn += '<exclusiveGateway id="'+node.id+'" name="Exclusive Gateway">\n' +
               judgeDocument(node.conventional.description) +
               '     </exclusiveGateway>\n';
           bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
@@ -69,6 +89,7 @@ function createBpmn(){
               '      </bpmndi:BPMNShape>\n';
       }
   });
+    processBpmn += start_bpmn+end_bpmn+ordinaryActivity_bpmn+routeActivity_bpmn;
 
 /*
 * 箭头生成相关bpmn文件
@@ -79,13 +100,18 @@ function createBpmn(){
       var target = edge.target;
       var name = edge.postCondition.edgeName;
       var condition = edge.postCondition.conditionData;
+      var sFlowListener = edge.sFlowListener;
+      var sFlowListenerXML = "";
+      if(sFlowListener!=null&&sFlowListener!="")
+          sFlowListenerXML = ' <extensionElements>\n<activiti:executionListener event="take" class= "'
+                +sFlowListener+'"> \n</activiti:executionListener>\n</extensionElements>';
 
       if(name != null && name != ''){
           processBpmn += '<sequenceFlow id="'+edge.edgeId+'" name=" '+ name +' " sourceRef="'+source.id+'" targetRef="'+target.id+'">\n\t';
       }else {
           processBpmn += '<sequenceFlow id="'+edge.edgeId+'" sourceRef="'+source.id+'" targetRef="'+target.id+'">\n\t';
       }
-      processBpmn += judgeCondition(edge.postCondition.conditionData) + judgeDocument(edge.postCondition.description);
+      processBpmn += sFlowListenerXML+judgeCondition(edge.postCondition.conditionData) + judgeDocument(edge.postCondition.description);
       processBpmn += '</sequenceFlow>';
 
       bpmndi += '<bpmndi:BPMNEdge bpmnElement="'+edge.edgeId+'" id="BPMNEdge_'+edge.edgeId+'" sourceElement="'+source.id+'" targetElement="'+target.id+'">\n' + '        <di:waypoint x="'+source.x+'" y="'+source.y+'"/>\n' +
@@ -106,6 +132,45 @@ function createBpmn(){
    //console.log("bpmnStr" + graph_main.bpmnStr);
   return graph_main.bpmnStr;
 }
+
+/**
+ *  下拉选择Listenner
+ */
+function getListener()
+{
+    var names = new Array();
+    $.ajax({
+        url:"http://localhost:8080/demo/workflow/designer",
+        type:"GET",
+        async:false,
+        dataType: 'json',
+        success:function(data){
+
+            names = data.names;
+        }
+    })
+    return names;
+}
+
+function setListener(listenerType,listener) {
+    var listenerSelect = $("#"+listenerType);
+    var listeners = getListener();
+    if(listener==null)
+    {
+        listenerSelect.append("<option value='empty'>空</option>");
+        for(i=0;i<listeners.length;i++) {
+            listenerSelect.append("<option value='" + listeners[i] + "'>" + listeners[i] + "</option>");
+        }
+    }
+    else {
+        listenerSelect.append("<option value='empty'>空</option>");
+        for(i=0;i<listeners.length;i++) {
+            listenerSelect.append("<option value='" + listeners[i] + "'>" + listeners[i] + "</option>");
+        }
+        listenerSelect.val(listener);
+    }
+}
+
 function getGroupAndCandidate(){
    var jsonObject;
 $.ajax({
@@ -520,6 +585,7 @@ function handleViews() {
       element.mCustomScrollbar("update");
       break;
     case 'third':
+      createBpmn();
       var XmlContent = graph_main.emergeAllXmlContent();
       $('#xmlContainer xmp').empty().text(XmlContent);
       break;
@@ -639,10 +705,11 @@ function handleNodeMenuProp() {
     onApprove: function() {
       //更新-扩展属性
       selectedNode.extendAttr = [];
-      $('.extended_attr tbody tr').each(function() {
+      $('.extended_attr:visible tbody tr').each(function() {
         var jsonstr = $(this).attr('jsonstr');
         selectedNode.extendAttr.push(jsonstr);
       });
+
       //更新-高级 属性
       selectedNode.highLevel = {};
       var highLevel = {};
@@ -680,6 +747,7 @@ function handleNodeMenuProp() {
       if (conventional.name != selectedNode.title) {
         selectedNode.title = conventional.name;
       }
+      conventional.taskListener = $('.conventional').find("select[name=taskListener] option:selected").val();
       // var $role = $('.conventional select[name="definition_role"]').parent();
       // conventional.performer = $role.children('.text').attr('definition_id') || '';
       // var role_txt = $role.dropdown('get text'); //Semantic存在bug，重构dropdown不能取value
@@ -806,6 +874,8 @@ function handleNodeMenuProp() {
 
       //展示-常规
       var conventional = node.conventional;
+      var taskListener = conventional.taskListener;
+      setListener("taskListener",taskListener);//显示监听器下拉菜单
       $('.conventional').find('input[name], textarea').each(function() {
         for (var key in conventional) {
           if (key == $(this).attr('name')) {
@@ -863,12 +933,14 @@ function handleNodeMenuProp() {
       $('.post_condition .list').empty(); // 清空后置条件
       $('.post_condition .targetActivity').html('');
       $('.conventional select[name="definition_role"]').siblings('.text').removeAttr('definition_id');
+      $('.conventional select[name="taskListener"]').empty();//清空监听器，防止生成的其他任务节点直接获得该监听器设置
     }
   }).modal('show');
     $('.prop_node>.menu a[data-tab="five"]').addClass('hideitem');
-  if(selectedNode.title == '普通活动' || selectedNode.title == 'S'){
+  if(selectedNode.title == '普通活动'){
       $('.prop_node>.menu a[data-tab="five"]').removeClass('hideitem');
   }
+
   /*
   $('.prop_node>.menu a[data-tab*="two"]').addClass('hideitem');
   if (selectedNode.title == '普通活动') {
@@ -883,29 +955,181 @@ function handleNodeMenuProp() {
   */
 }
 
-function handleEdgeMenuProp() {
-  var graph_active = graphPool.getGraphByActiveEdit();
-  var selectedEdge = graph_active.state.selectedEdge;
-  $('.prop_edge .targetActivity').html($('#transition_tpl').html());
-  $('.prop_edge .targetActivity .menu .item').tab();
-  $(".targetActivity .transferInf_extended_attr .postCondi_extendedAttr").mCustomScrollbar();
-  $('.targetActivity .conditionList,.conditionList2').mCustomScrollbar();
-  $('.ui.modal.prop_edge').modal({
-    autofocus: false,
-    closable: false,
-    onApprove: function() {
-      //更新-转移属性
-      graph_active.updatePostCondi('.prop_edge');
-    },
-    onShow: function() {
-      var edge = graph_active.state.selectedEdge;
-      //展示-后置条件
-      graph_active.showTransition('.prop_edge', edge);
-    },
-    onHidden: function() {
-      $('.prop_edge .targetActivity').html('');
+function handleFlagMenuProp() {
+    var graph_active = graphPool.getGraphByActiveEdit();
+    var selectedNode = graph_active.state.selectedNode;
+    $('.ui.modal.prop_flag').modal({
+        autofocus: false,
+        closable: false,
+        onApprove: function() {
+
+            //更新-常规
+            selectedNode.conventional = {};
+            var conventional = {};
+            $('.prop_node .conventional').find('input[name], textarea, select').each(function() {
+                conventional[$(this).attr('name')] = $(this).val();
+            });
+            if (conventional.ID != selectedNode.id) {
+                selectedNode.id = conventional.ID;
+            }
+            if (conventional.name != selectedNode.title) {
+                selectedNode.title = conventional.name;
+            }
+
+            selectedNode.conventional = conventional;
+            graph_active.updateGraph();
+        },
+        onShow: function() {
+            var node = selectedNode;
+
+
+            //展示-常规
+            var conventional = node.conventional;
+            $('.conventional').find('input[name], textarea').each(function() {
+                for (var key in conventional) {
+                    if (key == $(this).attr('name')) {
+                        $(this).val(conventional[key]);
+                    }
+                }
+            });
+
+
+            $('.conventional input[name=ID]').val(node.id);
+            $('.conventional input[name=name]').val(node.title);
+
+
+        },
+        onHidden: function() {
+            $('.prop_node .menu .item[data-tab="one"]').trigger('click');
+            $('.monitorinf select[name="isResponsibleTem"]').off('change'); // 弹窗关闭，避免清空表单时触发事件
+            $(this).find('input, textarea').val('');
+            $(this).find('.ui.dropdown').dropdown('clear');
+            $(this).find('.ui.checkbox').checkbox('uncheck');
+
+        }
+    }).modal('show');
+
+}
+
+function handleStartMenuProp() {
+    var graph_active = graphPool.getGraphByActiveEdit();
+    var selectedNode = graph_active.state.selectedNode;
+    $('.ui.modal.prop_start').modal({
+        autofocus: false,
+        closable: false,
+        onApprove: function() {
+
+            //更新-常规
+            selectedNode.conventional = {};
+            var conventional = {};
+            $('.prop_start .conventional').find('input[name], textarea, select').each(function() {
+                conventional[$(this).attr('name')] = $(this).val();
+            });
+            if (conventional.ID != selectedNode.id) {
+                selectedNode.id = conventional.ID;
+            }
+            if (conventional.name != selectedNode.title) {
+                selectedNode.title = conventional.name;
+            }
+
+            conventional.globalListener = $(this).find("select[name=globalListener] option:selected").val();
+            selectedNode.conventional = conventional;
+            graph_active.updateGraph();
+
+            //更新-扩展属性
+            selectedNode.extendAttr = [];
+            $('.extended_attr:visible tbody tr').each(function() {
+                var jsonstr = $(this).attr('jsonstr');
+                selectedNode.extendAttr.push(jsonstr);
+            });
+
+
+        },
+        onShow: function() {
+            var node = selectedNode;
+
+
+            //展示-常规
+            var conventional = node.conventional;
+            var globalListener = conventional.globalListener;
+            setListener("globalListener",globalListener);
+            $('.conventional').find('input[name], textarea').each(function() {
+                for (var key in conventional) {
+                    if (key == $(this).attr('name')) {
+                        $(this).val(conventional[key]);
+                    }
+                }
+            });
+
+
+            $('.conventional input[name=ID]').val(node.id);
+            $('.conventional input[name=name]').val(node.title);
+
+            //展示-扩展属性集
+            var extendAttr_strs = node.extendAttr;
+            if (extendAttr_strs && extendAttr_strs.length) {
+                var e_tr = '';
+                extendAttr_strs.forEach(function(extendAttr_str) {
+                    var extendAttr_obj = JSON.parse(extendAttr_str);
+                    var data = {
+                        data: extendAttr_obj,
+                        jsonstr: extendAttr_str
+                    };
+                    e_tr += juicer($('#extended_attr_tpl').html(), data);
+                });
+                $('.extended_attr tbody').append(e_tr).find('.ui.checkbox').checkbox();
+            }
+
+
+        },
+        onHidden: function() {
+            $('.prop_start .menu .item[data-tab="one"]').trigger('click');
+            $('.monitorinf select[name="isResponsibleTem"]').off('change'); // 弹窗关闭，避免清空表单时触发事件
+            $(this).find('input, textarea').val('');
+            $(this).find('.ui.dropdown').dropdown('clear');
+            $(this).find('.ui.checkbox').checkbox('uncheck');
+            $('.extended_attr tbody').empty(); // 清空扩展属性集
+            $(this).find("select[name=globalListener]").empty();//清空当前面板上的监听器
+
+        }
+    }).modal('show');
+    $('.prop_start>.menu a[data-tab="global_two"]').addClass('hideitem');
+    if(selectedNode.title == 'S'){
+        $('.prop_start>.menu a[data-tab="global_two"]').removeClass('hideitem');
     }
-  }).modal('show');
+
+}
+
+function handleEdgeMenuProp() {
+    var graph_active = graphPool.getGraphByActiveEdit();
+    var selectedEdge = graph_active.state.selectedEdge;
+    var sFlowListener = $("#sFlowListener").val();
+    if(sFlowListener==null||sFlowListener=="")
+    {
+        $('.prop_edge .targetActivity').html($('#transition_tpl').html());
+        $('.prop_edge .targetActivity .menu .item').tab();
+        $(".targetActivity .transferInf_extended_attr .postCondi_extendedAttr").mCustomScrollbar();
+        $('.targetActivity .conditionList,.conditionList2').mCustomScrollbar();
+    }
+
+
+    $('.ui.modal.prop_edge').modal({
+        autofocus: false,
+        closable: false,
+        onApprove: function() {
+            //更新-转移属性
+            graph_active.updatePostCondi('.prop_edge');
+        },
+        onShow: function() {
+            //展示-后置条件
+            graph_active.showTransition('.prop_edge', selectedEdge);
+            var sFlowListener = selectedEdge.sFlowListener;
+            setListener("sFlowListener",sFlowListener);//显示监听器设置菜单
+        },
+        onHidden: function() {
+            $('.transition select[name="sFlowListener"]').empty();//清空监听器
+        }
+    }).modal('show');
 }
 
 function handleRightMenu() {
@@ -913,6 +1137,7 @@ function handleRightMenu() {
   var item = $(this).attr('name');
   var selectedNode = graph_active.state.selectedNode,
   selectedEdge = graph_active.state.selectedEdge;
+
   switch (item) {
     case 'removeMenu':
       handleDeleteNode();
@@ -924,13 +1149,22 @@ function handleRightMenu() {
       handleMenuEdit();
       break;
       */
-    case 'propMenu':
-      if (selectedNode) {
-        handleNodeMenuProp();
-      } else if (selectedEdge) {
-        handleEdgeMenuProp();
-      }
-      break;
+      case 'propMenu':
+          if (selectedNode) {
+              if(selectedNode.type == 'activity'){
+                  handleNodeMenuProp();
+              }
+              if(selectedNode.type=="flag"){
+                  handleFlagMenuProp();
+              }
+              if(selectedNode.type=="start"){
+                  handleStartMenuProp();
+              }
+
+          } else if (selectedEdge) {
+              handleEdgeMenuProp();
+          }
+          break;
   }
   $('#rMenu').hide();
 }
