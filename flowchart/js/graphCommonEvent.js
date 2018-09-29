@@ -139,7 +139,7 @@ function getListener()
 {
     var names = new Array();
     $.ajax({
-        url:"http://localhost:8080/demo/workflow/designer",
+        url:"http://localhost:8080/getListener",
         type:"GET",
         async:false,
         dataType: 'json',
@@ -301,23 +301,25 @@ candidates = new Object();
 var groupNamesList=[];
 var candidateNamesList=[];
 var jsonObject=getGroupAndCandidate();
+var groupSelect=$(".five.wide.field").find("select[name=conventional_definition_group]");
 $.each(jsonObject,function (it) {
     groupNamesList.push(it);
     candidateNamesList.push(jsonObject[it])
 });
 for(var i=0;i<groupNamesList.length;i++){
     candidates[groupNamesList[i]]=new Array(candidateNamesList[i]);
-    var groupSelect=$(".five.wide.field").find("select[name=conventional_definition_group]");
     groupSelect.append("<option value='"+groupNamesList[i]+"'>"+groupNamesList[i]+"</option>");
 }
 function getGroups() {
-    var group_name=document.groupandcandidate.conventional_definition_group;
-    var candidate_name=document.groupandcandidate.conventional_definition_name;
+    var group_name=document.getElementById('groups');
+    var candidate_name=document.getElementById('conventional_definition_name');
     var groupCandidate=candidateNamesList[group_name.selectedIndex-1];
-    candidate_name.length=1;
+
+    candidate_name.length = 1;//清除其他选项，只保留第一个option
     for(var i=0;i<groupCandidate.length;i++){
-        candidate_name[i+1]=new Option(groupCandidate[i],groupCandidate[i]);
+        candidate_name.options[i+1]=new Option(groupCandidate[i],groupCandidate[i]);
     }
+
 }
 /*
 * 导入bpmn文件
