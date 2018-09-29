@@ -130,21 +130,21 @@ return jsonObject;
 function getFormKey(){
     // document.currentScript.src;
     $.ajax({
-        type: "GET",   // get post 方法都是一样的
+        type: "GET",   // get post 方法都是一样的  
         async: false,
         url: "http://localhost:8080/getFileName",
         dataType: "json",
         success: function(json){
             var names = json.names.split(",");
             var formSelect = $(".five.wide.field").find("select[name=formKey]");
-            // formSelect.html("");
+            formSelect.html("");
             // alert(formSelect.find("option").length);
-            if(formSelect.find("option").length==0){
-                names.forEach(function (form) {
+            // if(formSelect.find("option").length==0){
+            formSelect.append("<option value='1'>空</option>");
+            names.forEach(function (form) {
                     formSelect.append("<option value='"+form+"'>"+form+"</option>");
                 });
-                formSelect.append("<option value='1'>空</option>");
-            }
+            // }
         },
         error: function(){
 
