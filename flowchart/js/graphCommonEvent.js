@@ -53,7 +53,7 @@ function createBpmn(){
 
           var userTask = '<userTask activiti:exclusive="true" id="'+node.id+'" name="'+node.title+'"';
           if(userName!=null&&userName!=''){
-              userTask += ' " activiti:assignee="' + userName + '"';
+              userTask += ' activiti:assignee="' + userName + '"';
           }
           if(formKey!=null&&formKey!='1'){
               userTask += ' activiti:formKey="'+formKey+'"';
