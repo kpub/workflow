@@ -55,7 +55,7 @@ function createBpmn(){
 
           var userTask = '<userTask activiti:exclusive="true" id="'+node.id+'" name="'+node.title+'"';
           if(userName!=null&&userName!=''){
-              userTask += ' activiti:candidateGroups="' + userGroup + '" activiti:candidateUsers="' + userName + '"';
+              userTask += ' " activiti:assignee="' + userName + '"';
           }
           if(formKey!=null&&formKey!='1'){
               userTask += ' activiti:formKey="'+formKey+'"';
@@ -301,6 +301,7 @@ candidates = new Object();
 var groupNamesList=[];
 var candidateNamesList=[];
 var jsonObject=getGroupAndCandidate();
+console.log(jsonObject);
 var groupSelect=$(".five.wide.field").find("select[name=conventional_definition_group]");
 $.each(jsonObject,function (it) {
     groupNamesList.push(it);
@@ -1105,6 +1106,7 @@ function handleStartMenuProp() {
 function handleEdgeMenuProp() {
     var graph_active = graphPool.getGraphByActiveEdit();
     var selectedEdge = graph_active.state.selectedEdge;
+    var edgeSource = selectedEdge.source;
     var sFlowListener = $("#sFlowListener").val();
     if(sFlowListener==null||sFlowListener=="")
     {
@@ -1123,6 +1125,8 @@ function handleEdgeMenuProp() {
             graph_active.updatePostCondi('.prop_edge');
         },
         onShow: function() {
+            if(edgeSource.type!="flag")
+                $('.transition div[name="transition_condition"]').remove();//仅当该转移的source为判断条件时才有转移条件设置，否则移除
             //展示-后置条件
             graph_active.showTransition('.prop_edge', selectedEdge);
             var sFlowListener = selectedEdge.sFlowListener;
