@@ -310,9 +310,13 @@ function getGroups() {
     var groupCandidate=candidateNamesList[group_name.selectedIndex-1];
 
     candidate_name.length = 1;//清除其他选项，只保留第一个option
-    for(var i=0;i<groupCandidate.length;i++){
-        candidate_name.options[i+1]=new Option(groupCandidate[i],groupCandidate[i]);
+    var ass=groupCandidate.length;
+    if(ass!=null){
+        for(var i=0;i<ass;i++){
+            candidate_name.options[i+1]=new Option(groupCandidate[i],groupCandidate[i]);
+        }
     }
+
 
 }
 /*
