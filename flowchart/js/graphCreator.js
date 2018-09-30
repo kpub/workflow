@@ -152,7 +152,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     };
 
     // handle download data
-    d3.select("#download-input").on("click", function() {
+    /*d3.select("#download-input").on("click", function() {
       var saveEdges = [];
       thisGraph.edges.forEach(function(val, i) {
         saveEdges.push({
@@ -168,7 +168,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       });
       saveAs(blob, "mydag.json");
     });
-
+*/
 
     // handle uploaded data
     d3.select("#upload-input").on("click", function() {
@@ -322,7 +322,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     });
     */
 
-    //扩展属性集-添加
+    //动态表单属性集-添加
     $('.extendAttr_add .green.button').on('click', function() {
       var id = $('.extendAttr_add.modal input[name="extendAttr_add_id"]').val();
       var name = $('.extendAttr_add.modal input[name="extendAttr_add_name"]').val();
@@ -376,7 +376,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       // $('.extendAttr_add.modal').modal('show'); //会关闭一级弹窗
     });
 
-    //扩展属性集-删除
+    //动态表单属性集-删除
     $('.extended_attr .extendAttrDelBtn').on('click', function() {
       var tr = $(this).parents('.grid').find('tbody tr.active');
       if (tr.length > 0) {
@@ -413,7 +413,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     });*/
 
     //超时限制-删除
-    $('.timeoutLimitRemoveBtn').on('click', function() {
+    /*$('.timeoutLimitRemoveBtn').on('click', function() {
       var tr = $(this).parents('.grid').find('tbody tr.active');
       if (tr.length > 0) {
         tr.remove();
@@ -437,7 +437,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       $('.timeoutLimit_add').find('select').dropdown('set selected', data.execution);
       $('.timeoutLimit_add.modal input[name="timeoutLimit_add_operate"]').val("1");
       $('.timeoutLimitAddBtn').trigger('click');
-    });
+    });*/
 
     //常规-定义
     $('.conventional').on('click', '.definitionBtn', function(event) {
@@ -501,7 +501,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     });
 
     //常规-定义-高级-增加条件
-    $('.conventional_definition').on('click', '.definition_addBtn', function() {
+    /*$('.conventional_definition').on('click', '.definition_addBtn', function() {
       var typeName = $('.conventional_definition [data-tab="definition_2"]>.menu>.item.active').attr('value'),
         data_tab = $('.conventional_definition [data-tab="definition_2"] .tab.active').attr('data-tab'),
         type = $('.conventional_definition div[data-tab="'+data_tab+'"] select[name="definition_type"]').val(),
@@ -772,10 +772,10 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         node.monitorinf.responsible = node.monitorinf.responsible || [];
         node.monitorinf.responsible.push(definition_id);
       }
-    });
+    });*/
 
     //后置条件-条件设置-类型
-    $('.targetActivity').on('change', 'select[name=conditype]', function() {
+   /* $('.targetActivity').on('change', 'select[name=conditype]', function() {
       var show_cls = '.' + $(this).val().toLowerCase() + 'Div';
       var show_div = $(this).parents('.fields').siblings(show_cls);
       var targetActivity$ = $(this).parents('.targetActivity');//为了公用模板
@@ -1042,7 +1042,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         $('.full-right>.menu [data-tab="tab_main"]').trigger('click');
       }
     });
-    
+    */
 
   };
 
@@ -1402,7 +1402,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
   };
 
   //获取常规相应的xpdl
-  GraphCreator.prototype.conventionalXpdl = function(node) {
+  /*GraphCreator.prototype.conventionalXpdl = function(node) {
     var thisGraph = this,
       conventional = node.conventional,
       conventionalXpdl = {};
@@ -1459,7 +1459,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     deadlineXpdl.deadlines = Deadlines;
     deadlineXpdl.deadline = deadlines_arr.length>0? '<ExtendedAttribute Name="deadline" Value="'+deadlines_arr.join('|')+'"/>':'<ExtendedAttribute Name="deadline"/>';
     return deadlineXpdl;
-  };
+  };*/
 
   //获取activity进出线的数量
   GraphCreator.prototype.activityInOutNum = function(node) {
@@ -1488,7 +1488,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
   };
 
   //获取TransitionRestrictions相应的xpdl
-  GraphCreator.prototype.getTransitionRestrictions = function(node, activity_inOut) {
+  /*GraphCreator.prototype.getTransitionRestrictions = function(node, activity_inOut) {
     var join = node.frontCondition.convergeType?'<Join Type="'+node.frontCondition.convergeType+'"/>':'<Join Type="XOR"/>';
     var TransitionRestrictions = '';
     if (activity_inOut.numIn > 1 || activity_inOut.numOut > 1 || node.frontCondition.convergeType) {
@@ -1547,7 +1547,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                participantsXpdl+
            '</Participants>';
     return xpdl;
-  };
+  };*/
 
   //生成所有activity xml添加至xmlContainer
   GraphCreator.prototype.emergeAllXmlContent = function(){
@@ -1586,7 +1586,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
 
   };
 
-  GraphCreator.prototype.emergeActivities = function() {
+  /*GraphCreator.prototype.emergeActivities = function() {
     var thisGraph = this;
     var activitiesXpdl = '';
 
@@ -1649,9 +1649,9 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
         }
     });
     return '<Activities>' + activitiesXpdl + '</Activities>';
-  };
+  };*/
 
-  GraphCreator.prototype.emergeTransitions = function() {
+  /*GraphCreator.prototype.emergeTransitions = function() {
     var thisGraph = this;
     var transitions = '';
     var edges_act = thisGraph.edgesLinkAcivity();
@@ -1694,7 +1694,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
             // bean: System_Wf_Source_Party  paramField: 0   | key: CorpName           |  sign_one: = |  displayValue_one: 1
             //                                               | 关系：并且；            |  条件：！=； |  参考值：2
             //                                               | fieldCondition_type: AND|  sign_two: !=|  displayValue_two: 2
-            /* ==> 
+            /!* ==>
             (( 
               typeof(getMetaBeanById('personInfo',System_Wf_Source_Party).getCorpName())!='undefined' && 
               getMetaBeanById('personInfo',System_Wf_Source_Party).getCorpName()!=null && 
@@ -1703,7 +1703,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
               typeof(getMetaBeanById('personInfo',System_Wf_Source_Party).getCorpName())!='undefined' && 
               getMetaBeanById('personInfo',System_Wf_Source_Party).getCorpName()!=null && 
               getMetaBeanById('personInfo',System_Wf_Source_Party).getCorpName()!='2' 
-            ))*/ 
+            ))*!/
             var exp_cdata = $(wfdConfig).find('expression[key="'+$(this).attr('sign')+'"] exp[type="'+$(this).attr('type')+'"]').eq(0).html();// <![CDATA[(typeof(${b})!='undefined' && ${b}!=null && ${b}=='${a}')]]>
             exp_cdata = exp_cdata.replace(/<!\[CDATA\[(.+)\]\]>/, function(match, p1) { 
               return p1;
@@ -1755,7 +1755,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     });
 
     return '<Transitions>' + transitions + '</Transitions>';
-  };
+  };*/
 
   //生成所有activity xml添加至xpdlContainer
   GraphCreator.prototype.emergeAllxpdlContent = function() {
@@ -1900,7 +1900,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     return vkbeautify.xml(xpdl);
   };
 
-  GraphCreator.prototype.emergeActivitySet = function(activitySetId) {
+  /*GraphCreator.prototype.emergeActivitySet = function(activitySetId) {
     var thisGraph = this; 
     var activities = thisGraph.filterActivities();
     var activitySets = '<ActivitySet Id="'+activitySetId+'"></ActivitySet>';
@@ -1911,7 +1911,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                      '</ActivitySet>';
     }
     return activitySets;
-  };
+  };*/
 
   GraphCreator.prototype.findActByActSetId = function(activitysetid) {
     var thisGraph = this;
@@ -1937,13 +1937,13 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     return activities;
   };
 
-  GraphCreator.prototype.filterBlockActivities = function() {
+  /*GraphCreator.prototype.filterBlockActivities = function() {
     var thisGraph = this;
     var blockActivities = thisGraph.nodes.filter(function(node) {
       return node.component == 'blockActivity';
     });
     return blockActivities;
-  };
+  };*/
 
   GraphCreator.prototype.edgesLinkAcivity = function() {
     var thisGraph = this;

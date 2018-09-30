@@ -2,7 +2,6 @@
  * 生成bpmn文件
  */
 function createBpmn(){
-  // alert($('#aaa'));
   graph_main.bpmnStr = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n' +
       '<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/testm1533999566823" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1533999566823" name="" targetNamespace="http://www.activiti.org/testm1533999566823" typeLanguage="http://www.w3.org/2001/XMLSchema">\n';
   var processBpmn = '<process id="myProcess_1" isClosed="false" isExecutable="true" name="leave" processType="None">\n\t';
@@ -17,7 +16,6 @@ function createBpmn(){
   bpmndi += '<bpmndi:BPMNPlane bpmnElement="myProcess_1">\n';
   nodes.forEach(function (node) {
     //alert("node:"+JSON.stringify(node));
-    //alert("arr:"+node.extendAttr);
       node.id = "_"+bpmnId++;
       node.choseId = bpmnId++;
       if(node.type=="start"){
@@ -48,7 +46,7 @@ function createBpmn(){
           '      </bpmndi:BPMNShape>\n';
       }else if(node.type=="activity"){
           var userName = node.conventional.conventional_definition_name;
-          var userGroup = node.conventional.conventional_definition_group;
+          //var userGroup = node.conventional.conventional_definition_group;
           var formKey = node.conventional.formKey;
           var taskListner = node.conventional.taskListener;
           var taskEvent = null;
@@ -98,7 +96,7 @@ function createBpmn(){
       var source = edge.source;
       var target = edge.target;
       var name = edge.postCondition.edgeName;
-      var condition = edge.postCondition.conditionData;
+      //var condition = edge.postCondition.conditionData;
       var sFlowListener = edge.sFlowListener;
       var sFlowListenerXML = "";
       if(sFlowListener!=null&&sFlowListener!="")
@@ -150,7 +148,6 @@ function getListener()
     })
     return names;
 }
-
 function setListener(listenerType,listener) {
     var listenerSelect = $("#"+listenerType);
     var listeners = getListener();
@@ -171,28 +168,27 @@ function setListener(listenerType,listener) {
 }
 
 function getGroupAndCandidate(){
-   var jsonObject;
-$.ajax({
-    type:"GET",
-    async:false,
-    url:"http://localhost:8080/Candidate/getGroup",
-    dataType:"json",
-    success:function (json) {
-      jsonObject=json;
-      console.log('jsonObject');
-        console.log(jsonObject);
-    },
-    error:function () {
-    },
-});
-return jsonObject;
+    var jsonObject;
+    $.ajax({
+        type:"GET",
+        async:false,
+        url:"http://localhost:8080/Candidate/getGroup",
+        dataType:"json",
+        success:function (json) {
+          jsonObject=json;
+          console.log('jsonObject');
+            console.log(jsonObject);
+        },
+        error:function () {
+        },
+    });
+    return jsonObject;
 }
 
 /**
  *  下拉选择FormKey
  */
 function getFormKey(){
-    // document.currentScript.src;
     $.ajax({
         type: "GET",   // get post 方法都是一样的  
         async: false,
@@ -202,16 +198,12 @@ function getFormKey(){
             var names = json.names.split(",");
             var formSelect = $(".five.wide.field").find("select[name=formKey]");
             formSelect.html("");
-            // alert(formSelect.find("option").length);
-            // if(formSelect.find("option").length==0){
             formSelect.append("<option value='1'>空</option>");
             names.forEach(function (form) {
                     formSelect.append("<option value='"+form+"'>"+form+"</option>");
                 });
-            // }
         },
         error: function(){
-
         }
     });
 }
@@ -273,7 +265,6 @@ function fake_click(obj) {
     );
     obj.dispatchEvent(ev);
 }
-
 function export_raw(name, data) {
     var urlObject = window.URL || window.webkitURL || window;
 
@@ -284,6 +275,7 @@ function export_raw(name, data) {
     save_link.download = name;
     fake_click(save_link);
 }
+/*
 
 function judgeLength(desc){
     if(desc != null && desc != ''){
@@ -292,6 +284,7 @@ function judgeLength(desc){
         return '';
     }
 }
+*/
 
 /**
  * 所属组下拉选项
@@ -525,55 +518,6 @@ function handleComponentsBtn() {
 }
 
 /**
- * 自动插入开始结束节点
- */
-/*function handleAddStartEnd() {
-  var graph_active = graphPool.getGraphByActiveEdit();
-  var edges = graph_active.edges;
-  var nodes = graph_active.filterActivities();
-  nodes.forEach(function(node) {
-    if (!graph_active.hasLinked(node, false, -1)) {
-      var start = {
-        id: generateUUID(),
-        title: 'S',
-        component: 'startComponent',
-        type: 'start',
-        x: node.x - 120,
-        y: node.y
-      };
-      graph_active.nodes.push(start);
-      var edge_start = {
-        edgeId: generateUUID(),
-        drawLine: 'NOROUTING',
-        source: start,
-        target: node
-      };
-      graph_active.edges.push(edge_start);
-      graph_active.updateGraph();
-    }
-    if (!graph_active.hasLinked(node, false, 1)) {
-      var end = { 
-        id: generateUUID(),
-        title: 'E',
-        component: 'endComponent',
-        type: 'end',
-        x: node.x + 120,
-        y: node.y
-      };
-      graph_active.nodes.push(end);
-      var edge_end = {
-        edgeId: generateUUID(),
-        drawLine: 'NOROUTING',
-        source: node,
-        target: end
-      };
-      graph_active.edges.push(edge_end);
-      graph_active.updateGraph();
-    }
-  });
-}*/
-
-/**
  * 视图显示Tab（图标视图、Xpdl视图、Xml视图）
  */
 function handleViews() {
@@ -581,18 +525,19 @@ function handleViews() {
   var element = $('.full-right>.tab.active .content-div');
   var activitysetid = $('.full-right>.menu>.item.active').attr('activitysetid');
   switch (dataTab) {
-    case 'second':
+ /*   case 'second':
       var xpdlContent = graph_main.emergeAllxpdlContent();
       $('#xpdlContainer xmp').empty().text(xpdlContent);
       element.mCustomScrollbar("update");
-      break;
+      break;*/
     case 'third':
       createBpmn();
       var XmlContent = graph_main.emergeAllXmlContent();
       $('#xmlContainer xmp').empty().text(XmlContent);
       break;
   }
-  var isSubGraphXpdlView = /Package_(.+)_second/.test(dataTab);
+
+}/*var isSubGraphXpdlView = /Package_(.+)_second/.test(dataTab);
   if (isSubGraphXpdlView) {
     var blockActivity = graph_main.findActByActSetId(activitysetid);
     var subGraph = blockActivity.activitySet.graphCreator;
@@ -600,16 +545,15 @@ function handleViews() {
     activitySet = vkbeautify.xml('<ActivitySet>' + activitySet + '</ActivitySet>');
     element.find('xmp').empty().text(activitySet);
     element.mCustomScrollbar("update");
-  }
-}
+  }*/
 
-function handleSave() {
+/*function handleSave() {
   var dataTab = $('.full-right-btn .item.active').attr('data-tab');
   $('.tab[data-tab="tab_main"] .item').not($('.full-right-btn .item.active')).trigger('click'); // 触发点击事件获取xpdl和xml
   $('.full-right-btn .item[data-tab="' + dataTab + '"]').trigger('click');
   var xpdl = $('#xpdlContainer xmp').text();
   var xml = $('#xmlContainer xmp').text();
-  var xpdl_top = /*下面这一块应该可以从WfDSystemConfig.xml中获取，发现Applet与xml中有差别*/
+  var xpdl_top = /!*下面这一块应该可以从WfDSystemConfig.xml中获取，发现Applet与xml中有差别*!/
     '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' +
     '   <Package xmlns="http://www.wfmc.org/2002/XPDL1.0" xmlns:xpdl="http://www.wfmc.org/2002/XPDL1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Id="' + package_id + '" Name="新包" xsi:schemaLocation="http://www.wfmc.org/2002/XPDL1.0 http://wfmc.org/standards/dtd/TC-1025_schema_10_xpdl.xsd">' +
     '       <PackageHeader>' +
@@ -668,12 +612,12 @@ function handleSave() {
   $('input[name=xpdlcontent]').val(xpdl);
   $('input[name=xmlcontent]').val(xpdl);
   $('#containerForm').submit();
-}
+}*/
 
 /**
  * 右击菜单编辑
  */
-function handleMenuEdit() {
+/*function handleMenuEdit() {
   var graph_active = graphPool.getGraphByActiveEdit();
   var selectedNode = graph_active.state.selectedNode;
   var data = {
@@ -696,8 +640,11 @@ function handleMenuEdit() {
     tab.find('.content-div').mCustomScrollbar();
     graph_active.createSubGraph();
   }
-}
+}*/
 
+/*
+* 右击菜单属性
+* */
 function handleNodeMenuProp() {
   var graph_active = graphPool.getGraphByActiveEdit();
   var selectedNode = graph_active.state.selectedNode;
@@ -713,7 +660,7 @@ function handleNodeMenuProp() {
       });
 
       //更新-高级 属性
-      selectedNode.highLevel = {};
+      /*selectedNode.highLevel = {};
       var highLevel = {};
       $('.prop_node .highLevel').find('input').each(function() {
         highLevel[$(this).attr('name')] = $(this).val();
@@ -734,7 +681,7 @@ function handleNodeMenuProp() {
       selectedNode.frontCondition = {};
       $('.front_condition > div:not(".hideDiv")').find('input:not(:radio)[name], select').each(function() {
         selectedNode.frontCondition[$(this).attr('name')] = $(this).val();
-      });
+      });*/
       //更新-工具
 
       //更新-常规
@@ -750,19 +697,13 @@ function handleNodeMenuProp() {
         selectedNode.title = conventional.name;
       }
       conventional.taskListener = $('.conventional').find("select[name=taskListener] option:selected").val();
-      // var $role = $('.conventional select[name="definition_role"]').parent();
-      // conventional.performer = $role.children('.text').attr('definition_id') || '';
-      // var role_txt = $role.dropdown('get text'); //Semantic存在bug，重构dropdown不能取value
-      // if (role_txt !='请选择' && role_txt !='(空)') {
-      //   conventional.participantID = $role.dropdown('get text');
-      // }
       selectedNode.conventional = conventional;
       graph_active.updateGraph();
     },
     onShow: function() {
       var node = selectedNode;
       //展示-监控信息
-      $('.monitorinf select[name="isResponsibleTem"]').dropdown('set selected', node.monitorinf.isResponsibleTem);
+      /*$('.monitorinf select[name="isResponsibleTem"]').dropdown('set selected', node.monitorinf.isResponsibleTem);
       var responsible = node.monitorinf.responsible;
       if (responsible && responsible.length) {
         var tr = '';
@@ -807,7 +748,7 @@ function handleNodeMenuProp() {
           d_tr += '<tr jsonstr= '+deadline_str+'><td>'+deadline_obj.deadlineCondition+'</td></tr>';
         });
         $('.timeout_limit tbody').append(d_tr);
-      }
+      }*/
       //展示-扩展属性集
       var extendAttr_strs = node.extendAttr;
       if (extendAttr_strs && extendAttr_strs.length) {
@@ -860,6 +801,7 @@ function handleNodeMenuProp() {
         $('.post_condition .targetActivity').addClass('invisible');
         $('.post_condition select[name="splitType"]').parent().addClass('disabled');
       }
+      /*
       //展示-前置条件
       var frontCondition = node.frontCondition;
       if (frontCondition.convergeType) {
@@ -871,7 +813,7 @@ function handleNodeMenuProp() {
         } else if (frontCondition.isCreateNew == "false") {
           $('.front_condition input[tabindex="false"]').parent().checkbox('check');
         }
-      }
+      }*/
       //展示-工具
 
       //展示-常规
@@ -904,10 +846,10 @@ function handleNodeMenuProp() {
         $('.conventional .dropdown .text').attr('definition_id', conventional.performer);
       }
       //监控信息-是否为临时监控
-      $('.monitorinf select[name="isResponsibleTem"]').on('change', function() {
+      /*$('.monitorinf select[name="isResponsibleTem"]').on('change', function() {
         var node = graph_active.state.selectedNode;
         node.monitorinf.isResponsibleTem = $(this).val();
-      });
+      });*/
       //常规-参与者集
       $('.conventional .definition_field').on('click', function() {
         var participants = graph_active.participants;
@@ -943,21 +885,10 @@ function handleNodeMenuProp() {
   if(selectedNode.title == '普通活动'){
       $('.prop_node>.menu a[data-tab="five"]').removeClass('hideitem');
   }
-
-  /*
-  $('.prop_node>.menu a[data-tab*="two"]').addClass('hideitem');
-  if (selectedNode.title == '普通活动') {
-    $('.prop_node>.menu a[data-tab="two_1"]').removeClass('hideitem');
-  }
-  if (selectedNode.title == '块活动') {
-    $('.prop_node>.menu a[data-tab="two_2"]').removeClass('hideitem');
-  }
-  if (selectedNode.title == '子活动') {
-    $('.prop_node>.menu a[data-tab="two_3"]').removeClass('hideitem');
-  }
-  */
 }
-
+/*
+* 右击判断条件属性
+* */
 function handleFlagMenuProp() {
     var graph_active = graphPool.getGraphByActiveEdit();
     var selectedNode = graph_active.state.selectedNode;
@@ -965,7 +896,6 @@ function handleFlagMenuProp() {
         autofocus: false,
         closable: false,
         onApprove: function() {
-
             //更新-常规
             selectedNode.conventional = {};
             var conventional = {};
@@ -978,14 +908,11 @@ function handleFlagMenuProp() {
             if (conventional.name != selectedNode.title) {
                 selectedNode.title = conventional.name;
             }
-
             selectedNode.conventional = conventional;
             graph_active.updateGraph();
         },
         onShow: function() {
             var node = selectedNode;
-
-
             //展示-常规
             var conventional = node.conventional;
             $('.conventional').find('input[name], textarea').each(function() {
@@ -995,12 +922,8 @@ function handleFlagMenuProp() {
                     }
                 }
             });
-
-
             $('.conventional input[name=ID]').val(node.id);
             $('.conventional input[name=name]').val(node.title);
-
-
         },
         onHidden: function() {
             $('.prop_node .menu .item[data-tab="one"]').trigger('click');
@@ -1008,12 +931,14 @@ function handleFlagMenuProp() {
             $(this).find('input, textarea').val('');
             $(this).find('.ui.dropdown').dropdown('clear');
             $(this).find('.ui.checkbox').checkbox('uncheck');
-
         }
     }).modal('show');
 
 }
 
+/*
+* 开始节点右击属性
+* */
 function handleStartMenuProp() {
     var graph_active = graphPool.getGraphByActiveEdit();
     var selectedNode = graph_active.state.selectedNode;
@@ -1021,7 +946,6 @@ function handleStartMenuProp() {
         autofocus: false,
         closable: false,
         onApprove: function() {
-
             //更新-常规
             selectedNode.conventional = {};
             var conventional = {};
@@ -1034,24 +958,18 @@ function handleStartMenuProp() {
             if (conventional.name != selectedNode.title) {
                 selectedNode.title = conventional.name;
             }
-
             conventional.globalListener = $(this).find("select[name=globalListener] option:selected").val();
             selectedNode.conventional = conventional;
             graph_active.updateGraph();
-
             //更新-扩展属性
             selectedNode.extendAttr = [];
             $('.extended_attr:visible tbody tr').each(function() {
                 var jsonstr = $(this).attr('jsonstr');
                 selectedNode.extendAttr.push(jsonstr);
             });
-
-
         },
         onShow: function() {
             var node = selectedNode;
-
-
             //展示-常规
             var conventional = node.conventional;
             var globalListener = conventional.globalListener;
@@ -1063,11 +981,8 @@ function handleStartMenuProp() {
                     }
                 }
             });
-
-
             $('.conventional input[name=ID]').val(node.id);
             $('.conventional input[name=name]').val(node.title);
-
             //展示-扩展属性集
             var extendAttr_strs = node.extendAttr;
             if (extendAttr_strs && extendAttr_strs.length) {
@@ -1082,8 +997,6 @@ function handleStartMenuProp() {
                 });
                 $('.extended_attr tbody').append(e_tr).find('.ui.checkbox').checkbox();
             }
-
-
         },
         onHidden: function() {
             $('.prop_start .menu .item[data-tab="one"]').trigger('click');
@@ -1093,7 +1006,6 @@ function handleStartMenuProp() {
             $(this).find('.ui.checkbox').checkbox('uncheck');
             $('.extended_attr tbody').empty(); // 清空扩展属性集
             $(this).find("select[name=globalListener]").empty();//清空当前面板上的监听器
-
         }
     }).modal('show');
     $('.prop_start>.menu a[data-tab="global_two"]').addClass('hideitem');
@@ -1102,7 +1014,9 @@ function handleStartMenuProp() {
     }
 
 }
-
+/*
+* 连接线右击属性
+* */
 function handleEdgeMenuProp() {
     var graph_active = graphPool.getGraphByActiveEdit();
     var selectedEdge = graph_active.state.selectedEdge;
@@ -1137,7 +1051,9 @@ function handleEdgeMenuProp() {
         }
     }).modal('show');
 }
-
+/*
+* 连接线右击菜单
+* */
 function handleRightMenu() {
   var graph_active = graphPool.getGraphByActiveEdit();
   var item = $(this).attr('name');
@@ -1148,13 +1064,6 @@ function handleRightMenu() {
     case 'removeMenu':
       handleDeleteNode();
       break;
-    /*case 'toFront':
-      alert('前置');
-      break;
-    case 'editMenu':
-      handleMenuEdit();
-      break;
-      */
       case 'propMenu':
           if (selectedNode) {
               if(selectedNode.type == 'activity'){
@@ -1166,11 +1075,10 @@ function handleRightMenu() {
               if(selectedNode.type=="start"){
                   handleStartMenuProp();
               }
-
           } else if (selectedEdge) {
               handleEdgeMenuProp();
           }
-          break;
+      break;
   }
   $('#rMenu').hide();
 }
