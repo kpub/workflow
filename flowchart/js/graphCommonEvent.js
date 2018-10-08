@@ -37,7 +37,7 @@ function createBpmn(){
               '      </bpmndi:BPMNShape>\n';
       }
       else if(node.type=="end"){
-          end_bpmn += '<endEvent id="'+node.id+'" name="EndEvent"/>\n\t';
+          end_bpmn += '<endEvent id="'+node.id+'" name="EndEvent"></endEvent>\n\t';
           bpmndi += '<bpmndi:BPMNShape bpmnElement="'+node.id+'" id="Shape-'+node.id+'">\n' +
               '        <dc:Bounds height="32.0" width="32.0" x="'+node.x+'" y="'+node.y+'"/>\n' +
               '        <bpmndi:BPMNLabel>\n' +
@@ -148,22 +148,18 @@ function getListener()
     })
     return names;
 }
+var listeners = getListener();
 function setListener(listenerType,listener) {
     var listenerSelect = $("#"+listenerType);
-    var listeners = getListener();
-    if(listener==null)
-    {
-        listenerSelect.append("<option value='empty'>空</option>");
-        for(i=0;i<listeners.length;i++) {
-            listenerSelect.append("<option value='" + listeners[i] + "'>" + listeners[i] + "</option>");
-        }
+    var listenerClasses = listeners;
+    listenerSelect.append("<option value='empty'>空</option>");
+    for(i=0;i<listenerClasses.length;i++) {
+        listenerSelect.append("<option value='" + listenerClasses[i] + "'>" + listenerClasses[i] + "</option>");//根据获取的class，生成下拉菜单选项
     }
-    else {
-        listenerSelect.append("<option value='empty'>空</option>");
-        for(i=0;i<listeners.length;i++) {
-            listenerSelect.append("<option value='" + listeners[i] + "'>" + listeners[i] + "</option>");
-        }
-        listenerSelect.val(listener);
+
+    if(listener!=null)
+    {
+        listenerSelect.val(listener);//如果之前已经设置了监听器，第二次打开菜单时设置其为选中项
     }
 }
 
@@ -254,7 +250,7 @@ function judgeFormList(arr) {
 * 下载功能模块
 * */
 function downloadBpmn(){
-    export_raw('test.bpmn',graph_main.bpmnStr);
+    export_raw('test.bpmn',graph_main.emergeAllXmlContent());//美化导出的bpmn文件格式
 }
 
 function fake_click(obj) {
@@ -290,35 +286,40 @@ function judgeLength(desc){
  * 所属组下拉选项
  * 菜单二级联动
  */
-candidates = new Object();
+var candidates = new Object();
 var groupNamesList=[];
 var candidateNamesList=[];
 var jsonObject=getGroupAndCandidate();
-console.log(jsonObject);
-var groupSelect=$(".five.wide.field").find("select[name=conventional_definition_group]");
+
 $.each(jsonObject,function (it) {
     groupNamesList.push(it);
     candidateNamesList.push(jsonObject[it])
 });
-for(var i=0;i<groupNamesList.length;i++){
-    candidates[groupNamesList[i]]=new Array(candidateNamesList[i]);
-    groupSelect.append("<option value='"+groupNamesList[i]+"'>"+groupNamesList[i]+"</option>");
-}
-function getGroups() {
-    var group_name=document.getElementById('groups');
-    var candidate_name=document.getElementById('conventional_definition_name');
-    var groupCandidate=candidateNamesList[group_name.selectedIndex-1];
+console.log(jsonObject);
+function setGroups(){
 
-    candidate_name.length = 1;//清除其他选项，只保留第一个option
-    var ass=groupCandidate.length;
-    if(ass!=null){
-        for(var i=0;i<ass;i++){
-            candidate_name.options[i+1]=new Option(groupCandidate[i],groupCandidate[i]);
-        }
+    var groupSelect=document.getElementById('groups');
+    groupSelect.append(new Option("请选择所属组",0));
+    var candidateSelect=document.getElementById('conventional_definition_name');
+    candidateSelect.append(new Option("请选择候选人",0));
+
+    for(var i=0;i<groupNamesList.length;i++){
+        candidates[groupNamesList[i]]=new Array(candidateNamesList[i]);
+        groupSelect.append(new Option(groupNamesList[i],groupNamesList[i]));
     }
-
-
 }
+
+function setCandidates() {
+    var group_name=document.getElementById('groups');
+    var candidateSelect=document.getElementById('conventional_definition_name');
+    var groupCandidates=candidateNamesList[group_name.selectedIndex-1];
+
+    candidateSelect.length = 1;//清除其他选项，只保留第一个option
+    for(var i=0;i<groupCandidates.length;i++){
+        candidateSelect.options[i+1]=new Option(groupCandidates[i],groupCandidates[i]);
+    }
+}
+
 /*
 * 导入bpmn文件
 * */
@@ -701,6 +702,16 @@ function handleNodeMenuProp() {
         selectedNode.title = conventional.name;
       }
       conventional.taskListener = $('.conventional').find("select[name=taskListener] option:selected").val();
+      conventional.candidateGroup = $('.conventional').find("select[name=conventional_definition_group] option:selected").val();
+      conventional.assignee = $('.conventional').find("select[name=conventional_definition_name] option:selected").val();
+      var selectedGroupCandidates = new Array();
+      $('.conventional').find("select[name=conventional_definition_name] option").each(function(){
+          var txt = $(this).val();
+          if(txt!="0")
+              selectedGroupCandidates.push(txt);//获取候选人数组
+      });
+      console.log(selectedGroupCandidates);
+      conventional.groupCandidates = selectedGroupCandidates;
       selectedNode.conventional = conventional;
       graph_active.updateGraph();
     },
@@ -823,8 +834,28 @@ function handleNodeMenuProp() {
       //展示-常规
       var conventional = node.conventional;
       var taskListener = conventional.taskListener;
+      var assignee = conventional.assignee;
+      var candidateGroup = conventional.candidateGroup;
+      var groupCandidates = conventional.groupCandidates;
+      var candidateSelect = document.getElementById('conventional_definition_name');
+
       setListener("taskListener",taskListener);//显示监听器下拉菜单
       getFormKey();
+      setGroups();
+      alert(groupCandidates);
+      if(candidateGroup!=null)
+          $('.conventional').find("select[name=conventional_definition_group]").val(candidateGroup);//显示之前选中的候选组
+      if(groupCandidates!=null)
+      {
+          for(var i=0;i<groupCandidates.length;i++){
+              candidateSelect.options[i+1]=new Option(groupCandidates[i],groupCandidates[i]);//生成对应的候选人
+          }
+      }
+
+      if(assignee!=null)
+      {
+          candidateSelect.value = assignee;//设置之前选中的候选人为选中项
+      }
       $('.conventional').find('input[name], textarea').each(function() {
         for (var key in conventional) {
           if (key == $(this).attr('name')) {
@@ -883,6 +914,9 @@ function handleNodeMenuProp() {
       $('.post_condition .targetActivity').html('');
       $('.conventional select[name="definition_role"]').siblings('.text').removeAttr('definition_id');
       $('.conventional select[name="taskListener"]').empty();//清空监听器，防止生成的其他任务节点直接获得该监听器设置
+      $('.conventional select[name="conventional_definition_group"]').empty();
+      $('.conventional select[name="conventional_definition_name"]').empty();//清空候选人和候选组
+
     }
   }).modal('show');
     $('.prop_node>.menu a[data-tab="five"]').addClass('hideitem');
