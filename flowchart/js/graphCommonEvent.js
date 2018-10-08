@@ -710,7 +710,7 @@ function handleNodeMenuProp() {
           if(txt!="0")
               selectedGroupCandidates.push(txt);//获取候选人数组
       });
-      console.log(selectedGroupCandidates);
+
       conventional.groupCandidates = selectedGroupCandidates;
       selectedNode.conventional = conventional;
       graph_active.updateGraph();
@@ -841,8 +841,8 @@ function handleNodeMenuProp() {
 
       setListener("taskListener",taskListener);//显示监听器下拉菜单
       getFormKey();
-      setGroups();
-      alert(groupCandidates);
+      setGroups();//设置候选组下拉菜单
+
       if(candidateGroup!=null)
           $('.conventional').find("select[name=conventional_definition_group]").val(candidateGroup);//显示之前选中的候选组
       if(groupCandidates!=null)
