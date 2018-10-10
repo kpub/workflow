@@ -351,7 +351,7 @@ function handleImportOrExport(e) {
             jsonObj = edgeAssociateNode(jsonObj);
             graph_main.nodes = graph_main.nodes.concat(jsonObj.nodes);
             graph_main.edges = graph_main.edges.concat(jsonObj.edges);
-            graph_main.updateGraph();
+            graph_main.importJSONGraph();
           }
         }
       },

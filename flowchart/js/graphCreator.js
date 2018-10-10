@@ -3358,6 +3358,9 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
             return "translate(" + d.x + "," + d.y + ")";
         });
 
+        thisGraph.circles.attr("type", function(d) {
+            return d.type;
+        });
         // add new nodes
         var newGs = thisGraph.circles.enter()
             .append("g")
@@ -3396,6 +3399,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                 .attr("height",50)
                 .attr("rx",10)
                 .attr("ry",10);
+
         }
 
         newGs.each(function(d) {
@@ -3408,6 +3412,269 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                     break;
                 case 'flag':
                   d3.select(this).classed('flag',true);
+            }
+            thisGraph.insertTitleLinebreaks(d3.select(this), d);
+        });
+
+        // remove old nodes
+        thisGraph.circles.exit().remove();
+        //thisGraph.bpmnStr = createBpmn();
+    };
+
+    GraphCreator.prototype.importJSONGraph = function() {
+        var thisGraph = this,
+            consts = thisGraph.consts,
+            state = thisGraph.state,
+            nodes = thisGraph.nodes,
+            edges = thisGraph.edges;
+
+        thisGraph.paths = thisGraph.paths.data(edges, function(d) {
+            return String(d.source.id) + "+" + String(d.target.id);
+        });
+        var paths = thisGraph.paths;
+        // update existing paths
+        var link = paths.style('marker-end', 'url(#'+thisGraph.containerId+'-end-arrow)')
+            .classed(consts.selectedClass, function(d) {
+                return d === state.selectedEdge;
+            })
+            .attr("conditype", function(d) {
+                if (d.postCondition) {
+                    return changeCase(d.postCondition.conditype, 5);
+                } else {
+                    return '';
+                }
+            })
+            .attr("d", function(d) {
+                if (d.drawLine == 'NOROUTING') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y,
+                        type : d.source.type
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y,
+                        type : d.target.type
+                    };
+                    thisGraph.getLink_move(start, des);
+                    return "M" + start.x + "," + start.y + "L" + des.x + "," + des.y;
+                }
+                if (d.drawLine == 'SIMPLEROUTING-1') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y,
+                        type : d.source.type
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y,
+                        type : d.target.type
+                    };
+                    thisGraph.getLink_move_w_1(start, des);
+                    return thisGraph.getLink_d_1(start, des);
+                }
+                if (d.drawLine == 'SIMPLEROUTING-2') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y,
+                        type : d.source.type
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y,
+                        type : d.target.type
+                    };
+                    thisGraph.getLink_move_w_2(start, des);
+                    return thisGraph.getLink_d_2(start, des);
+                }
+                if (d.drawLine == 'SIMPLEROUTING-3') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y,
+                        type : d.source.type
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y,
+                        type : d.target.type
+                    };
+                    thisGraph.getLink_move_w_3(start, des);
+                    return thisGraph.getLink_d_3(start, des);
+                }
+            });
+        refresh(link); // 兼容IE11
+
+        // add new paths
+        paths.enter()
+            .append("path")
+            .style('marker-end', 'url(#'+thisGraph.containerId+'-end-arrow)')
+            .classed("link", true)
+            .attr("conditype", function(d) {
+                if (d.postCondition) {
+                    return changeCase(d.postCondition.conditype, 5);
+                } else {
+                    return '';
+                }
+            })
+            .attr("d", function(d) {
+                if (d.drawLine == 'NOROUTING') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y,
+                        type : d.source.type
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y,
+                        type : d.target.type
+                    };
+                    thisGraph.getLink_move(start, des);
+                    return "M" + start.x + "," + start.y + "L" + des.x + "," + des.y;
+                }
+                if (d.drawLine == 'SIMPLEROUTING-1') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y,
+                        type : d.source.type
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y,
+                        type : d.target.type
+                    };
+                    thisGraph.getLink_move_w_1(start, des);
+                    return thisGraph.getLink_d_1(start, des);
+                }
+                if (d.drawLine == 'SIMPLEROUTING-2') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y,
+                        type : d.source.type
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y,
+                        type : d.target.type
+                    };
+                    thisGraph.getLink_move_w_2(start, des);
+                    return thisGraph.getLink_d_2(start, des);
+                }
+                if (d.drawLine == 'SIMPLEROUTING-3') {
+                    var start = {
+                        x: d.source.x,
+                        y: d.source.y,
+                        type : d.source.type
+                    };
+                    var des = {
+                        x: d.target.x,
+                        y: d.target.y,
+                        type : d.target.type
+                    };
+                    thisGraph.getLink_move_w_3(start, des);
+                    return thisGraph.getLink_d_3(start, des);
+                }
+            })
+            .on("mousedown", function(d) {
+                thisGraph.pathMouseDown.call(thisGraph, d3.select(this), d);
+            })
+            .on("mouseup", function(d) {
+                state.mouseDownLink = null;
+            });
+
+        // remove old links
+        paths.exit().remove();
+
+        // update existing nodes
+        thisGraph.circles = thisGraph.circles.data(nodes, function(d) {
+            return d.id;
+        });
+
+        // var svgG = thisGraph.svgG;
+
+        thisGraph.circles.attr("transform", function(d) {
+            if (d == state.selectedNode) { // 更新节点名称
+                var tspan = d3.select(this).select('tspan');
+                if (tspan.text() !== d.title) {
+                    tspan.text(d.title);
+                }
+            }
+            return "translate(" + d.x + "," + d.y + ")";
+        });
+
+        thisGraph.circles.attr("type", function(d) {
+            return d.type;
+        });
+
+        // add new nodes
+        var newGs = thisGraph.circles.enter()
+            .append("g")
+            .attr({"id": function(d) { return generateUUID(); }});
+
+        newGs.classed(consts.circleGClass, true)
+            .attr("transform", function(d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            })
+            .on("mouseover", function(d) {
+                if (state.shiftNodeDrag) {
+                    d3.select(this).classed(consts.connectClass, true);
+                }
+            })
+            .on("mouseout", function(d) {
+                d3.select(this).classed(consts.connectClass, false);
+            })
+            .on("mousedown", function(d) {
+                thisGraph.circleMouseDown.call(thisGraph, d3.select(this), d);
+            })
+            .on("mouseup", function(d) {
+                thisGraph.circleMouseUp.call(thisGraph, d3.select(this), d);
+            })
+            .call(thisGraph.drag);
+
+        newGs.each(function(d) {
+            switch (d.type) {
+                case 'start':
+                    d3.select(this).classed('start', true);
+                    break;
+                case 'end':
+                    d3.select(this).classed('end', true);
+                    break;
+                case 'flag':
+                    d3.select(this).classed('flag',true);
+                    break;
+                case 'activity':
+                    d3.select(this).classed('activity',true);
+            }
+            thisGraph.insertTitleLinebreaks(d3.select(this), d);
+        });
+
+        d3.selectAll(".conceptG.start")
+            .append("circle")
+            .attr("r", String(consts.nodeRadius));
+        d3.selectAll(".conceptG.end")
+            .append("circle")
+            .attr("r", String(consts.nodeRadius));
+        d3.selectAll(".conceptG.activity")
+            .append("rect")
+            .attr("width",100)
+            .attr("height",50)
+            .attr("rx",10)
+            .attr("ry",10);
+        d3.selectAll(".conceptG.flag")
+            .append("rect")
+            .attr("width",30)
+            .attr("height",30)
+            .attr("transform","rotate(45)");
+
+        newGs.each(function(d) {
+            switch (d.type) {
+                case 'start':
+                    d3.select(this).classed('start', true);
+                    break;
+                case 'end':
+                    d3.select(this).classed('end', true);
+                    break;
+                case 'flag':
+                    d3.select(this).classed('flag',true);
             }
             thisGraph.insertTitleLinebreaks(d3.select(this), d);
         });
