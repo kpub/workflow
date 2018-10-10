@@ -3358,9 +3358,6 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
             return "translate(" + d.x + "," + d.y + ")";
         });
 
-        thisGraph.circles.attr("type", function(d) {
-            return d.type;
-        });
         // add new nodes
         var newGs = thisGraph.circles.enter()
             .append("g")
@@ -3601,9 +3598,6 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
             return "translate(" + d.x + "," + d.y + ")";
         });
 
-        thisGraph.circles.attr("type", function(d) {
-            return d.type;
-        });
 
         // add new nodes
         var newGs = thisGraph.circles.enter()

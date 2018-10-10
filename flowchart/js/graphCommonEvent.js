@@ -172,8 +172,6 @@ function getGroupAndCandidate(){
         dataType:"json",
         success:function (json) {
           jsonObject=json;
-          console.log('jsonObject');
-            console.log(jsonObject);
         },
         error:function () {
         },
@@ -295,7 +293,7 @@ $.each(jsonObject,function (it) {
     groupNamesList.push(it);
     candidateNamesList.push(jsonObject[it])
 });
-console.log(jsonObject);
+
 function setGroups(){
 
     var groupSelect=document.getElementById('groups');
@@ -314,9 +312,12 @@ function setCandidates() {
     var candidateSelect=document.getElementById('conventional_definition_name');
     var groupCandidates=candidateNamesList[group_name.selectedIndex-1];
 
-    candidateSelect.length = 1;//清除其他选项，只保留第一个option
-    for(var i=0;i<groupCandidates.length;i++){
-        candidateSelect.options[i+1]=new Option(groupCandidates[i],groupCandidates[i]);
+    if(groupCandidates!=null)
+    {
+        candidateSelect.length = 1;//清除其他选项，只保留第一个option
+        for(var i=0;i<groupCandidates.length;i++){
+            candidateSelect.options[i+1]=new Option(groupCandidates[i],groupCandidates[i]);
+        }
     }
 }
 
@@ -339,7 +340,6 @@ function openFileBtn() {
  * 工具栏-json数据导入/导出功能
  */
 function handleImportOrExport(e) {
-    alert("e:"+JSON.stringify(e));
   var isImport = e.target.className.indexOf('in'),
       textarea = $('.json_data textarea');
     $('.ui.modal.json_data').modal({
