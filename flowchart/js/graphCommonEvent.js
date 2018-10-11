@@ -59,7 +59,7 @@ function createBpmn(){
               userTask += ' activiti:formKey="'+formKey+'"';
           }
           userTask += '>';
-          if(taskListner!=null&&taskListner!="empty"){
+          if(taskListner!=null&&taskListner!=""){
               taskEvent = node.conventional.taskEvent;
               userTask += ' <extensionElements>\n<activiti:taskListener event="'+taskEvent+'" class= "'+taskListner+'"> \n</activiti:taskListener>\n</extensionElements>';
           }
@@ -152,7 +152,7 @@ var listeners = getListener();
 function setListener(listenerType,listener) {
     var listenerSelect = $("#"+listenerType);
     var listenerClasses = listeners;
-    listenerSelect.append("<option value='empty'>空</option>");
+    listenerSelect.append("<option value=''>空</option>");
     for(i=0;i<listenerClasses.length;i++) {
         listenerSelect.append("<option value='" + listenerClasses[i] + "'>" + listenerClasses[i] + "</option>");//根据获取的class，生成下拉菜单选项
     }
