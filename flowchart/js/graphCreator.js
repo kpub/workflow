@@ -1275,7 +1275,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
     };
   
   // 获取 后置条件-条件设置-类型(条件)下的列表
-  GraphCreator.prototype.getConditionList = function(condition, num) {
+  /*GraphCreator.prototype.getConditionList = function(condition, num) {
     var displayCondi = {};
     var sign = condition.sign_one;
     displayCondi.sign_one = sign=='!='? '!=':sign=='=='? '=':sign=='IN'? '包含':sign=='NOT'? '不包含':sign=='PREFIX'? '前缀':sign=='SUFFIX'?'后缀':'';
@@ -1302,7 +1302,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
       displayCondi.paramField = condition.paramField!='0'? condition.paramField:'默认';
       displayCondi.key = condition.key=='CorpName'?'获取组织名称':condition.key=='Extattr'?'获取人员扩展属性1':condition.key=='MObilephone'?
         '获取人员移动电话号码':condition.key=='Firstname'?'获取人员姓氏':condition.key=='Gender'?'获取人员性别':condition.key=='Birthday'?
-        '获取人员出生日期':condition.key=='Securitylevel'?'获取人员安全级别':condition.key=='Mainemail'?'获取人员常用EMAI':condition.key=='Lastname'?
+        '获取人员出生日期':condition.key=='Secu        ritylevel'?'获取人员安全级别':condition.key=='Mainemail'?'获取人员常用EMAI':condition.key=='Lastname'?
         '获取人员名字':condition.key=='Duty'?'获取人员职务':condition.key=='Homeaddress'?'获取人员家庭住址':condition.key=='AdminLevel'?
         '获取人员级别':condition.key=='Workno'?'获取人员工号':condition.key=='Callname'?'获取人员称呼':condition.key=='Otheremail'?
         '获取人员备用EMAIL':condition.key=='Instantmessage'?'获取人员即时消息号':condition.key=='Name'?'获取人员姓名':
@@ -1326,7 +1326,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
            '</tr>';
     }
     return tr;
-  };
+  };*/
 
   // 获取activity的ExtendedAttributes
   GraphCreator.prototype.getExtendedAttributes = function(node, deadlineXpdl, conventionalXpdl) {
@@ -3396,7 +3396,6 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                 .attr("height",50)
                 .attr("rx",10)
                 .attr("ry",10);
-
         }
 
         newGs.each(function(d) {
