@@ -3415,7 +3415,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
 
         // remove old nodes
         thisGraph.circles.exit().remove();
-        //thisGraph.bpmnStr = createBpmn();
+
     };
 
     GraphCreator.prototype.importJSONGraph = function() {

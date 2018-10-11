@@ -15,7 +15,7 @@ function createBpmn(){
   var routeActivity_bpmn = "";
   bpmndi += '<bpmndi:BPMNPlane bpmnElement="myProcess_1">\n';
   nodes.forEach(function (node) {
-    //alert("node:"+JSON.stringify(node));
+
       node.id = "_"+bpmnId++;
       node.choseId = bpmnId++;
       if(node.type=="start"){
@@ -248,6 +248,7 @@ function judgeFormList(arr) {
 * 下载功能模块
 * */
 function downloadBpmn(){
+    createBpmn();//开始时创建bpmn_Str，防止保存时出错
     export_raw('test.bpmn',graph_main.emergeAllXmlContent());//美化导出的bpmn文件格式
 }
 
