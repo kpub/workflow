@@ -3396,7 +3396,6 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
                 .attr("height",50)
                 .attr("rx",10)
                 .attr("ry",10);
-
         }
 
         newGs.each(function(d) {

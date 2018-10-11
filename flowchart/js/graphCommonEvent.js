@@ -53,7 +53,7 @@ function createBpmn(){
 
           var userTask = '<userTask activiti:exclusive="true" id="'+node.id+'" name="'+node.title+'"';
           if(userName!=null&&userName!=''){
-              userTask += ' activiti:assignee="' + userName + '"';
+              userTask += ' activiti:assignee="'+ userName +'"';
           }
           if(formKey!=null&&formKey!='1'){
               userTask += ' activiti:formKey="'+formKey+'"';
@@ -363,6 +363,8 @@ function handleImportOrExport(e) {
     .modal('show');
 
     var element_header = $('div.json_data .header');
+    var element_checkmark = $('div .json_data .positive');
+
     if (isImport !== -1) {
       element_header.text('导入数据');
     } else {
@@ -372,6 +374,12 @@ function handleImportOrExport(e) {
         edges: graph_main.edges
       };
       textarea.val(JSON.stringify(data));
+      element_checkmark.click(function () {
+          textarea.focus();
+          textarea.select();
+          document.execCommand('copy');
+      })
+      /**/
     }
   }
 
@@ -1120,15 +1128,16 @@ function handleRightMenu() {
   }
   $('#rMenu').hide();
 }
-
 /**
  * edge关联连接的node对象
  * @param  {Object} jsonObj 数据对象
  * @return {Object}         关联node以后的数据对象
  */
 function edgeAssociateNode(jsonObj) {
-  jsonObj.edges.map(function(edge) { // 根据edge.source.id重新关联node对象
+  jsonObj.edges.map(function(edge) {
+      // 根据edge.source.id重新关联node对象
     var source = jsonObj.nodes.find(function(node) {
+
       return node.id === edge.source.id;
     });
     var target = jsonObj.nodes.find(function(node) {
