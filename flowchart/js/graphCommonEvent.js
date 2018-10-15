@@ -137,7 +137,7 @@ function getListener()
 {
     var names = new Array();
     $.ajax({
-        url:"http://localhost:8080/getListener",
+        url:"http://localhost:8155/seckill/getListener",
         type:"GET",
         async:false,
         dataType: 'json',
@@ -168,7 +168,7 @@ function getGroupAndCandidate(){
     $.ajax({
         type:"GET",
         async:false,
-        url:"http://localhost:8080/Candidate/getGroup",
+        url:"http://localhost:8155/seckill/Candidate/getGroup",
         dataType:"json",
         success:function (json) {
           jsonObject=json;
@@ -186,7 +186,7 @@ function getFormKey(){
     $.ajax({
         type: "GET",   // get post 方法都是一样的  
         async: false,
-        url: "http://localhost:8080/getFileName",
+        url: "http://localhost:8155/seckill/getFileName",
         dataType: "json",
         success: function(json){
             var names = json.names.split(",");
@@ -380,7 +380,6 @@ function handleImportOrExport(e) {
           textarea.select();
           document.execCommand('copy');
       })
-      /**/
     }
   }
 

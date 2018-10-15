@@ -3696,7 +3696,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
 
 function initCommonEvent() {
   $('.editor-toolbar').on('click', '.sign.in,.sign.out', handleImportOrExport);
-  $('.editor-toolbar .open .icon').on('click',openFileBtn);
+  //$('.editor-toolbar .open .icon').on('click',openFileBtn);
   $('.full-right').on('click', '.full-right-btn .item', handleViews);
   $('.editor-toolbar #delete-ele').on('click', handleDeleteNode);
   $('.editor-toolbar #zoom-enlarge,#zoom-narrow').on('click.zoom', handleClickZoom);
