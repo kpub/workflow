@@ -3094,6 +3094,7 @@ document.onload = (function(d3, saveAs, Blob, vkbeautify) {
             taskAssign: 'taskAutoMode',
             autoAcceptAllAssignments: true,
             isResponsible: true,
+            candidateGroup:null,
             assignee:null,
             groupCandidates:[],
             startMode: 'manual',

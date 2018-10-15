@@ -150,16 +150,25 @@ function getListener()
 }
 var listeners = getListener();
 function setListener(listenerType,listener) {
-    var listenerSelect = $("#"+listenerType);
-    var listenerClasses = listeners;
-    listenerSelect.append("<option value=''>空</option>");
-    for(i=0;i<listenerClasses.length;i++) {
-        listenerSelect.append("<option value='" + listenerClasses[i] + "'>" + listenerClasses[i] + "</option>");//根据获取的class，生成下拉菜单选项
-    }
-
-    if(listener!=null)
+    var listenerSelect = document.getElementById(listenerType);
+    var listenerOption = listenerSelect.options;
+    if(listener==null)
     {
-        listenerSelect.val(listener);//如果之前已经设置了监听器，第二次打开菜单时设置其为选中项
+        if(listenerOption[0])//监听器为空，但是监听器选项不为空，表示创建另一个task
+        {
+            listenerOption[0].selected=true;//重置为选中第一项“空”
+        }
+        else {//表示创建第一个task
+            var listenerClasses = listeners;
+            listenerOption.add(new Option("空",""));
+            for(i=0;i<listenerClasses.length;i++) {
+                listenerOption.add(new Option(listenerClasses[i],listenerClasses[i]));//根据获取的class，生成下拉菜单选项
+            }
+        }
+    }
+    else//该节点已经设置了监听器
+    {
+        listenerSelect.value = listener;//第二次打开菜单时设置其为选中项
     }
 }
 
@@ -295,16 +304,33 @@ $.each(jsonObject,function (it) {
     candidateNamesList.push(jsonObject[it])
 });
 
-function setGroups(){
-
+function setGroups(candidateGroup,groupCandidates,assignee){
     var groupSelect=document.getElementById('groups');
-    groupSelect.append(new Option("请选择所属组",0));
     var candidateSelect=document.getElementById('conventional_definition_name');
-    candidateSelect.append(new Option("请选择候选人",0));
+    var groupOptions = groupSelect.options;
 
-    for(var i=0;i<groupNamesList.length;i++){
-        candidates[groupNamesList[i]]=new Array(candidateNamesList[i]);
-        groupSelect.append(new Option(groupNamesList[i],groupNamesList[i]));
+    if(candidateGroup==null)
+    {
+        if(groupOptions[0])//表示创建另一个task
+        {
+            groupSelect.options[0].selected = true;//候选组选中第一项“请选择所属组”
+            candidateSelect.length = 1;//候选人重置，仅保留第一项“请选择候选人”
+        }else //表示创建第一个task
+        {
+            candidateSelect.options.add(new Option("请选择候选人",""));
+            groupOptions.add(new Option("请选择所属组",""));
+            for(var i=0;i<groupNamesList.length;i++){
+                groupOptions.add(new Option(groupNamesList[i],groupNamesList[i]));
+            }
+        }
+    }
+    else//节点已经有候选组和候选人
+    {
+        for(var i=0;i<groupCandidates.length;i++){
+            candidateSelect.options.add(new Option(groupCandidates[i],groupCandidates[i]));//重新生成对应的候选人
+        }
+        groupSelect.value = candidateGroup;
+        candidateSelect.value = assignee;
     }
 }
 
@@ -845,25 +871,11 @@ function handleNodeMenuProp() {
       var assignee = conventional.assignee;
       var candidateGroup = conventional.candidateGroup;
       var groupCandidates = conventional.groupCandidates;
-      var candidateSelect = document.getElementById('conventional_definition_name');
 
       setListener("taskListener",taskListener);//显示监听器下拉菜单
       getFormKey();
-      setGroups();//设置候选组下拉菜单
+      setGroups(candidateGroup,groupCandidates,assignee);//设置候选组下拉菜单
 
-      if(candidateGroup!=null)
-          $('.conventional').find("select[name=conventional_definition_group]").val(candidateGroup);//显示之前选中的候选组
-      if(groupCandidates!=null)
-      {
-          for(var i=0;i<groupCandidates.length;i++){
-              candidateSelect.options[i+1]=new Option(groupCandidates[i],groupCandidates[i]);//生成对应的候选人
-          }
-      }
-
-      if(assignee!=null)
-      {
-          candidateSelect.value = assignee;//设置之前选中的候选人为选中项
-      }
       $('.conventional').find('input[name], textarea').each(function() {
         for (var key in conventional) {
           if (key == $(this).attr('name')) {
@@ -921,9 +933,6 @@ function handleNodeMenuProp() {
       $('.post_condition .list').empty(); // 清空后置条件
       $('.post_condition .targetActivity').html('');
       $('.conventional select[name="definition_role"]').siblings('.text').removeAttr('definition_id');
-      $('.conventional select[name="taskListener"]').empty();//清空监听器，防止生成的其他任务节点直接获得该监听器设置
-      $('.conventional select[name="conventional_definition_group"]').empty();
-      $('.conventional select[name="conventional_definition_name"]').empty();//清空候选人和候选组
 
     }
   }).modal('show');
@@ -1051,7 +1060,6 @@ function handleStartMenuProp() {
             $(this).find('.ui.dropdown').dropdown('clear');
             $(this).find('.ui.checkbox').checkbox('uncheck');
             $('.extended_attr tbody').empty(); // 清空扩展属性集
-            $(this).find("select[name=globalListener]").empty();//清空当前面板上的监听器
         }
     }).modal('show');
     $('.prop_start>.menu a[data-tab="global_two"]').addClass('hideitem');
@@ -1093,7 +1101,7 @@ function handleEdgeMenuProp() {
             setListener("sFlowListener",sFlowListener);//显示监听器设置菜单
         },
         onHidden: function() {
-            $('.transition select[name="sFlowListener"]').empty();//清空监听器
+            //$('.transition select[name="sFlowListener"]').empty();//清空监听器
         }
     }).modal('show');
 }
