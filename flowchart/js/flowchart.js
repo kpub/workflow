@@ -60,74 +60,6 @@ $(function() {
 			$('.otherOpt>div').eq(1).removeClass('hideDiv');
 		}
 	});
-/*
-	// 编辑工具(保存)
-	$('.editor-toolbar .icon.save').on('click', function() {
-		var dataTab = $('.full-right-btn .item.active').attr('data-tab');
-		$('.tab[data-tab="tab_main"] .item').not($('.full-right-btn .item.active')).trigger('click');//触发点击事件获取xpdl和xml
-		$('.full-right-btn .item[data-tab="'+dataTab+'"]').trigger('click');
-		var xpdl = $('#xpdlContainer xmp').text();
-		var xml = $('#xmlContainer xmp').text();
-		var xpdl_top =
-			'<?xml version="1.0" encoding="UTF-8" standalone="no"?>'+
-		    '<Package xmlns="http://www.wfmc.org/2002/XPDL1.0" xmlns:xpdl="http://www.wfmc.org/2002/XPDL1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Id="'+package_id+'" Name="新包" xsi:schemaLocation="http://www.wfmc.org/2002/XPDL1.0 http://wfmc.org/standards/dtd/TC-1025_schema_10_xpdl.xsd">'+
-		    '    <PackageHeader>'+
-		    '        <XPDLVersion>1.0</XPDLVersion>'+
-		    '        <Vendor>GENTLESOFT</Vendor>'+
-		    '        <Created>'+create_time+'</Created>'+
-		    '    </PackageHeader>'+
-		    '    <RedefinableHeader PublicationStatus="UNDER_TEST">'+
-		    '        <Author>管理员</Author>'+
-		    '        <Version>1.0</Version>'+
-		    '    </RedefinableHeader>'+
-		    '    <ConformanceClass GraphConformance="NON_BLOCKED"/>'+
-		    '    <Script Type="text/javascript"/>'+
-		    '    <DataFields>'+
-		    '        <DataField Id="sourceReferenceId" IsArray="FALSE" Name="sourceReferenceId">'+
-		    '            <DataType>'+
-		    '                <BasicType Type="STRING"/>'+
-		    '            </DataType>'+
-		    '            <InitialValue>null</InitialValue>'+
-		    '        </DataField>'+
-		    '        <DataField Id="formId" IsArray="FALSE" Name="formId">'+
-		    '            <DataType>'+
-		    '                <BasicType Type="STRING"/>'+
-		    '            </DataType>'+
-		    '            <InitialValue>null</InitialValue>'+
-		    '        </DataField>'+
-		    '        <DataField Id="nextActivityInfo" IsArray="FALSE" Name="nextActivityInfo">'+
-		    '            <DataType>'+
-		    '                <ExternalReference location="org.gentlesoft.wf.NextActivitiesParty"/>'+
-		    '            </DataType>'+
-		    '            <InitialValue>null</InitialValue>'+
-		    '        </DataField>'+
-		    '        <DataField Id="nextActivityName" IsArray="FALSE" Name="nextActivityName">'+
-		    '            <DataType>'+
-		    '                <ExternalReference location="java.util.ArrayList"/>'+
-		    '            </DataType>'+
-		    '            <InitialValue>null</InitialValue>'+
-		    '        </DataField>'+
-		    '        <DataField Id="formType" IsArray="FALSE" Name="formType">'+
-		    '            <DataType>'+
-		    '                <BasicType Type="STRING"/>'+
-		    '            </DataType>'+
-		    '            <InitialValue>null</InitialValue>'+
-		    '        </DataField>'+
-		    '    </DataFields>';
-		var xpdl_end = 
-			'    <ExtendedAttributes>'+
-		    '        <ExtendedAttribute Name="MadeBy" Value="com.gentlesoft.tools.wfd"/>'+
-		    '        <ExtendedAttribute Name="Version" Value="1.4.2"/>'+
-		    '    </ExtendedAttributes>'+
-		    '</Package>';
-		var xml_top = '<?xml version="1.0" encoding="UTF-8"?><pkg-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Id="'+package_id+'" Name="新包" Version="" xsi:noNamespaceSchemaLocation="../dtd/flowactconfig.xsd">';
-		var xml_end = '</pkg-config>';
-		xpdl = vkbeautify.xml(xpdl_top + xpdl + xpdl_end);
-		xml = vkbeautify.xml(xml_top + xml + xml_end);
-		$('input[name="xpdlcontent"]').val(xpdl);
-		$('input[name="xmlcontent"]').val(xpdl);
-		$('#containerForm').submit();
-	});*/
 });
 	    
 /*  */
@@ -175,27 +107,6 @@ $(function() {
 
 	// 活动属性semantic初始化
 	$('.prop_node .menu .item').tab();
-	/* IE11下 Semantic UI 存在问题
-	$('.prop_node>.menu .item').on('click', function() {
-		var item = $(this).attr('data-tab');
-		$('.prop_node [data-tab="'+item+'"]').find('.content-div').mCustomScrollbar("update");
-		if (item == 'four') {
-			$('.post_condition .postCondi_extendedAttr').mCustomScrollbar("update");
-			$('.prop_node.modal').css({
-				height: '745px'
-			});
-			$('.prop_node>.tab').css({
-				height: '608px'
-			});
-		} else {
-			$('.prop_node.modal').css({
-				height: '577px'
-			});
-			$('.prop_node>.tab').css({
-				height: '447px'
-			});
-		}
-	});*/
 
 	// 后置条件下的tab
 	$('.targetActivity .menu .item').on('click', function() {// 防止切换切换标签时滚动条消失
@@ -404,20 +315,6 @@ $(function() {
 	        }
 		}).modal('show');
 	});
-
-	/* 监控信息-增加 */
-	/*$('.monitorinf_add.modal').modal({
-		allowMultiple: true,
-		autofocus: false, 
-		duration: {},
-		onHidden: function() {
-        	$('.modal.prop_node').dimmer('hide');
-        	clearModal(this);
-        },
-		onShow: function() {
-        	$('.modal.prop_node').dimmer({closable: false}).dimmer('show');
-        }
-	}).modal('attach events', '.modal.prop_node .monitorinfAddBtn'); //attach events 在firefox下存在问题*/
 
 	$(document).on('click', '.modal.prop_node .monitorinfAddBtn', function() {
 		$('.monitorinf_add.modal').modal({
